@@ -1,3 +1,3 @@
 # ProjetWeb
-Ce repo contient un site web trop trop cool 
-Si vous lisez ceci vous etes surement exeptionel 
+Ce repo contient un site web trop trop cool.
+Si vous lisez ceci, vous êtes surement exceptionel !
