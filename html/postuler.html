@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Postuler à une offre - CesiTonJob">
+    <title>Postuler | CesiTonJob</title>
+
+    <!-- CSS existants -->
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/offres.css">
+
+    <!-- CSS spécifique -->
+    <link rel="stylesheet" href="../css/postuler.css">
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <header>
+        <nav class="nav-main">
+            <a href="accueil.html" class="nav-logo">
+                <img src="../images/logo/Logo-HomePage2.svg" alt="Logo CesiTonJob">
+            </a>
+
+            <ul class="nav-link">
+                <li><a href="offres.html" class="nav-item">Emploi</a></li>
+                <li><a href="#" class="nav-item">Candidature Spontanée</a></li>
+                <li><a href="#" class="nav-item">Mes Candidatures</a></li>
+                <li><a href="#" class="nav-item" aria-label="Favoris">★</a></li>
+            </ul>
+
+            <a href="#" class="nav-btn">Connexion</a>
+        </nav>
+    </header>
+
+    <main class="apply-page">
+        <div class="apply-layout">
+
+            <!-- Lien retour -->
+            <a class="apply-back" href="offre-detail.html">← Retour à l’offre</a>
+
+            <!-- Titre -->
+            <h1 class="apply-title">Postuler</h1>
+            <p class="apply-subtitle">Complète tes informations et envoie ta candidature.</p>
+
+            <!-- FORMULAIRE -->
+            <form class="apply-form" action="#" method="post" enctype="multipart/form-data">
+
+                <!-- INFOS PERSO -->
+                <fieldset class="apply-box">
+                    <legend>Informations personnelles</legend>
+
+                    <div class="apply-field">
+                        <label for="prenom">Prénom</label>
+                        <input id="prenom" name="prenom" type="text" placeholder="Ex : Bilal" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label for="nom">Nom</label>
+                        <input id="nom" name="nom" type="text" placeholder="Ex : Dupont" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" placeholder="exemple@mail.com" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label for="tel">Téléphone</label>
+                        <input id="tel" name="tel" type="tel" placeholder="06 12 34 56 78" required>
+                    </div>
+                </fieldset>
+
+                <!-- ADRESSE -->
+                <fieldset class="apply-box">
+                    <legend>Adresse</legend>
+
+                    <div class="apply-field">
+                        <label for="ville">Ville</label>
+                        <input id="ville" name="ville" type="text" placeholder="Ex : Paris" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label for="cp">Code postal</label>
+                        <input id="cp" name="cp" type="text" inputmode="numeric" placeholder="75000" required>
+                    </div>
+                </fieldset>
+
+                <!-- PIECES JOINTES -->
+                <fieldset class="apply-box">
+                    <legend>Pièces jointes</legend>
+
+                    <div class="apply-field">
+                        <label for="cv">CV (PDF)</label>
+                        <input id="cv" name="cv" type="file" accept=".pdf" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label for="lm">Lettre de motivation (PDF)</label>
+                        <input id="lm" name="lm" type="file" accept=".pdf">
+                    </div>
+
+                    <div class="apply-field">
+                        <label for="message">Message (optionnel)</label>
+                        <textarea id="message" name="message" rows="6"
+                            placeholder="Écris un message court au recruteur..."></textarea>
+                    </div>
+                </fieldset>
+
+                <!-- CONSENTEMENT -->
+                <fieldset class="apply-box">
+                    <legend>Consentement</legend>
+
+                    <label class="apply-consent">
+                        <input type="checkbox" name="consent" required>
+                        J’accepte que mes informations soient utilisées pour traiter ma candidature.
+                    </label>
+                </fieldset>
+
+                <!-- ACTIONS -->
+                <div class="apply-actions">
+                    <button class="apply-submit" type="submit">Envoyer ma candidature</button>
+                    <a class="apply-cancel" href="offre-detail.html">Annuler</a>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+</body>
+
+</html>

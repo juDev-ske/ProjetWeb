@@ -1,0 +1,440 @@
+/* ========================= */
+/* RESET GLOBAL */
+/* ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+}
+
+/* ========================= */
+/* HERO (image + search) */
+/* ========================= */
+
+.hero {
+    padding: 20px 5%;
+    position: relative;
+}
+
+.hero-img {
+    width: 100%;
+    max-width: 1400px;
+    height: 260px;
+    margin: 0 auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+/* ========================= */
+/* SEARCH BAR */
+/* ========================= */
+
+.search {
+    max-width: 1100px;
+    width: calc(100% - 40px);  /* garde marge sur mobile */
+    margin: -55px auto 0;      /* remonte sur l'image */
+
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 18px;
+
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+
+    position: relative;
+    z-index: 2;
+}
+
+.search-field {
+    flex: 1;
+    padding: 0 18px;
+}
+
+.search-field + .search-field {
+    border-left: 1px solid #e1e1e1;
+}
+
+.search-field label {
+    display: block;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+    color: #111;
+}
+
+.search-field input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+}
+
+.search-btn {
+    flex: 0 0 auto;
+    width: 54px;
+    height: 54px;
+    border: none;
+    border-radius: 14px;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 18px;
+}
+
+.search-btn:hover {
+    opacity: 0.9;
+}
+
+/* ========================= */
+/* LAYOUT (Filtres / Offres) */
+/* ========================= */
+
+.layout {
+    display: flex;
+    gap: 24px;
+    padding: 30px 5%;
+    align-items: flex-start;
+
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ========================= */
+/* FILTRES */
+/* ========================= */
+
+.filters {
+    width: 320px;
+    min-width: 260px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.filters-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.filters-header button {
+    border: none;
+    background: transparent;
+    color: #d50000;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.filters-header button:hover {
+    text-decoration: underline;
+}
+
+.filters details {
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.filters details:first-of-type {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.filters summary {
+    cursor: pointer;
+    font-weight: 800;
+    list-style: none;
+}
+
+.filters summary::-webkit-details-marker {
+    display: none;
+}
+
+.filters summary::after {
+    content: "▾";
+    float: right;
+    font-weight: 700;
+}
+
+.filters details[open] summary::after {
+    content: "▴";
+}
+
+.filters-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.filters-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #222;
+}
+
+.filters-group input {
+    width: 16px;
+    height: 16px;
+}
+
+/* ========================= */
+/* OFFRES */
+/* ========================= */
+
+.results {
+    flex: 1;
+    min-width: 0; /* évite overflow en flex */
+}
+
+.results-title {
+    margin: 0 0 16px 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: #222;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 18px;
+    padding: 18px;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 78px;
+}
+
+.job-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #222;
+}
+
+.company-name {
+    margin: 6px 0 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.job-date {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.card-meta {
+    margin-top: 14px;
+    background: #eef3ff;
+    border-radius: 16px;
+    padding: 14px;
+    min-height: 92px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-meta p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #222;
+}
+
+.meta-label {
+    font-weight: 800;
+}
+
+.card-skills {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 52px;
+    align-content: flex-start;
+}
+
+.skill {
+    background: #f6f6f6;
+    border: 1px solid #e6e6e6;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: #333;
+}
+
+.card-bottom {
+    margin-top: auto;
+    padding-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.save-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 12px;
+    background: #f2f2f2;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.save-btn:hover {
+    background: #e8e8e8;
+}
+
+.offer-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 140px;
+    height: 46px;
+    padding: 0 22px;
+
+    text-decoration: none;
+    background: #1800ad;
+    color: #fff;
+    font-weight: 800;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.offer-btn:hover {
+    opacity: 0.92;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+/* Tablette */
+@media (max-width: 1100px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filters {
+        width: 280px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+    .hero {
+        padding: 16px 4%;
+    }
+
+    .hero-img {
+        height: 200px;
+        border-radius: 16px;
+    }
+
+    .search {
+        margin-top: -40px;
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .search-field {
+        padding: 0 12px;
+    }
+
+    .search-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        margin-left: 12px;
+    }
+
+    .layout {
+        flex-direction: column; /* filtres en dessous */
+        padding: 20px 4%;
+    }
+
+    .filters {
+        width: 100%;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .results-title {
+        font-size: 22px;
+    }
+}
+
+/* Très petit mobile */
+@media (max-width: 480px) {
+    .search {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: -35px;
+    }
+
+    .search-field + .search-field {
+        border-left: none;
+        border-top: 1px solid #e1e1e1;
+        padding-top: 12px;
+    }
+
+    .search-btn {
+        width: 100%;
+        height: 46px;
+        margin-left: 0;
+        border-radius: 12px;
+    }
+}
