@@ -1,0 +1,591 @@
+/* Toutes les pages */
+
+:root {
+    --main-color: #00693e;
+    --secondary-color: #d8ffe8;
+    --accent-color: #faf0dd;
+    --nuance-color: #333333;
+}
+
+*{
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--nuance-color);
+}
+
+::selection {
+    color: #fff;
+    background-color: var(--main-color);
+}
+
+.btn {
+    height: 47px;
+    padding: 12px 16px;
+    border: 3px solid var(--main-color);
+    border-radius: 16px;
+    background-color: var(--main-color);
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.btn:hover {
+    background-color: transparent;
+    color: var(--nuance-color);
+}
+
+.content-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 64px;
+    gap: 48px;
+}
+
+.name-page {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-page {
+    font-family: 'Hind Madurai';
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.btn-page {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.btn-add {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    color: var(--main-color);
+    font-weight: bold;
+}
+
+.btn-sort {
+    height: 47px;
+    padding: 12px 24px;
+    border: 3px solid var(--main-color);
+    border-radius: 16px;
+    background-color: var(--main-color);
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.btn-sort:hover {
+    background-color: transparent;
+    color: var(--nuance-color);
+}
+
+.bullet-info {
+    background-color: var(--accent-color);
+    border-radius: 16px;
+    padding: 5px 10px;
+}
+
+.bullet-info-title {
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.bullet-info-result {
+    margin: 0;
+    opacity: 0.8;
+    text-align: center;
+}
+
+
+.bullets-pagination {
+    display: flex;
+    padding: 6px 0px;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.bullet-pagination {
+    width: 15px;
+    height: 15px;
+    background-color: #333333;
+    opacity: 0.2;
+    -moz-border-radius: 75px;
+    -webkit-border-radius: 75px;
+    border-radius: 75px;
+    cursor: pointer;
+}
+
+.bullet-pagination.active {
+    background-color: var(--main-color);
+    opacity: 1;
+}
+
+/* Page élève */
+
+.student-first-content {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+
+.student-article-presentation {
+    width: 704px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1);
+    gap: 30px;
+}
+
+.student-first-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.student-first-info-img {
+    width: 100px;
+    height: 100px;
+    border: none;
+    -moz-border-radius : 75px;
+    -webkit-border-radius : 75px;
+    border-radius : 75px;
+}
+
+.student-first-info-p {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.student-first-info-p-name {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.student-lastname {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.student-firstname {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.student-first-info-p-class {
+    margin: 0;
+    font-size: 20px;
+}
+
+.student-first-info-p-age {
+    margin: 0;
+    font-size: 20px;
+    opacity: 0.8;
+}
+
+.student-second-info {
+    display: flex;
+    flex-direction: column;
+    gap : 30px;
+}
+
+.student-second-main-info {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.student-title-bullet-info {
+    margin: 0;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.student-main-info-result {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.8;
+    text-align: center;
+}
+
+.student-second-others-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.student-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.student-contact {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.fa-solid, .student-mail, .student-phone {
+    margin: 0;
+    font-size: 16px;
+}
+
+.student-state {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.student-result-state {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.student-article-stat {
+    width: 320px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    border-radius: 16px;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.student-name-stat {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.student-title-name-stat {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.student-card-result-stat {
+    background-color: var(--main-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: none;
+    border-radius: 16px;
+}
+
+.student-result-stat {
+    background-color: #fff;
+    display: flex;
+    padding: 5px 10px;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    border-radius: 16px;
+}
+
+.student-result-stat-p {
+    margin: 0;
+    font-size: 84px;
+    font-weight: bold;
+}
+
+.student-second-content {}
+
+.student-title-content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-content {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+/* Page promotion */
+
+.class-content-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+}
+
+.class-articles-student {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0 32px;
+    gap: 32px;
+}
+
+.article-student {
+    width: 320px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    border-radius: 16px;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.article-student-first-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.article-student-first-info-img {
+    width: 90px;
+    height: 90px;
+    border: none;
+    -moz-border-radius : 75px;
+    -webkit-border-radius : 75px;
+    border-radius : 75px;
+}
+
+.article-student-first-info-p {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.article-student-first-info-p-name {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.article-student-lastname {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.article-student-firstname {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.article-student-age {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.article-student-main-info {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.article-student-others-info {
+    width: 290px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: var(--secondary-color);
+    border-radius: 16px;
+}
+
+.article-student-first-other-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.article-student-title-other-info {
+    margin: 0;
+    font-size: 12px;
+}
+
+.job-mini-article {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    background-color: #fff;
+    border-radius: 16px;
+}
+
+.job-mini-article-img {
+    width: 30px;
+    height: 30px;
+    border: none;
+    -moz-border-radius : 75px;
+    -webkit-border-radius : 75px;
+    border-radius : 75px;
+}
+
+.job-mini-article-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.job-mini-article-info-title {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.job-mini-article-info-company {
+    margin: 0;
+    opacity: 0.8;
+}
+
+.article-student-second-other-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-student-mini-article {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 5px 10px;
+}
+
+.info-student-mini-article-result {
+    margin: 0;
+    font-size: 12px;
+}
+
+.article-student-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.article-student-statu {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.article-student-result-statu {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Page classes */
+
+.classes-content-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 32px;
+    gap: 32px;
+}
+
+.article-class {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 16px;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.article-class-first-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.article-class-first-info-img {
+    width: 90px;
+    height: 90px;
+    border: none;
+    -moz-border-radius : 75px;
+    -webkit-border-radius : 75px;
+    border-radius : 75px;
+}
+
+.article-class-first-info-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.article-class-mains-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 96px;
+}
+
+.article-class-main-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.article-class-others-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.article-class-other-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
