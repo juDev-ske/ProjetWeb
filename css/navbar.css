@@ -1,0 +1,53 @@
+:root{
+    --Colors-Bleu: #1800ad;
+    --Colors-Noir: #333333;
+    --Colors-Gris:  #515250;
+    --Colors-Blanc: #ffffff;
+    --Police: Arial,sans-serif;
+}
+
+body{
+    font-family: var(--Police);
+}
+
+.nav-main{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1% 5%;
+    background-color: var(--Colors-Blanc);
+}
+.nav-link{
+    display: flex;
+    list-style: none;
+    gap:48px;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+    margin-right: 48px;
+}
+.nav-item{
+    text-decoration: none;
+    color: var(--Colors-Noir);
+    font-weight: bold;
+}
+
+.nav-item:hover{
+    color: var(--Colors-Bleu);
+    scale: 1.1;
+}
+
+.nav-btn{
+    display: inline-block;
+    background-color: var(--Colors-Noir);
+    color: var(--Colors-Blanc);
+    text-decoration: none;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+}
+
+.nav-btn:hover{
+    background-color: var(--Colors-Bleu);
+    scale: 1.1;
+}

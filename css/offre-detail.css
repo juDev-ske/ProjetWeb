@@ -1,0 +1,243 @@
+/* ========================= */
+/* PAGE DETAIL OFFRE */
+/* ========================= */
+
+.offer-page {
+  padding: 24px 5%;
+}
+
+.offer-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Colonne gauche */
+.offer-content {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+/* Header offre */
+.offer-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.offer-back {
+  text-decoration: none;
+  font-weight: 800;
+  color: #1800ad;
+  width: fit-content;
+}
+
+.offer-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 900;
+  color: #222;
+}
+
+/* Tags (réutilise .skill) */
+.offer-tags {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Section texte */
+.offer-section {
+  margin-top: 18px;
+}
+
+.offer-section h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+.offer-section p {
+  margin: 10px 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+.offer-section ul {
+  margin: 10px 0 10px 18px;
+  color: #333;
+}
+
+/* Accordéons */
+.offer-accordion {
+  margin-top: 14px;
+  border: 1px solid #e6e6e6;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+.offer-accordion summary {
+  cursor: pointer;
+  font-weight: 900;
+  list-style: none;
+}
+
+.offer-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.offer-accordion summary::after {
+  content: "▾";
+  float: right;
+  font-weight: 700;
+}
+
+.offer-accordion[open] summary::after {
+  content: "▴";
+}
+
+.accordion-content {
+  margin-top: 10px;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Galerie */
+.offer-gallery {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.offer-gallery img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+/* Colonne droite */
+.offer-side {
+  position: sticky;
+  top: 16px;
+}
+
+.offer-side-card {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 16px;
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.offer-side-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: #222;
+}
+
+.offer-side-img {
+  width: 100%;
+  height: 180px;
+  border-radius: 14px;
+  object-fit: cover;
+  display: block;
+}
+
+.offer-apply-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 46px;
+  border-radius: 999px;
+  text-decoration: none;
+
+  background: #1800ad;
+  color: #fff;
+  font-weight: 900;
+}
+
+.offer-apply-btn:hover {
+  opacity: 0.92;
+}
+
+.offer-side-meta {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Suggestions */
+.suggestions {
+  padding: 10px 5% 40px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.suggestions-title {
+  margin: 0 0 16px 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #222;
+}
+
+.more-offers-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 18px;
+  text-decoration: none;
+
+  background: #000;
+  color: #fff;
+  font-weight: 900;
+  padding: 14px 22px;
+  border-radius: 999px;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .offer-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .offer-side {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .offer-page {
+    padding: 16px 4%;
+  }
+
+  .offer-content {
+    padding: 16px;
+  }
+
+  .offer-title {
+    font-size: 22px;
+  }
+
+  .offer-gallery {
+    grid-template-columns: 1fr;
+  }
+}
