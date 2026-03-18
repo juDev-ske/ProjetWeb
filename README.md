@@ -1,8 +1,13 @@
 ## Projet Web — Plateforme de recherche de stages
 
+
+
 Application web permettant de centraliser des offres de stage et des entreprises, avec gestion des rôles (**Administrateur, Pilote, Étudiant, Anonyme**), candidatures et wish-list.
 
+
+
 ## Objectifs du Projet
+
 
 - **Accessibilité** : Faciliter la recherche de stage des étudiants.
 
@@ -12,7 +17,9 @@ Application web permettant de centraliser des offres de stage et des entreprises
 
 - **Qualité** : Garantir un site responsive, sécurisé et optimisé pour le SEO.
 
+
 ## L'application propose un système d'authentification avec des permissions spécifiques :
+
 
 - **Administrateur** : Contrôle total du site, gestion des comptes et des données.
 
@@ -22,7 +29,9 @@ Application web permettant de centraliser des offres de stage et des entreprises
 
 - **Anonyme** : Consultation limitée (ex : page de connexion, présentation).
 
+
 ## Core Features :
+
 
 - **Moteur de recherche** : Filtres avancés pour les offres et les entreprises.
 
@@ -34,7 +43,9 @@ Application web permettant de centraliser des offres de stage et des entreprises
 
 - **Sécurité** : Protection des données et respect des mentions légales.
 
+
 ## Stack Technique :
+
 
 - **Frontend** : HTML, CSS, JavaScript
 
