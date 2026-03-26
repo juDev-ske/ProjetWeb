@@ -1,0 +1,505 @@
+/* ============================================================
+   VARIABLES & RESET
+   ============================================================ */
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --muted: #6b6b6b;
+  --accent: #00693e;
+}
+
+::selection {
+  color: #fff;
+  background-color: var(--accent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: #333;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+
+/* ============================================================
+   LAYOUT — PAGE & CARD
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 60px;
+}
+
+.card {
+  width: 760px;
+  max-width: 95vw;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 64px 80px;
+  box-shadow: 0 10px 30px rgba(22, 22, 22, 0.06);
+  text-align: center;
+  position: relative;
+}
+
+.logo {
+  width: 200px;
+  height: auto;
+  margin: 0 auto 24px;
+  display: block;
+}
+
+.title {
+  margin: 8px 0 32px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* ============================================================
+   BOUTON RETOUR
+   ============================================================ */
+
+.btn-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-back:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ============================================================
+   FORMULAIRE
+   ============================================================ */
+
+.add-form {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.add-form label {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.add-form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.label-text {
+  display: block;
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+textarea,
+input[type="text"],
+select,
+input[type="email"],
+input[type="tel"], .select-selected {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  outline: none;
+  font-size: 16px;
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+select {
+  padding: 12px 35px 12px 15px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+select option {
+  padding: 10px;
+}
+
+select option:checked {
+  background-color: var(--accent);
+  color: white;
+}
+
+.primary {
+  display: inline-block;
+  padding: 14px 36px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* ============================================================
+   UPLOAD PHOTO / LOGO
+   ============================================================ */
+
+.intro {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 24px;
+}
+
+.upload-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-label {
+  cursor: pointer;
+}
+
+.upload-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 auto;
+}
+
+.upload-circle:hover {
+  background-color: #e0e0e0;
+}
+
+.plus-sign {
+  font-size: 24px;
+  color: #555;
+}
+
+.upload-text {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+.upload-delete-overlay {
+  width: 80px;
+  height: 80px;
+  display: none;
+  position: relative;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.upload-circle:hover .upload-delete-overlay {
+  opacity: 1;
+}
+
+/* ============================================================
+   DROPDOWN SECTEUR (custom-select)
+   ============================================================ */
+
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.select-selected {
+  padding: 12px 18px;
+  cursor: pointer;
+  position: relative;
+}
+
+.select-selected.open {
+  border-color: var(--accent);
+}
+
+.select-selected.default {
+  color: #999;
+}
+
+.select-selected::after {
+  content: "\f0d7";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   DROPDOWN GENERIQUE (select-items)
+   ============================================================ */
+
+.select-items {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.select-items div {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin: 2px;
+}
+
+.select-items div:first-child {
+  margin-top: 5px;
+}
+
+.select-items div:last-child {
+  margin-bottom: 5px;
+}
+
+.select-items div:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+.select-items div.selected {
+  background-color: var(--accent);
+  color: white;
+}
+
+.select-option,
+.select-option-city {
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.select-option:hover {
+  background-color: #f5f5f5;
+}
+
+.select-option-new {
+  color: var(--accent);
+  font-style: italic;
+  border-top: 1px solid #eee;
+  margin-top: 4px !important;
+  padding-top: 8px !important;
+}
+
+
+/* ============================================================
+   CHAMPS DE RECHERCHE AVEC SUGGESTIONS (search-container)
+   ============================================================ */
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+
+/* ============================================================
+   RADIO BUTTONS (Stage / Alternance)
+   ============================================================ */
+
+.radio-group {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.add-form .radio-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+}
+
+.radio-label input[type="radio"] {
+  display: none;
+}
+
+.radio-label .label-text {
+  margin-bottom: 0;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom {
+  border-color: var(--accent);
+}
+
+.radio-custom::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+
+/* ============================================================
+   SKILLS — TAGS
+   ============================================================ */
+
+.skills-container {
+  width: 100%;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e6f4ee;
+  color: var(--accent);
+  border: 1px solid #b3ddc8;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.skill-tag button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  line-height: 1;
+}
+
+.skill-tag button:hover {
+  color: #c0392b;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 560px) {
+  .card {
+    padding: 28px 20px;
+  }
+
+  .logo {
+    width: 100px;
+  }
+
+  .form-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

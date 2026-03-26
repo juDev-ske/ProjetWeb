@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="../assets/Logo vert head.png">
+    <title>Ajouter une offre — CesiTonJob</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/Création.css" />
+  </head>
+  <body class="pilote">
+    <main class="page">
+      <section class="card">
+        <a href="javascript:history.back()" class="btn-back">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <img class="logo" id="logo" src="../assets/Logo vert cesiTonJob.svg?v=1" alt="Logo CesiTonJob" />
+        <h1 class="title">Ajouter une offre</h1>
+
+        <form class="add-form" action="#" method="post" novalidate>
+          <label>
+            <span class="label-text">Nom</span>
+            <input type="text" name="name" placeholder="Nom..." required />
+          </label>
+          <label>
+            <span class="label-text">Entreprise</span>
+            <div class="search-container">
+                <input type="text" id="entreprise-input" placeholder="Entreprise...">
+                <div class="select-items" id="entreprise-options">
+                    <div class="select-option-search" data-value="Google">Google</div>
+                    <div class="select-option-search" data-value="Figma">Figma</div>
+                    <div class="select-option-search" data-value="Microsoft">Microsoft</div>
+                </div>
+                <input type="hidden" name="entreprise" class="select-hidden">
+            </div>
+          </label>
+          <label>
+            <span class="label-text">Secteur</span>
+            <div class="custom-select">
+                <div class="select-selected default">Secteur...</div>
+                <div class="select-items" id="secteur-options">
+                    <div class="select-option" data-value="info">Informatique</div>
+                    <div class="select-option" data-value="btp">BTP</div>
+                    <div class="select-option" data-value="gen">Généraliste</div>
+                </div>
+                <input type="hidden" name="secteurs" class="select-hidden">
+            </div>
+          </label>
+          <label>
+            <span class="label-text">Ville</span>
+            <div class="search-container">
+                <input type="text" id="ville-input" placeholder="Ville...">
+                <div class="select-items" id="lieu-options">
+                    <div class="select-option-search" data-value="Rouen">Rouen</div>
+                    <div class="select-option-search" data-value="Paris">Paris</div>
+                    <div class="select-option-search" data-value="Lyon">Lyon</div>
+                    <div class="select-option-search" data-value="Marseille">Marseille</div>
+                    <div class="select-option-search" data-value="Lille">Lille</div>
+                </div>
+                <input type="hidden" name="stage_or_alternance" class="select-hidden">
+            </div>
+          </label>
+          <label>
+              <span class="label-text">Niveau d'étude</span>
+              <div class="search-container">
+                  <input type="text" id="education-input" placeholder="Niveau d'étude...">
+                  <div class="select-items" id="education-options">
+                      <div class="select-option-search" data-value="bac">Bac</div>
+                      <div class="select-option-search" data-value="licence">Licence</div>
+                      <div class="select-option-search" data-value="master">Master</div>
+                  </div>
+                  <input type="hidden" name="education" class="select-hidden">
+              </div>
+          </label>
+          <label>
+            <span class="label-text">Stage ou Alternance</span>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="type" value="stage" checked>
+                <span class="radio-custom"></span>
+                <span class="label-text">Stage</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="type" value="alternance">
+                <span class="radio-custom"></span>
+                <span class="label-text">Alternance</span>
+              </label>
+            </div>
+          </label>
+          <label>
+            <span class="label-text">Salaire</span>
+            <input type="text" name="salary" placeholder="Salaire..."/>
+          </label>
+          <label>
+            <span class="label-text">Description</span>
+            <textarea type="text" name="description" placeholder="Description..." required></textarea>
+          </label>
+          <div class="add-form-group">
+            <span class="label-text">Skills</span>
+            <div class="skills-container">
+                <div class="skills-tags" id="skills-tags"></div>
+                <div class="search-container">
+                <input type="text" id="skills-input" placeholder="Ajouter un skill..." autocomplete="off">
+                <div class="select-items" id="skills-options"></div>
+                </div>
+                <input type="hidden" name="skills" id="skills-hidden">
+            </div>
+        </div>
+
+          <button class="primary" type="submit">Ajouter</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="../js/Creation.js"></script>
+  </body>
+</html>

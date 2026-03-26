@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="../assets/Logo vert head.png">
-    <title>Ajouter un étudiant — CesiTonJob</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/Logo rouge head.png">
+    <title>Ajouter un pilote — CesiTonJob</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/Création.css" />
+    <style> :root {--accent: #bd0000;}</style>
   </head>
   <body class="pilote">
     <main class="page">
@@ -15,8 +16,8 @@
           <i class="fa-solid fa-arrow-left"></i>
         </a>
 
-        <img class="logo" id="logo" src="../assets/Logo vert cesiTonJob.svg?v=1" alt="Logo CesiTonJob" />
-        <h1 class="title">Ajouter un étudiant</h1>
+        <img class="logo" id="logo" src="../assets/Logo rouge cesiTonJob.svg?v=1" alt="Logo CesiTonJob" />
+        <h1 class="title">Ajouter un pilote</h1>
 
         <form class="add-form" action="#" method="post" novalidate>
             <div class="intro">
@@ -66,6 +67,10 @@
               </div>
               <input type="hidden" name="ville" class="select-hidden">
             </div>
+          </label>
+          <label>
+            <span class="label-text">Promotion</span>
+            <input type="text" name="promotion" placeholder="Promotion..." />
           </label>
 
           <button class="primary" type="submit">Ajouter</button>
