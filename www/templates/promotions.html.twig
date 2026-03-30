@@ -1,0 +1,43 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Promotions{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Promotions</h1>
+    <a href="/creation-promotion" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle promotion</a>
+  </div>
+
+  <div class="liste-search">
+    <input type="text" placeholder="Rechercher une promotion...">
+  </div>
+
+  <div class="promo-grid">
+    {% for promo in promotions %}
+      <div class="promo-card">
+        <div class="promo-card-body">
+          <p class="promo-card-title">{{ promo.nom }}</p>
+          <div class="promo-card-meta">
+            <span><i class="fa-solid fa-chalkboard-user"></i> Pilote : {{ promo.pilote }}</span>
+            <span><i class="fa-solid fa-user-graduate"></i> {{ promo.nb_etudiants }} étudiants</span>
+          </div>
+        </div>
+        <a href="/promotion/{{ promo.id }}" class="btn-primary">Voir la promo</a>
+      </div>
+    {% else %}
+      <p>Aucune promotion disponible.</p>
+    {% endfor %}
+  </div>
+
+  <nav class="pagination">
+    {% for i in 1..pages %}
+      <a href="/promotions?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+    {% endfor %}
+  </nav>
+</main>
+{% endblock %}

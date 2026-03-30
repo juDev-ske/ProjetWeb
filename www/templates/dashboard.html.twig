@@ -1,0 +1,130 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Dashboard{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1>Tableau de bord</h1>
+    <p>Bienvenue, {{ user.prenom }}</p>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:#ede9fe;color:#3730a3">
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <div class="kpi-body">
+        <p class="kpi-value">{{ stats.offres }}</p>
+        <p class="kpi-label">Offres actives</p>
+      </div>
+      <a href="/offres" class="kpi-link">Voir les offres</a>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:#dbeafe;color:#1d4ed8">
+        <i class="fa-solid fa-building"></i>
+      </div>
+      <div class="kpi-body">
+        <p class="kpi-value">{{ stats.entreprises }}</p>
+        <p class="kpi-label">Entreprises</p>
+      </div>
+      <a href="/entreprises" class="kpi-link">Voir les entreprises</a>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:#d1fae5;color:#065f46">
+        <i class="fa-solid fa-user-graduate"></i>
+      </div>
+      <div class="kpi-body">
+        <p class="kpi-value">{{ stats.etudiants }}</p>
+        <p class="kpi-label">Étudiants</p>
+      </div>
+      <a href="/etudiants" class="kpi-link">Voir les étudiants</a>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:#fef3c7;color:#92400e">
+        <i class="fa-solid fa-chalkboard-user"></i>
+      </div>
+      <div class="kpi-body">
+        <p class="kpi-value">{{ stats.pilotes }}</p>
+        <p class="kpi-label">Pilotes</p>
+      </div>
+      <a href="/pilotes" class="kpi-link">Voir les pilotes</a>
+    </div>
+  </div>
+
+  <section class="dashboard-section">
+    <h2>Accès rapide</h2>
+    <div class="quick-grid">
+      <div class="quick-card">
+        <div class="quick-card-header">
+          <p class="quick-card-title">Offres</p>
+          <a href="/creation-offre" class="btn-add"><i class="fa-solid fa-plus"></i> Créer</a>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Titre</th><th>Entreprise</th><th>Statut</th></tr>
+          </thead>
+          <tbody>
+            {% for offre in dernières_offres %}
+              <tr>
+                <td>{{ offre.titre }}</td>
+                <td>{{ offre.entreprise }}</td>
+                <td><span class="badge badge-blue">{{ offre.statut }}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="quick-card">
+        <div class="quick-card-header">
+          <p class="quick-card-title">Entreprises</p>
+          <a href="/creation-entreprise" class="btn-add"><i class="fa-solid fa-plus"></i> Créer</a>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Nom</th><th>Email</th><th>Offres</th></tr>
+          </thead>
+          <tbody>
+            {% for entreprise in dernières_entreprises %}
+              <tr>
+                <td>{{ entreprise.nom }}</td>
+                <td>{{ entreprise.email }}</td>
+                <td>{{ entreprise.nb_offres }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="quick-card">
+        <div class="quick-card-header">
+          <p class="quick-card-title">Étudiants</p>
+          <a href="/creation-etudiant" class="btn-add"><i class="fa-solid fa-plus"></i> Créer</a>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Nom</th><th>Prénom</th><th>Candidatures</th></tr>
+          </thead>
+          <tbody>
+            {% for etudiant in derniers_etudiants %}
+              <tr>
+                <td>{{ etudiant.nom }}</td>
+                <td>{{ etudiant.prenom }}</td>
+                <td>{{ etudiant.nb_candidatures }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

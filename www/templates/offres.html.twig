@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CesiTonJob — Offres de stage{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/offres.css">
+{% endblock %}
+
+{% block content %}
+<main class="offres-page">
+  <aside class="offres-sidebar">
+    <div class="sidebar-title">
+      <span>Filtres</span>
+      <a class="sidebar-reset">Réinitialiser</a>
+    </div>
+    <div class="filter-group">
+      <p class="filter-group-title">Type de contrat</p>
+      <label class="filter-option"><input type="checkbox" name="contrat" value="alternance"> Alternance</label>
+      <label class="filter-option"><input type="checkbox" name="contrat" value="stage"> Stage</label>
+      <label class="filter-option"><input type="checkbox" name="contrat" value="cdi"> CDI</label>
+      <label class="filter-option"><input type="checkbox" name="contrat" value="cdd"> CDD</label>
+    </div>
+    <div class="filter-group">
+      <p class="filter-group-title">Localisation</p>
+      <input type="text" class="filter-input" placeholder="Ville, département...">
+    </div>
+    <div class="filter-group">
+      <p class="filter-group-title">Rémunération</p>
+      <label class="filter-option"><input type="checkbox" name="remuneration" value="non"> Non rémunéré</label>
+      <label class="filter-option"><input type="checkbox" name="remuneration" value="inf600"> &lt; 600€</label>
+      <label class="filter-option"><input type="checkbox" name="remuneration" value="600-1000"> 600 – 1 000€</label>
+      <label class="filter-option"><input type="checkbox" name="remuneration" value="sup1000"> &gt; 1 000€</label>
+    </div>
+    <div class="filter-group">
+      <p class="filter-group-title">Mode</p>
+      <label class="filter-option"><input type="checkbox" name="mode" value="sursite"> Sur site</label>
+      <label class="filter-option"><input type="checkbox" name="mode" value="teletravail"> Télétravail</label>
+      <label class="filter-option"><input type="checkbox" name="mode" value="hybride"> Hybride</label>
+    </div>
+  </aside>
+
+  <div class="offres-main">
+    <div class="offres-search">
+      <input type="text" placeholder="Rechercher une offre...">
+      <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="offres-header">
+      <p class="offres-count"><strong>{{ offres|length }}</strong> offres trouvées</p>
+      <select class="offres-sort">
+        <option value="recent">Plus récentes</option>
+        <option value="remuneration">Rémunération</option>
+        <option value="pertinence">Pertinence</option>
+      </select>
+    </div>
+
+    <div class="offres-grid">
+      {% for offre in offres %}
+        <div class="card">
+          <div class="card-header">
+            <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
+            <div>
+              <p class="card-title">{{ offre.titre }}</p>
+              <p class="card-company">{{ offre.entreprise }}</p>
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge badge-blue">{{ offre.type }}</span>
+            <span class="badge badge-gray">{{ offre.mode }}</span>
+            <span class="card-date">{{ offre.date }}</span>
+          </div>
+          <div class="card-meta">
+            <div class="card-meta-row"><i class="fa-solid fa-location-dot"></i> {{ offre.ville }}</div>
+            <div class="card-meta-row"><i class="fa-solid fa-earth-europe"></i> {{ offre.remuneration }}</div>
+          </div>
+          <div class="skill-tags">
+            {% for competence in offre.competences %}
+              <span class="skill-tag">{{ competence }}</span>
+            {% endfor %}
+          </div>
+          <div class="card-footer">
+            <button class="btn-bookmark"><i class="fa-regular fa-bookmark"></i></button>
+            <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
+          </div>
+        </div>
+      {% else %}
+        <p>Aucune offre disponible pour le moment.</p>
+      {% endfor %}
+    </div>
+
+    <nav class="pagination">
+      {% for i in 1..pages %}
+        <a href="/offres?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</main>
+{% endblock %}

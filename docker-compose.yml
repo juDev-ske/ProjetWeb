@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+
+  # --- Serveur Apache + PHP ---
+  web:
+    build:
+      context: .                 # racine du projet = contexte de build
+      dockerfile: docker/php/Dockerfile
+    ports:
+      - "8080:80"              # port de ta machine : port dans le conteneur
+    volumes:
+      - ./www:/var/www/html    # ton dossier www = le dossier web d'Apache
+    depends_on:
+      - db                     # attend que MySQL soit prêt
+
+  # --- Base de données MySQL ---
+  db:
+    image: mysql:8.0           # image officielle, pas besoin de Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: monsite
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    volumes:
+      - db_data:/var/lib/mysql  # stockage persistant des données
+
+volumes:
+  db_data:                      # volume nommé géré par Docker
