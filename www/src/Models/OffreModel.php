@@ -21,17 +21,20 @@ class OffreModel extends Model
         return (int) $result[0]['total'];
     }
 
+
     public function getOffersPaginated(int $limit, int $offset): array
     {
+        $limit = (int) $limit;
+        $offset = (int) $offset;
         return $this->db->query("
-            SELECT o.*, c.name AS company_name, l.city, l.department
-            FROM offer o
-            JOIN company c  ON o.company_id  = c.id
-            JOIN location l ON o.location_id = l.id
-            WHERE o.is_active = 1
-            ORDER BY o.publication_date DESC
-            LIMIT ? OFFSET ?
-        ", [$limit, $offset]);
+        SELECT o.*, c.name AS company_name, l.city, l.department
+        FROM offer o
+        JOIN company c  ON o.company_id  = c.id
+        JOIN location l ON o.location_id = l.id
+        WHERE o.is_active = 1
+        ORDER BY o.publication_date DESC
+        LIMIT {$limit} OFFSET {$offset}
+    ");
     }
 
     public function getOfferById(int $id): ?array
@@ -75,9 +78,14 @@ class OffreModel extends Model
             INSERT INTO offer (title, description, salary, type, mode, publication_date, company_id, location_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ", [
-            $data['title'], $data['description'], $data['salary'],
-            $data['type'], $data['mode'], $data['publication_date'],
-            $data['company_id'], $data['location_id']
+            $data['title'],
+            $data['description'],
+            $data['salary'],
+            $data['type'],
+            $data['mode'],
+            $data['publication_date'],
+            $data['company_id'],
+            $data['location_id']
         ]);
     }
 
