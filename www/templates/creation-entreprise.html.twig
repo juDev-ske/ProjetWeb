@@ -1,0 +1,45 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Créer une entreprise{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/secondaires.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="content-block" style="max-width:600px">
+    <div class="form-page-header">
+      <a href="/dashboard" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+      <h1>Créer une entreprise</h1>
+    </div>
+
+    <form action="/creation-entreprise" method="post" novalidate>
+      <div class="form-group">
+        <label for="nom">Nom de l'entreprise</label>
+        <input type="text" id="nom" name="nom" placeholder="Ex : Google France" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" placeholder="Décrivez l'entreprise..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse e-mail</label>
+        <input type="email" id="email" name="email" placeholder="contact@entreprise.fr" required>
+      </div>
+
+      <div class="form-group">
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" name="telephone" placeholder="+33 1 00 00 00 00">
+      </div>
+
+      <div class="form-actions">
+        <a href="/dashboard" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit">Créer l'entreprise</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

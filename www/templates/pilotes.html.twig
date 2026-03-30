@@ -1,0 +1,57 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Pilotes{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Pilotes</h1>
+    <a href="/creation-pilote" class="btn-add"><i class="fa-solid fa-plus"></i> Nouveau pilote</a>
+  </div>
+
+  <div class="liste-search">
+    <input type="text" placeholder="Rechercher un pilote...">
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pilote in pilotes %}
+          <tr>
+            <td>{{ pilote.first_name }}</td>
+            <td>{{ pilote.last_name }}</td>
+            <td>{{ pilote.email }}</td>
+            <td>{{ pilote.is_active ? 'Actif' : 'Inactif' }}</td>
+            <td class="table-actions">
+              <a href="/pilote/{{ pilote.id }}/supprimer" class="btn-delete"><i class="fa-solid fa-trash"></i></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">Aucun pilote enregistré.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if pages > 1 %}
+  <div class="pagination">
+    {% for i in 1..pages %}
+      <a href="/pilotes?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</main>
+{% endblock %}

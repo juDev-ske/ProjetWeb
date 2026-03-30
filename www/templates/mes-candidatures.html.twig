@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CesiTonJob — Mes Candidatures{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Mes candidatures</h1>
+    <a href="/candidature-spontanee" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle candidature</a>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active">Toutes</button>
+    <button class="filter-tab">Envoyées</button>
+    <button class="filter-tab">Acceptées</button>
+    <button class="filter-tab">Refusées</button>
+  </div>
+
+  <div class="candidature-list">
+    {% for candidature in candidatures %}
+      <div class="candidature-item">
+        <div class="candidature-info">
+          <div class="card-logo-placeholder">{{ candidature.entreprise|first }}</div>
+          <div>
+            <p class="candidature-titre">{{ candidature.titre }} — {{ candidature.entreprise }}</p>
+            <div class="candidature-meta">
+              <span><i class="fa-solid fa-location-dot"></i> {{ candidature.ville }}</span>
+              <span><i class="fa-solid fa-calendar"></i> {{ candidature.date }}</span>
+              <span><i class="fa-solid fa-briefcase"></i> {{ candidature.type }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="candidature-actions">
+          <span class="statut statut-{{ candidature.statut|lower }}">{{ candidature.statut }}</span>
+          <a href="/offre/{{ candidature.offre_id }}" class="btn-voir">Voir l'offre</a>
+        </div>
+      </div>
+    {% else %}
+      <p>Vous n'avez pas encore de candidatures.</p>
+    {% endfor %}
+  </div>
+
+  <nav class="pagination">
+    {% for i in 1..pages %}
+      <a href="/mes-candidatures?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+    {% endfor %}
+  </nav>
+</main>
+{% endblock %}
