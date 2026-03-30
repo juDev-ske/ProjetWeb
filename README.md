@@ -49,7 +49,7 @@ Application web permettant de centraliser des offres de stage et des entreprises
 
 - **Frontend** : HTML, CSS, JavaScript
 
-- **Backend** : PHP / Node.js
+- **Backend** : PHP / javaScript
 
 - **Base de données** : MySQL
 
