@@ -1,0 +1,45 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Modifier l'entreprise{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/secondaires.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="content-block" style="max-width:600px">
+    <div class="form-page-header">
+      <a href="/entreprise/{{ entreprise.id }}" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+      <h1>Modifier l'entreprise</h1>
+    </div>
+
+    <form action="/entreprise/{{ entreprise.id }}/modifier" method="post" novalidate>
+      <div class="form-group">
+        <label for="nom">Nom de l'entreprise</label>
+        <input type="text" id="nom" name="nom" value="{{ entreprise.nom }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4">{{ entreprise.description }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse e-mail</label>
+        <input type="email" id="email" name="email" value="{{ entreprise.email }}">
+      </div>
+
+      <div class="form-group">
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" name="telephone" value="{{ entreprise.phone }}">
+      </div>
+
+      <div class="form-actions">
+        <a href="/entreprise/{{ entreprise.id }}" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

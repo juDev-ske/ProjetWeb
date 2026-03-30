@@ -22,7 +22,7 @@
     <div class="offre-badges">
       <span class="badge badge-blue">{{ offre.type }}</span>
       <span class="badge badge-gray">{{ offre.mode }}</span>
-      <span class="offre-date">Publiée {{ offre.date }}</span>
+      <span class="offre-date">Publiée le {{ offre.date }}</span>
     </div>
 
     <div class="offre-section">
@@ -35,6 +35,8 @@
       <div class="offre-skills">
         {% for competence in offre.competences %}
           <span class="skill-tag">{{ competence }}</span>
+        {% else %}
+          <p>Aucune compétence spécifiée.</p>
         {% endfor %}
       </div>
     </div>
@@ -52,7 +54,10 @@
         <div class="entreprise-meta">
           <div class="entreprise-meta-row"><i class="fa-solid fa-envelope"></i> {{ offre.entreprise_email }}</div>
           <div class="entreprise-meta-row"><i class="fa-solid fa-phone"></i> {{ offre.entreprise_telephone }}</div>
-          <div class="entreprise-meta-row"><i class="fa-solid fa-star"></i> {{ offre.entreprise_note }} / 5 — Note entreprise</div>
+          <div class="entreprise-meta-row">
+            <i class="fa-solid fa-star"></i>
+            {{ offre.entreprise_note > 0 ? offre.entreprise_note ~ ' / 5' : 'Pas encore évaluée' }}
+          </div>
         </div>
       </div>
     </div>
@@ -69,10 +74,10 @@
           </div>
         </div>
         <div class="offre-info-row">
-          <i class="fa-solid fa-earth-europe"></i>
+          <i class="fa-solid fa-euro-sign"></i>
           <div>
             <p class="offre-info-label">Rémunération</p>
-            <p class="offre-info-value">{{ offre.remuneration }}</p>
+            <p class="offre-info-value">{{ offre.remuneration ?: 'Non précisée' }}</p>
           </div>
         </div>
         <div class="offre-info-row">
@@ -86,12 +91,24 @@
           <i class="fa-solid fa-users"></i>
           <div>
             <p class="offre-info-label">Candidatures</p>
-            <p class="offre-info-value">{{ offre.nb_candidatures }} candidats</p>
+            <p class="offre-info-value">{{ offre.nb_candidatures }} candidat(s)</p>
           </div>
         </div>
       </div>
-      <a href="/postuler/{{ offre.id }}" class="btn-postuler">Postuler à cette offre</a>
-      <button class="btn-wishlist"><i class="fa-regular fa-bookmark"></i> Sauvegarder</button>
+
+      {% if session.user_role == 'etudiant' %}
+        <a href="/postuler/{{ offre.id }}" class="btn-postuler">Postuler à cette offre</a>
+        <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-wishlist">
+          <i class="fa-regular fa-bookmark"></i> Sauvegarder
+        </a>
+      {% elseif session.user_role == 'admin' or session.user_role == 'pilote' %}
+        <a href="/offre/{{ offre.id }}/modifier" class="btn-postuler">Modifier l'offre</a>
+        <a href="/offre/{{ offre.id }}/supprimer" class="btn-wishlist" style="color:#ef4444">
+          <i class="fa-solid fa-trash"></i> Supprimer
+        </a>
+      {% else %}
+        <a href="/connexion" class="btn-postuler">Se connecter pour postuler</a>
+      {% endif %}
     </div>
   </aside>
 </main>

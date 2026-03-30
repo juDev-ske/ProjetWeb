@@ -1,6 +1,4 @@
-/* =============================================
-   HERO
-   ============================================= */
+
 .hero-wrapper { padding: 1.5rem 1.5rem 0; }
 
 .hero {
@@ -31,9 +29,6 @@
   text-align: right;
 }
 
-/* =============================================
-   SEARCH BAR
-   ============================================= */
 .search-bar {
   background: #fff;
   border-radius: 12px;
@@ -92,9 +87,6 @@
 }
 .search-btn:hover { background: var(--color-primary-hover); }
 
-/* =============================================
-   RESPONSIVE
-   ============================================= */
 @media (max-width: 768px) {
   .hero { height: 220px; }
   .hero-text { font-size: 1rem; right: 1.25rem; max-width: 260px; }

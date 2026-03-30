@@ -10,7 +10,7 @@
 <div class="dashboard-page">
   <div class="dashboard-header">
     <h1>Tableau de bord</h1>
-    <p>Bienvenue, {{ user.prenom }}</p>
+    <p>Bienvenue, {{ session.user_name }}</p>
   </div>
 
   <div class="kpi-grid">
@@ -64,7 +64,7 @@
     <div class="quick-grid">
       <div class="quick-card">
         <div class="quick-card-header">
-          <p class="quick-card-title">Offres</p>
+          <p class="quick-card-title">Dernières offres</p>
           <a href="/creation-offre" class="btn-add"><i class="fa-solid fa-plus"></i> Créer</a>
         </div>
         <table class="data-table">
@@ -74,10 +74,12 @@
           <tbody>
             {% for offre in dernières_offres %}
               <tr>
-                <td>{{ offre.titre }}</td>
+                <td><a href="/offre/{{ offre.id }}">{{ offre.titre }}</a></td>
                 <td>{{ offre.entreprise }}</td>
-                <td><span class="badge badge-blue">{{ offre.statut }}</span></td>
+                <td><span class="badge badge-blue">{{ offre.is_active ? 'Active' : 'Inactive' }}</span></td>
               </tr>
+            {% else %}
+              <tr><td colspan="3">Aucune offre.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -95,10 +97,12 @@
           <tbody>
             {% for entreprise in dernières_entreprises %}
               <tr>
-                <td>{{ entreprise.nom }}</td>
+                <td><a href="/entreprise/{{ entreprise.id }}">{{ entreprise.nom }}</a></td>
                 <td>{{ entreprise.email }}</td>
                 <td>{{ entreprise.nb_offres }}</td>
               </tr>
+            {% else %}
+              <tr><td colspan="3">Aucune entreprise.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -120,11 +124,19 @@
                 <td>{{ etudiant.prenom }}</td>
                 <td>{{ etudiant.nb_candidatures }}</td>
               </tr>
+            {% else %}
+              <tr><td colspan="3">Aucun étudiant.</td></tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
+  </section>
+
+  <section class="dashboard-section" style="margin-top:2rem">
+    <a href="/statistiques" class="btn-submit" style="display:inline-block">
+      <i class="fa-solid fa-chart-bar"></i> Voir les statistiques des offres
+    </a>
   </section>
 </div>
 {% endblock %}

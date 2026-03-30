@@ -1,0 +1,57 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Modifier l'offre{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/secondaires.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="content-block" style="max-width:600px">
+    <div class="form-page-header">
+      <a href="/offre/{{ offre.id }}" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+      <h1>Modifier l'offre</h1>
+    </div>
+
+    <form action="/offre/{{ offre.id }}/modifier" method="post" novalidate>
+      <div class="form-group">
+        <label for="title">Titre du poste</label>
+        <input type="text" id="title" name="title" value="{{ offre.titre }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="5">{{ offre.description }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="salary">Rémunération</label>
+        <input type="text" id="salary" name="salary" value="{{ offre.remuneration }}" placeholder="Ex : 600€/mois">
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type de contrat</label>
+        <select id="type" name="type">
+          <option value="internship"     {{ offre.type == 'internship'     ? 'selected' : '' }}>Stage</option>
+          <option value="apprenticeship" {{ offre.type == 'apprenticeship' ? 'selected' : '' }}>Alternance</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="mode">Mode de travail</label>
+        <select id="mode" name="mode">
+          <option value="on_site"{{ offre.mode == 'on_site'? 'selected' : '' }}>Sur site</option>
+          <option value="remote" {{ offre.mode == 'remote' ? 'selected' : '' }}>Télétravail</option>
+          <option value="hybrid" {{ offre.mode == 'hybrid' ? 'selected' : '' }}>Hybride</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <a href="/offre/{{ offre.id }}" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

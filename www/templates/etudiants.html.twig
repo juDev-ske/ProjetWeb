@@ -13,9 +13,10 @@
     <a href="/creation-etudiant" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvel étudiant</a>
   </div>
 
-  <div class="liste-search">
-    <input type="text" placeholder="Rechercher un étudiant...">
-  </div>
+  <form method="GET" action="/etudiants" class="liste-search">
+    <input type="text" name="search" value="{{ search ?? '' }}" placeholder="Rechercher par nom, prénom, email...">
+    <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
 
   <div class="table-wrapper">
     <table class="data-table">
@@ -24,24 +25,42 @@
           <th>Prénom</th>
           <th>Nom</th>
           <th>Email</th>
-          <th>Statut</th>
+          <th>Candidatures</th>
+          <th>État de stage</th>
+          <th>Actif</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for etudiant in etudiants %}
+          {% set statut_label = {
+            'searching':     'En recherche',
+            'found':         'Stage trouvé',
+            'not_searching': 'Pas en recherche'
+          } %}
+          {% set statut_color = {
+            'searching':     '#f59e0b',
+            'found':         '#10b981',
+            'not_searching': '#94a3b8'
+          } %}
           <tr>
-            <td>{{ etudiant.first_name }}</td>
-            <td>{{ etudiant.last_name }}</td>
+            <td>{{ etudiant.prenom }}</td>
+            <td>{{ etudiant.nom }}</td>
             <td>{{ etudiant.email }}</td>
-            <td>{{ etudiant.is_active ? 'Actif' : 'Inactif' }}</td>
+            <td>{{ etudiant.nb_candidatures }}</td>
+            <td>
+              <span style="color:{{ statut_color[etudiant.stage_status] ?? '#94a3b8' }};font-weight:600;">
+                {{ statut_label[etudiant.stage_status] ?? '—' }}
+              </span>
+            </td>
+            <td>{{ etudiant.is_active ? 'Oui' : 'Non' }}</td>
             <td class="table-actions">
               <a href="/etudiant/{{ etudiant.id }}/modifier" class="btn-edit"><i class="fa-solid fa-pen"></i></a>
               <a href="/etudiant/{{ etudiant.id }}/supprimer" class="btn-delete"><i class="fa-solid fa-trash"></i></a>
             </td>
           </tr>
         {% else %}
-          <tr><td colspan="5">Aucun étudiant enregistré.</td></tr>
+          <tr><td colspan="7">Aucun étudiant enregistré.</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -50,7 +69,8 @@
   {% if pages > 1 %}
   <div class="pagination">
     {% for i in 1..pages %}
-      <a href="/etudiants?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+      <a href="/etudiants?page={{ i }}&search={{ search ?? '' }}"
+         class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
     {% endfor %}
   </div>
   {% endif %}

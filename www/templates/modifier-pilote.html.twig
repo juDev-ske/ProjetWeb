@@ -1,0 +1,41 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Modifier le pilote{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/secondaires.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="content-block" style="max-width:600px">
+    <div class="form-page-header">
+      <a href="/pilotes" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+      <h1>Modifier le pilote</h1>
+    </div>
+
+    <form action="/pilote/{{ pilote.id }}/modifier" method="post" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" value="{{ pilote.first_name }}" required>
+        </div>
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" value="{{ pilote.last_name }}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ pilote.email }}">
+      </div>
+
+      <div class="form-actions">
+        <a href="/pilotes" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

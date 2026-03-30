@@ -9,21 +9,33 @@ class DashboardController extends Controller
 {
     public function index(): string
     {
-        $offreModel     = new OffreModel();
+        $offreModel      = new OffreModel();
         $entrepriseModel = new EntrepriseModel();
-        $userModel      = new UserModel();
+        $userModel       = new UserModel();
 
         return $this->render('dashboard.html.twig', [
-            'user'                 => ['prenom' => $_SESSION['user_name'] ?? 'Admin'],
-            'stats'                => [
-                'offres'      => count($offreModel->getAllOffers()),
-                'entreprises' => count($entrepriseModel->getAllCompanies()),
-                'etudiants'   => count($userModel->getAllStudents()),
-                'pilotes'     => count($userModel->getAllPilots()),
+            'stats' => [
+                'offres'      => $offreModel->countAllOffers(),
+                'entreprises' => $entrepriseModel->countAllCompanies(),
+                'etudiants'   => $userModel->countStudents(),
+                'pilotes'     => $userModel->countPilots(),
             ],
-            'dernières_offres'      => array_slice($offreModel->getAllOffers(), 0, 3),
-            'dernières_entreprises' => array_slice($entrepriseModel->getAllCompanies(), 0, 3),
-            'derniers_etudiants'    => array_slice($userModel->getAllStudents(), 0, 3),
+            'dernières_offres'      => array_slice($offreModel->getAllOffers(), 0, 5),
+            'dernières_entreprises' => array_slice($entrepriseModel->getAllCompanies(), 0, 5),
+            'derniers_etudiants'    => array_slice($userModel->getAllStudents(), 0, 5),
+        ]);
+    }
+
+    public function statistiques(): string
+    {
+        $offreModel = new OffreModel();
+        return $this->render('statistiques.html.twig', [
+            'stats' => [
+                'total'            => $offreModel->countTotal(),
+                'moy_candidatures' => $offreModel->avgCandidaturesParOffre(),
+                'par_type'         => $offreModel->repartitionParType(),
+                'top_wishlist'     => $offreModel->topWishlist(5),
+            ],
         ]);
     }
 }

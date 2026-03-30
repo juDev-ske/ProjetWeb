@@ -1,0 +1,57 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Candidatures de mes étudiants{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Candidatures de mes étudiants</h1>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Étudiant</th>
+          <th>Email</th>
+          <th>Offre</th>
+          <th>Entreprise</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>CV / LM</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in candidatures %}
+          <tr>
+            <td>{{ c.prenom }} {{ c.nom }}</td>
+            <td>{{ c.email }}</td>
+            <td><a href="/offre/{{ c.offre_id }}">{{ c.titre }}</a></td>
+            <td>{{ c.entreprise }}</td>
+            <td>{{ c.date }}</td>
+            <td><span class="statut statut-{{ c.statut|lower }}">{{ c.statut }}</span></td>
+            <td style="display:flex;gap:0.5rem;">
+              {% if c.cv_path %}
+                <a href="/{{ c.cv_path }}" target="_blank" class="fichier-link" title="CV">
+                  <i class="fa-solid fa-file-pdf"></i> CV
+                </a>
+              {% endif %}
+              {% if c.lm_path %}
+                <a href="/{{ c.lm_path }}" target="_blank" class="fichier-link" title="LM">
+                  <i class="fa-solid fa-file-lines"></i> LM
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="7">Aucune candidature pour vos étudiants.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+{% endblock %}

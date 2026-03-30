@@ -13,9 +13,10 @@
     <a href="/creation-entreprise" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle entreprise</a>
   </div>
 
-  <div class="liste-search">
-    <input type="text" placeholder="Rechercher une entreprise...">
-  </div>
+  <form method="GET" action="/entreprises" class="liste-search">
+    <input type="text" name="search" value="{{ search ?? '' }}" placeholder="Rechercher une entreprise...">
+    <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
 
   <div class="table-wrapper">
     <table class="data-table">
@@ -32,11 +33,11 @@
       <tbody>
         {% for entreprise in entreprises %}
           <tr>
-            <td>{{ entreprise.name }}</td>
+            <td><a href="/entreprise/{{ entreprise.id }}">{{ entreprise.nom }}</a></td>
             <td>{{ entreprise.email }}</td>
             <td>{{ entreprise.phone }}</td>
-            <td>{{ entreprise.rating }} / 5</td>
-            <td>{{ entreprise.offer_count }}</td>
+            <td>{{ entreprise.rating > 0 ? entreprise.rating ~ ' / 5' : '—' }}</td>
+            <td>{{ entreprise.nb_offres }}</td>
             <td class="table-actions">
               <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-edit"><i class="fa-solid fa-pen"></i></a>
               <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-delete"><i class="fa-solid fa-trash"></i></a>
@@ -52,7 +53,8 @@
   {% if pages > 1 %}
   <div class="pagination">
     {% for i in 1..pages %}
-      <a href="/entreprises?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+      <a href="/entreprises?page={{ i }}&search={{ search ?? '' }}"
+         class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
     {% endfor %}
   </div>
   {% endif %}

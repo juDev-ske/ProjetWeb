@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Redirect to login if user is not connected.
- */
+
 function requireLogin(): void
 {
     if (empty($_SESSION['user_id'])) {
@@ -11,10 +9,6 @@ function requireLogin(): void
     }
 }
 
-/**
- * Redirect to home if user doesn't have the required role.
- * Usage: requireRole('admin') or requireRole(['admin', 'pilote'])
- */
 function requireRole(string|array $roles): void
 {
     requireLogin();

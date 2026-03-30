@@ -22,7 +22,11 @@
         <li><a href="/offres" class="nav-item">Offres</a></li>
         <li><a href="/entreprises" class="nav-item">Entreprises</a></li>
         <li><a href="/etudiants" class="nav-item">Étudiants</a></li>
-        <li><a href="/pilotes" class="nav-item">Pilotes</a></li>
+        {% if session.user_role == 'admin' %}
+          <li><a href="/pilotes" class="nav-item">Pilotes</a></li>
+        {% endif %}
+        <li><a href="/candidatures-pilote" class="nav-item">Candidatures</a></li>
+        <li><a href="/statistiques" class="nav-item">Statistiques</a></li>
       </ul>
       <a href="/profil" class="nav-btn">{{ session.user_name }}</a>
       <a href="/deconnexion" class="nav-btn" style="background:#ef4444">Déconnexion</a>

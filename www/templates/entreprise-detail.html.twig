@@ -1,0 +1,69 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — {{ entreprise.nom }}{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/secondaires.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="content-block">
+    <div class="form-page-header">
+      <a href="/entreprises" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+      <h1>{{ entreprise.nom }}</h1>
+    </div>
+
+    <div class="detail-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
+      <div class="detail-card" style="background:#f8fafc;border-radius:8px;padding:1.5rem;">
+        <h2 style="margin-bottom:1rem;font-size:1rem;color:#64748b">Informations</h2>
+        <p><strong>Email :</strong> {{ entreprise.email ?: '—' }}</p>
+        <p><strong>Téléphone :</strong> {{ entreprise.phone ?: '—' }}</p>
+        <p><strong>Offres :</strong> {{ entreprise.nb_offres }}</p>
+        <p><strong>Stagiaires ayant postulé :</strong> {{ entreprise.nb_stagiaires }}</p>
+        <p style="margin-top:0.75rem"><strong>Description :</strong><br>{{ entreprise.description ?: 'Aucune description.' }}</p>
+      </div>
+
+      <div class="detail-card" style="background:#f8fafc;border-radius:8px;padding:1.5rem;">
+        <h2 style="margin-bottom:1rem;font-size:1rem;color:#64748b">Évaluation</h2>
+        <p style="font-size:2rem;font-weight:700;color:#f59e0b;">
+          {{ entreprise.rating > 0 ? entreprise.rating ~ ' / 5' : 'Pas encore évaluée' }}
+        </p>
+        <form action="/entreprise/{{ entreprise.id }}/evaluer" method="post" style="margin-top:1rem;display:flex;gap:0.5rem;align-items:center;">
+          <select name="note" style="padding:0.5rem;border:1px solid #e2e8f0;border-radius:6px;">
+            {% for i in 1..5 %}
+              <option value="{{ i }}" {{ entreprise.rating == i ? 'selected' : '' }}>{{ i }} / 5</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn-submit" style="padding:0.5rem 1rem">Évaluer</button>
+        </form>
+        <div style="margin-top:1.5rem;display:flex;gap:0.75rem;">
+          <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-submit">Modifier</a>
+          <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-delete" style="padding:0.5rem 1rem;background:#ef4444;color:#fff;border-radius:6px;text-decoration:none;">Supprimer</a>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-bottom:1rem;">Offres de l'entreprise</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Titre</th><th>Type</th><th>Mode</th><th>Date</th><th>Candidatures</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        {% for offre in offres %}
+          <tr>
+            <td><a href="/offre/{{ offre.id }}">{{ offre.titre }}</a></td>
+            <td>{{ offre.type }}</td>
+            <td>{{ offre.mode }}</td>
+            <td>{{ offre.date }}</td>
+            <td>{{ offre.nb_candidatures }}</td>
+            <td>{{ offre.is_active ? 'Active' : 'Inactive' }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">Aucune offre pour cette entreprise.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

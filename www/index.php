@@ -16,14 +16,12 @@ use App\Models\UserModel;
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig   = new \Twig\Environment($loader, ['debug' => true]);
 
-// Rend les infos de session accessibles dans tous les templates
 $twig->addGlobal('session', [
     'user_id'   => $_SESSION['user_id']   ?? null,
     'user_role' => $_SESSION['user_role'] ?? null,
     'user_name' => $_SESSION['user_name'] ?? null,
 ]);
 
-// Récupère l'URL et la méthode HTTP
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri    = rtrim($uri, '/');
 if ($uri === '') $uri = '/';
@@ -56,21 +54,34 @@ if ($uri === '/connexion' && $method === 'GET') {
     $controller = new OffreController($twig);
     echo $controller->index();
 
-} elseif (preg_match('#^/offre/(\d+)$#', $uri, $matches)) {
+} elseif (preg_match('#^/offre/(\d+)$#', $uri, $m) && $method === 'GET') {
     $controller = new OffreController($twig);
-    echo $controller->show((int) $matches[1]);
+    echo $controller->show((int) $m[1]);
 
 } elseif ($uri === '/creation-offre' && $method === 'GET') {
+    requireRole(['admin', 'pilote']);
     $controller = new OffreController($twig);
     echo $controller->createPage();
 
 } elseif ($uri === '/creation-offre' && $method === 'POST') {
+    requireRole(['admin', 'pilote']);
     $controller = new OffreController($twig);
     $controller->create();
 
-} elseif (preg_match('#^/offre/(\d+)/supprimer$#', $uri, $matches)) {
+} elseif (preg_match('#^/offre/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+    requireRole(['admin', 'pilote']);
     $controller = new OffreController($twig);
-    $controller->delete((int) $matches[1]);
+    echo $controller->editPage((int) $m[1]);
+
+} elseif (preg_match('#^/offre/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+    requireRole(['admin', 'pilote']);
+    $controller = new OffreController($twig);
+    $controller->edit((int) $m[1]);
+
+} elseif (preg_match('#^/offre/(\d+)/supprimer$#', $uri, $m)) {
+    requireRole(['admin', 'pilote']);
+    $controller = new OffreController($twig);
+    $controller->delete((int) $m[1]);
 
 // --- Candidatures ---
 } elseif ($uri === '/mes-candidatures') {
@@ -78,13 +89,20 @@ if ($uri === '/connexion' && $method === 'GET') {
     $controller = new CandidatureController($twig);
     echo $controller->index();
 
-} elseif (preg_match('#^/postuler/(\d+)$#', $uri, $matches) && $method === 'GET') {
+} elseif ($uri === '/candidatures-pilote') {
+    requireRole(['admin', 'pilote']);
     $controller = new CandidatureController($twig);
-    echo $controller->applyPage((int) $matches[1]);
+    echo $controller->piloteView();
 
-} elseif (preg_match('#^/postuler/(\d+)$#', $uri, $matches) && $method === 'POST') {
+} elseif (preg_match('#^/postuler/(\d+)$#', $uri, $m) && $method === 'GET') {
+    requireRole('etudiant');
     $controller = new CandidatureController($twig);
-    $controller->apply((int) $matches[1]);
+    echo $controller->applyPage((int) $m[1]);
+
+} elseif (preg_match('#^/postuler/(\d+)$#', $uri, $m) && $method === 'POST') {
+    requireRole('etudiant');
+    $controller = new CandidatureController($twig);
+    $controller->apply((int) $m[1]);
 
 } elseif ($uri === '/candidature-spontanee') {
     $controller = new CandidatureController($twig);
@@ -96,25 +114,37 @@ if ($uri === '/connexion' && $method === 'GET') {
     $controller = new WishlistController($twig);
     echo $controller->index();
 
-} elseif (preg_match('#^/wishlist/ajouter/(\d+)$#', $uri, $matches)) {
+} elseif (preg_match('#^/wishlist/ajouter/(\d+)$#', $uri, $m)) {
+    requireRole('etudiant');
     $controller = new WishlistController($twig);
-    $controller->add((int) $matches[1]);
+    $controller->add((int) $m[1]);
 
-} elseif (preg_match('#^/wishlist/retirer/(\d+)$#', $uri, $matches)) {
+} elseif (preg_match('#^/wishlist/retirer/(\d+)$#', $uri, $m)) {
+    requireRole('etudiant');
     $controller = new WishlistController($twig);
-    $controller->remove((int) $matches[1]);
+    $controller->remove((int) $m[1]);
 
-// --- Dashboard ---
+// --- Dashboard & Statistiques ---
 } elseif ($uri === '/dashboard') {
     requireRole(['admin', 'pilote']);
     $controller = new DashboardController($twig);
     echo $controller->index();
+
+} elseif ($uri === '/statistiques') {
+    requireRole(['admin', 'pilote']);
+    $controller = new DashboardController($twig);
+    echo $controller->statistiques();
 
 // --- Entreprises ---
 } elseif ($uri === '/entreprises' && $method === 'GET') {
     requireRole(['admin', 'pilote']);
     $controller = new EntrepriseController($twig);
     echo $controller->index();
+
+} elseif (preg_match('#^/entreprise/(\d+)$#', $uri, $m) && $method === 'GET') {
+    requireRole(['admin', 'pilote']);
+    $controller = new EntrepriseController($twig);
+    echo $controller->show((int) $m[1]);
 
 } elseif ($uri === '/creation-entreprise' && $method === 'GET') {
     requireRole(['admin', 'pilote']);
@@ -126,7 +156,27 @@ if ($uri === '/connexion' && $method === 'GET') {
     $controller = new EntrepriseController($twig);
     $controller->create();
 
-// --- Etudiants ---
+} elseif (preg_match('#^/entreprise/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+    requireRole(['admin', 'pilote']);
+    $controller = new EntrepriseController($twig);
+    echo $controller->editPage((int) $m[1]);
+
+} elseif (preg_match('#^/entreprise/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+    requireRole(['admin', 'pilote']);
+    $controller = new EntrepriseController($twig);
+    $controller->edit((int) $m[1]);
+
+} elseif (preg_match('#^/entreprise/(\d+)/evaluer$#', $uri, $m) && $method === 'POST') {
+    requireRole(['admin', 'pilote', 'etudiant']);
+    $controller = new EntrepriseController($twig);
+    $controller->rate((int) $m[1]);
+
+} elseif (preg_match('#^/entreprise/(\d+)/supprimer$#', $uri, $m)) {
+    requireRole(['admin', 'pilote']);
+    $controller = new EntrepriseController($twig);
+    $controller->delete((int) $m[1]);
+
+// --- Étudiants ---
 } elseif ($uri === '/etudiants' && $method === 'GET') {
     requireRole(['admin', 'pilote']);
     $controller = new EtudiantController($twig);
@@ -141,6 +191,21 @@ if ($uri === '/connexion' && $method === 'GET') {
     requireRole(['admin', 'pilote']);
     $controller = new EtudiantController($twig);
     $controller->create();
+
+} elseif (preg_match('#^/etudiant/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+    requireRole(['admin', 'pilote']);
+    $controller = new EtudiantController($twig);
+    echo $controller->editPage((int) $m[1]);
+
+} elseif (preg_match('#^/etudiant/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+    requireRole(['admin', 'pilote']);
+    $controller = new EtudiantController($twig);
+    $controller->edit((int) $m[1]);
+
+} elseif (preg_match('#^/etudiant/(\d+)/supprimer$#', $uri, $m)) {
+    requireRole(['admin', 'pilote']);
+    $controller = new EtudiantController($twig);
+    $controller->delete((int) $m[1]);
 
 // --- Pilotes ---
 } elseif ($uri === '/pilotes' && $method === 'GET') {
@@ -158,14 +223,43 @@ if ($uri === '/connexion' && $method === 'GET') {
     $controller = new PiloteController($twig);
     $controller->create();
 
+} elseif (preg_match('#^/pilote/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+    requireRole('admin');
+    $controller = new PiloteController($twig);
+    echo $controller->editPage((int) $m[1]);
+
+} elseif (preg_match('#^/pilote/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+    requireRole('admin');
+    $controller = new PiloteController($twig);
+    $controller->edit((int) $m[1]);
+
+} elseif (preg_match('#^/pilote/(\d+)/supprimer$#', $uri, $m)) {
+    requireRole('admin');
+    $controller = new PiloteController($twig);
+    $controller->delete((int) $m[1]);
+
 // --- Promotions ---
 } elseif ($uri === '/promotions') {
+    requireRole(['admin', 'pilote']);
     $controller = new PiloteController($twig);
     echo $controller->promotions();
 
-} elseif (preg_match('#^/promotion/(\d+)$#', $uri, $matches)) {
+} elseif (preg_match('#^/promotion/(\d+)$#', $uri, $m)) {
+    requireRole(['admin', 'pilote']);
     $controller = new PiloteController($twig);
-    echo $controller->promotionDetail((int) $matches[1]);
+    echo $controller->promotionDetail((int) $m[1]);
+
+// --- Profil ---
+} elseif ($uri === '/profil') {
+    requireLogin();
+    $userModel = new UserModel();
+    $user      = $userModel->getUserById($_SESSION['user_id']);
+    echo $twig->render('profil.html.twig', ['user' => [
+        'prenom' => $user['first_name'],
+        'nom'    => $user['last_name'],
+        'email'  => $user['email'],
+        'role'   => $user['role'],
+    ]]);
 
 // --- Pages statiques ---
 } elseif ($uri === '/a-propos') {
@@ -176,17 +270,6 @@ if ($uri === '/connexion' && $method === 'GET') {
 
 } elseif ($uri === '/mentions-legales') {
     echo $twig->render('mentions-legales.html.twig');
-
-} elseif ($uri === '/profil') {
-    requireLogin();
-    $userModel = new UserModel();
-    $user = $userModel->getUserById($_SESSION['user_id']);
-    echo $twig->render('profil.html.twig', ['user' => [
-        'prenom' => $user['first_name'],
-        'nom'    => $user['last_name'],
-        'email'  => $user['email'],
-        'role'   => $user['role']
-    ]]);
 
 // --- 404 ---
 } else {

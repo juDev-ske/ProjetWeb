@@ -10,14 +10,6 @@
 <main class="liste-page">
   <div class="liste-header">
     <h1>Mes candidatures</h1>
-    <a href="/candidature-spontanee" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle candidature</a>
-  </div>
-
-  <div class="filter-tabs">
-    <button class="filter-tab active">Toutes</button>
-    <button class="filter-tab">Envoyées</button>
-    <button class="filter-tab">Acceptées</button>
-    <button class="filter-tab">Refusées</button>
   </div>
 
   <div class="candidature-list">
@@ -32,6 +24,18 @@
               <span><i class="fa-solid fa-calendar"></i> {{ candidature.date }}</span>
               <span><i class="fa-solid fa-briefcase"></i> {{ candidature.type }}</span>
             </div>
+            <div class="candidature-fichiers" style="margin-top:0.5rem;display:flex;gap:1rem;">
+              {% if candidature.cv_path %}
+                <a href="/{{ candidature.cv_path }}" target="_blank" class="fichier-link">
+                  <i class="fa-solid fa-file-pdf"></i> CV
+                </a>
+              {% endif %}
+              {% if candidature.lm_path %}
+                <a href="/{{ candidature.lm_path }}" target="_blank" class="fichier-link">
+                  <i class="fa-solid fa-file-lines"></i> Lettre de motivation
+                </a>
+              {% endif %}
+            </div>
           </div>
         </div>
         <div class="candidature-actions">
@@ -44,10 +48,12 @@
     {% endfor %}
   </div>
 
+  {% if pages > 1 %}
   <nav class="pagination">
     {% for i in 1..pages %}
       <a href="/mes-candidatures?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
     {% endfor %}
   </nav>
+  {% endif %}
 </main>
 {% endblock %}

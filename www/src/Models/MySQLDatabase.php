@@ -4,17 +4,14 @@ namespace App\Models;
 use PDO;
 use PDOException;
 
-/**
- * MySQL implementation of the Database interface.
- * Uses PDO to connect and interact with the MySQL database.
- */
+
 class MySQLDatabase implements Database
 {
     private PDO $pdo;
 
     public function __construct()
     {
-        $host     = 'db';           // nom du conteneur Docker MySQL
+        $host     = 'db';           
         $dbname   = 'monsite';
         $user     = 'user';
         $password = 'userpass';
@@ -26,16 +23,14 @@ class MySQLDatabase implements Database
             $this->pdo = new PDO($dsn, $user, $password, [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
             ]);
         } catch (PDOException $e) {
-            die('Erreur de connexion à la base de données : ' . $e->getMessage());
+            error_log('DB connection error: ' . $e->getMessage());
+            die('Erreur de connexion à la base de données.');
         }
     }
 
-    /**
-     * Execute a SELECT query and return all results.
-     * Example: $db->query("SELECT * FROM offer WHERE is_active = ?", [1]);
-     */
     public function query(string $sql, array $params = []): array
     {
         $stmt = $this->pdo->prepare($sql);
@@ -43,19 +38,13 @@ class MySQLDatabase implements Database
         return $stmt->fetchAll();
     }
 
-    /**
-     * Execute an INSERT, UPDATE or DELETE query.
-     * Example: $db->execute("INSERT INTO user (email, password) VALUES (?, ?)", [$email, $hash]);
-     */
+
     public function execute(string $sql, array $params = []): bool
     {
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($params);
     }
 
-    /**
-     * Returns the ID of the last inserted row.
-     */
     public function lastInsertId(): int
     {
         return (int) $this->pdo->lastInsertId();

@@ -1,9 +1,7 @@
 <?php
 namespace App\Models;
 
-/**
- * Interface that every database implementation must follow.
- */
+
 interface Database
 {
     public function query(string $sql, array $params = []): array;

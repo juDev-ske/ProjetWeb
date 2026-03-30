@@ -8,53 +8,63 @@
 
 {% block content %}
 <main class="offres-page">
+
+  <form method="GET" action="/offres" id="filter-form">
   <aside class="offres-sidebar">
     <div class="sidebar-title">
       <span>Filtres</span>
-      <a class="sidebar-reset">Réinitialiser</a>
+      <a href="/offres" class="sidebar-reset">Réinitialiser</a>
     </div>
     <div class="filter-group">
       <p class="filter-group-title">Type de contrat</p>
-      <label class="filter-option"><input type="checkbox" name="contrat" value="alternance"> Alternance</label>
-      <label class="filter-option"><input type="checkbox" name="contrat" value="stage"> Stage</label>
-      <label class="filter-option"><input type="checkbox" name="contrat" value="cdi"> CDI</label>
-      <label class="filter-option"><input type="checkbox" name="contrat" value="cdd"> CDD</label>
+      {% set types = [
+        {val: 'internship',     label: 'Stage'},
+        {val: 'apprenticeship', label: 'Alternance'},
+      ] %}
+      {% for t in types %}
+        <label class="filter-option">
+          <input type="checkbox" name="type[]" value="{{ t.val }}"
+            {{ filters.type is defined and t.val in filters.type ? 'checked' : '' }}>
+          {{ t.label }}
+        </label>
+      {% endfor %}
     </div>
     <div class="filter-group">
       <p class="filter-group-title">Localisation</p>
-      <input type="text" class="filter-input" placeholder="Ville, département...">
-    </div>
-    <div class="filter-group">
-      <p class="filter-group-title">Rémunération</p>
-      <label class="filter-option"><input type="checkbox" name="remuneration" value="non"> Non rémunéré</label>
-      <label class="filter-option"><input type="checkbox" name="remuneration" value="inf600"> &lt; 600€</label>
-      <label class="filter-option"><input type="checkbox" name="remuneration" value="600-1000"> 600 – 1 000€</label>
-      <label class="filter-option"><input type="checkbox" name="remuneration" value="sup1000"> &gt; 1 000€</label>
+      <input type="text" class="filter-input" name="ville"
+             value="{{ filters.ville ?? '' }}" placeholder="Ville, département...">
     </div>
     <div class="filter-group">
       <p class="filter-group-title">Mode</p>
-      <label class="filter-option"><input type="checkbox" name="mode" value="sursite"> Sur site</label>
-      <label class="filter-option"><input type="checkbox" name="mode" value="teletravail"> Télétravail</label>
-      <label class="filter-option"><input type="checkbox" name="mode" value="hybride"> Hybride</label>
+      {% set modes = [
+        {val: 'on_site', label: 'Sur site'},
+        {val: 'remote',  label: 'Télétravail'},
+        {val: 'hybrid',  label: 'Hybride'},
+      ] %}
+      {% for m in modes %}
+        <label class="filter-option">
+          <input type="checkbox" name="mode[]" value="{{ m.val }}"
+            {{ filters.mode is defined and m.val in filters.mode ? 'checked' : '' }}>
+          {{ m.label }}
+        </label>
+      {% endfor %}
     </div>
+    <button type="submit" class="btn-submit" style="width:100%;margin-top:1rem">Appliquer</button>
   </aside>
 
   <div class="offres-main">
     <div class="offres-search">
-      <input type="text" placeholder="Rechercher une offre...">
-      <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <input type="text" name="search" value="{{ filters.search ?? '' }}"
+             placeholder="Rechercher une offre...">
+      <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
     <div class="offres-header">
-      <p class="offres-count"><strong>{{ offres|length }}</strong> offres trouvées</p>
-      <select class="offres-sort">
-        <option value="recent">Plus récentes</option>
-        <option value="remuneration">Rémunération</option>
-        <option value="pertinence">Pertinence</option>
-      </select>
+      <p class="offres-count"><strong>{{ total }}</strong> offres trouvées</p>
     </div>
 
     <div class="offres-grid">
       {% for offre in offres %}
+        {% set competences = offre.skill_names ? offre.skill_names|split('|') : [] %}
         <div class="card">
           <div class="card-header">
             <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
@@ -70,15 +80,17 @@
           </div>
           <div class="card-meta">
             <div class="card-meta-row"><i class="fa-solid fa-location-dot"></i> {{ offre.ville }}</div>
-            <div class="card-meta-row"><i class="fa-solid fa-earth-europe"></i> {{ offre.remuneration }}</div>
+            <div class="card-meta-row"><i class="fa-solid fa-euro-sign"></i> {{ offre.remuneration }}</div>
           </div>
           <div class="skill-tags">
-            {% for competence in offre.competences %}
+            {% for competence in competences %}
               <span class="skill-tag">{{ competence }}</span>
             {% endfor %}
           </div>
           <div class="card-footer">
-            <button class="btn-bookmark"><i class="fa-regular fa-bookmark"></i></button>
+            <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
+              <i class="fa-regular fa-bookmark"></i>
+            </a>
             <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
           </div>
         </div>
@@ -87,11 +99,15 @@
       {% endfor %}
     </div>
 
+    {% if pages > 1 %}
     <nav class="pagination">
       {% for i in 1..pages %}
-        <a href="/offres?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+        <a href="/offres?page={{ i }}&search={{ filters.search ?? '' }}"
+           class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
       {% endfor %}
     </nav>
+    {% endif %}
   </div>
+  </form>
 </main>
 {% endblock %}

@@ -1,14 +1,9 @@
--- =============================================
--- CesiTonJob - Database Schema
--- =============================================
+
 
 CREATE DATABASE IF NOT EXISTS monsite CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE monsite;
 
--- =============================================
--- TABLE: user
--- Stores authentication data for all users
--- =============================================
+
 CREATE TABLE user (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     email      VARCHAR(255) NOT NULL UNIQUE,
@@ -17,24 +12,18 @@ CREATE TABLE user (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- =============================================
--- TABLE: profile
--- Stores personal information for each user
--- is_active allows disabling an account without deleting it
--- =============================================
+
 CREATE TABLE profile (
-    id         INT AUTO_INCREMENT PRIMARY KEY,
-    user_id    INT NOT NULL UNIQUE,
-    first_name VARCHAR(100) NOT NULL,
-    last_name  VARCHAR(100) NOT NULL,
-    is_active  BOOLEAN DEFAULT TRUE,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT NOT NULL UNIQUE,
+    first_name      VARCHAR(100) NOT NULL,
+    last_name       VARCHAR(100) NOT NULL,
+    is_active       BOOLEAN DEFAULT TRUE,
+    stage_status    ENUM('searching', 'found', 'not_searching') DEFAULT 'searching',
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
--- =============================================
--- TABLE: location
--- Stores locations to avoid redundancy in offers
--- =============================================
+
 CREATE TABLE location (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     city        VARCHAR(100) NOT NULL,
@@ -43,10 +32,7 @@ CREATE TABLE location (
     region      VARCHAR(100)
 );
 
--- =============================================
--- TABLE: company
--- Stores company information
--- =============================================
+
 CREATE TABLE company (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -56,16 +42,12 @@ CREATE TABLE company (
     rating      DECIMAL(2,1) DEFAULT 0
 );
 
--- =============================================
--- TABLE: offer
--- Stores internship/job offers
--- =============================================
 CREATE TABLE offer (
     id               INT AUTO_INCREMENT PRIMARY KEY,
     title            VARCHAR(255) NOT NULL,
     description      TEXT,
     salary           VARCHAR(100),
-    type             ENUM('internship', 'apprenticeship', 'cdi', 'cdd') NOT NULL,
+    type             ENUM('internship', 'apprenticeship') NOT NULL,
     mode             ENUM('on_site', 'remote', 'hybrid') NOT NULL,
     publication_date DATE DEFAULT (CURRENT_DATE),
     is_active        BOOLEAN DEFAULT TRUE,
@@ -75,19 +57,13 @@ CREATE TABLE offer (
     FOREIGN KEY (location_id) REFERENCES location(id) ON DELETE RESTRICT
 );
 
--- =============================================
--- TABLE: skill
--- Stores skills to avoid redundancy
--- =============================================
+
 CREATE TABLE skill (
     id   INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
--- =============================================
--- TABLE: offer_skill
--- Links offers to skills (many-to-many)
--- =============================================
+
 CREATE TABLE offer_skill (
     offer_id INT NOT NULL,
     skill_id INT NOT NULL,
@@ -96,10 +72,7 @@ CREATE TABLE offer_skill (
     FOREIGN KEY (skill_id) REFERENCES skill(id) ON DELETE CASCADE
 );
 
--- =============================================
--- TABLE: application
--- Stores student applications to offers
--- =============================================
+
 CREATE TABLE application (
     id               INT AUTO_INCREMENT PRIMARY KEY,
     student_id       INT NOT NULL,
@@ -111,10 +84,7 @@ CREATE TABLE application (
     FOREIGN KEY (offer_id)   REFERENCES offer(id) ON DELETE CASCADE
 );
 
--- =============================================
--- TABLE: wishlist
--- Stores offers saved by students
--- =============================================
+
 CREATE TABLE wishlist (
     student_id INT NOT NULL,
     offer_id   INT NOT NULL,
@@ -124,10 +94,7 @@ CREATE TABLE wishlist (
     FOREIGN KEY (offer_id)   REFERENCES offer(id) ON DELETE CASCADE
 );
 
--- =============================================
--- TABLE: promotion
--- Stores student groups managed by pilots
--- =============================================
+
 CREATE TABLE promotion (
     id       INT AUTO_INCREMENT PRIMARY KEY,
     name     VARCHAR(255) NOT NULL,
@@ -136,10 +103,7 @@ CREATE TABLE promotion (
     FOREIGN KEY (pilot_id) REFERENCES user(id) ON DELETE RESTRICT
 );
 
--- =============================================
--- TABLE: student_promotion
--- Links students to promotions (many-to-many)
--- =============================================
+
 CREATE TABLE student_promotion (
     student_id   INT NOT NULL,
     promotion_id INT NOT NULL,
