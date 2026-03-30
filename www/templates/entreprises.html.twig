@@ -1,0 +1,60 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Entreprises{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Entreprises</h1>
+    <a href="/creation-entreprise" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle entreprise</a>
+  </div>
+
+  <div class="liste-search">
+    <input type="text" placeholder="Rechercher une entreprise...">
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Note</th>
+          <th>Offres</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entreprise in entreprises %}
+          <tr>
+            <td>{{ entreprise.name }}</td>
+            <td>{{ entreprise.email }}</td>
+            <td>{{ entreprise.phone }}</td>
+            <td>{{ entreprise.rating }} / 5</td>
+            <td>{{ entreprise.offer_count }}</td>
+            <td class="table-actions">
+              <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-edit"><i class="fa-solid fa-pen"></i></a>
+              <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-delete"><i class="fa-solid fa-trash"></i></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">Aucune entreprise enregistrée.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if pages > 1 %}
+  <div class="pagination">
+    {% for i in 1..pages %}
+      <a href="/entreprises?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</main>
+{% endblock %}

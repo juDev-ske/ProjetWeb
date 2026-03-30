@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/public/images/logo-header.svg">
+  <link rel="stylesheet" href="/public/css/layout.css">
+  {% block styles %}{% endblock %}
+  <script src="https://kit.fontawesome.com/bb09137a9a.js" crossorigin="anonymous"></script>
+  <title>{% block title %}CesiTonJob{% endblock %}</title>
+</head>
+<body>
+
+  <header class="header">
+    <nav class="nav">
+      <a href="/" class="nav-logo">
+        <img src="/public/images/logo-header.svg" alt="CesiTonJob">
+        <span>CesiTonJob</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/offres" class="nav-item">Emploi</a></li>
+
+        {% if session.user_role == 'etudiant' %}
+          <li><a href="/candidature-spontanee" class="nav-item">Candidature Spontanée</a></li>
+          <li><a href="/mes-candidatures" class="nav-item">Mes Candidatures</a></li>
+          <li><a href="/wishlist" class="nav-item"><i class="fa-solid fa-bookmark"></i></a></li>
+
+        {% elseif session.user_role == 'pilote' %}
+          <li><a href="/dashboard" class="nav-item">Dashboard</a></li>
+          <li><a href="/promotions" class="nav-item">Promotions</a></li>
+
+        {% elseif session.user_role == 'admin' %}
+          <li><a href="/dashboard" class="nav-item">Dashboard</a></li>
+          <li><a href="/promotions" class="nav-item">Promotions</a></li>
+
+        {% endif %}
+      </ul>
+
+      {% if session.user_id %}
+        <a href="/profil" class="nav-btn">{{ session.user_name }}</a>
+        <a href="/deconnexion" class="nav-btn" style="background:#ef4444">Déconnexion</a>
+      {% else %}
+        <a href="/connexion" class="nav-btn">Se connecter</a>
+      {% endif %}
+      <button class="nav-burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <img src="/public/images/logo-header.svg" alt="CesiTonJob">
+          <span>CesiTonJob</span>
+        </a>
+        <p class="footer-desc">La plateforme de stages et alternances pour les étudiants CESI.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+      <nav class="footer-nav">
+        <p class="footer-nav-title">Liens</p>
+        <a href="/a-propos">À propos</a>
+        <a href="/contact">Contact</a>
+        <a href="/mentions-legales">Mentions légales</a>
+      </nav>
+    </div>
+    <div class="footer-bottom"><p>© 2025 CesiTonJob — Tous droits réservés</p></div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

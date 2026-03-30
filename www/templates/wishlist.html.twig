@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CesiTonJob — Ma Wish-list{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Ma Wish-list</h1>
+    <span class="liste-count">{{ offres|length }} offres sauvegardées</span>
+  </div>
+
+  {% if offres|length > 0 %}
+    <div class="cards-grid">
+      {% for offre in offres %}
+        <div class="card">
+          <div class="card-header">
+            <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
+            <div>
+              <p class="card-title">{{ offre.titre }}</p>
+              <p class="card-company">{{ offre.entreprise }}</p>
+            </div>
+          </div>
+          <div class="card-badges">
+            <span class="badge badge-blue">{{ offre.type }}</span>
+            <span class="badge badge-gray">{{ offre.mode }}</span>
+            <span class="card-date">{{ offre.date }}</span>
+          </div>
+          <div class="card-meta">
+            <div class="card-meta-row"><i class="fa-solid fa-location-dot"></i> {{ offre.ville }}</div>
+            <div class="card-meta-row"><i class="fa-solid fa-earth-europe"></i> {{ offre.remuneration }}</div>
+          </div>
+          <div class="skill-tags">
+            {% for competence in offre.competences %}
+              <span class="skill-tag">{{ competence }}</span>
+            {% endfor %}
+          </div>
+          <div class="card-footer">
+            <button class="btn-bookmark active"><i class="fa-solid fa-bookmark"></i></button>
+            <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="wishlist-empty">
+      <div class="wishlist-empty-icon"><i class="fa-regular fa-bookmark"></i></div>
+      <p class="wishlist-empty-text">Votre wish-list est vide</p>
+      <a href="/offres" class="btn-primary">Parcourir les offres</a>
+    </div>
+  {% endif %}
+</main>
+{% endblock %}

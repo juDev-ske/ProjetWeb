@@ -1,0 +1,132 @@
+/* Page liste des offres */
+
+.offres-page {
+  display: flex;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  align-items: flex-start;
+}
+
+/* ─── SIDEBAR FILTRES ─── */
+.offres-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.sidebar-title {
+  font-size: .95rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-reset {
+  font-size: .78rem;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.filter-group { margin-bottom: 1.25rem; }
+.filter-group-title {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--color-text-muted);
+  margin-bottom: .6rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .4rem;
+  font-size: .875rem;
+  cursor: pointer;
+}
+.filter-option input { accent-color: var(--color-primary); }
+
+.filter-input {
+  width: 100%;
+  padding: .55rem .8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: .875rem;
+  outline: none;
+  font-family: inherit;
+}
+.filter-input:focus { border-color: var(--color-primary); }
+
+/* ─── MAIN ─── */
+.offres-main { flex: 1; min-width: 0; }
+
+.offres-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.offres-count { font-size: .875rem; color: var(--color-text-muted); }
+.offres-count strong { color: var(--color-text); }
+
+.offres-sort {
+  padding: .45rem .8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: .85rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.offres-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+/* ─── SEARCH TOP ─── */
+.offres-search {
+  display: flex;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+
+.offres-search input {
+  flex: 1;
+  padding: .65rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: .875rem;
+  outline: none;
+  font-family: inherit;
+}
+.offres-search input:focus { border-color: var(--color-primary); }
+
+.offres-search button {
+  padding: .65rem 1.25rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.offres-search button:hover { background: var(--color-primary-hover); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .offres-page    { flex-direction: column; }
+  .offres-sidebar { width: 100%; position: static; }
+  .offres-grid    { grid-template-columns: 1fr; }
+}

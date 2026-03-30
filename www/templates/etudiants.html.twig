@@ -1,0 +1,58 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Étudiants{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <div class="liste-header">
+    <h1>Étudiants</h1>
+    <a href="/creation-etudiant" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvel étudiant</a>
+  </div>
+
+  <div class="liste-search">
+    <input type="text" placeholder="Rechercher un étudiant...">
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for etudiant in etudiants %}
+          <tr>
+            <td>{{ etudiant.first_name }}</td>
+            <td>{{ etudiant.last_name }}</td>
+            <td>{{ etudiant.email }}</td>
+            <td>{{ etudiant.is_active ? 'Actif' : 'Inactif' }}</td>
+            <td class="table-actions">
+              <a href="/etudiant/{{ etudiant.id }}/modifier" class="btn-edit"><i class="fa-solid fa-pen"></i></a>
+              <a href="/etudiant/{{ etudiant.id }}/supprimer" class="btn-delete"><i class="fa-solid fa-trash"></i></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">Aucun étudiant enregistré.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if pages > 1 %}
+  <div class="pagination">
+    {% for i in 1..pages %}
+      <a href="/etudiants?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</main>
+{% endblock %}

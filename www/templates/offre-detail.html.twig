@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CesiTonJob — {{ offre.titre }} chez {{ offre.entreprise }}{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/offre-detail.css">
+{% endblock %}
+
+{% block content %}
+<main class="offre-detail-page">
+  <div class="offre-main">
+    <a href="/offres" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour aux offres</a>
+
+    <div class="offre-hero">
+      <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
+      <div>
+        <h1>{{ offre.titre }}</h1>
+        <p class="offre-company">{{ offre.entreprise }}</p>
+      </div>
+    </div>
+
+    <div class="offre-badges">
+      <span class="badge badge-blue">{{ offre.type }}</span>
+      <span class="badge badge-gray">{{ offre.mode }}</span>
+      <span class="offre-date">Publiée {{ offre.date }}</span>
+    </div>
+
+    <div class="offre-section">
+      <h2>Description du poste</h2>
+      <p>{{ offre.description }}</p>
+    </div>
+
+    <div class="offre-section">
+      <h2>Compétences requises</h2>
+      <div class="offre-skills">
+        {% for competence in offre.competences %}
+          <span class="skill-tag">{{ competence }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="offre-section offre-entreprise">
+      <h2>À propos de l'entreprise</h2>
+      <div class="entreprise-card">
+        <div class="entreprise-card-header">
+          <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
+          <div>
+            <p class="entreprise-nom">{{ offre.entreprise }}</p>
+            <p class="entreprise-desc">{{ offre.entreprise_description }}</p>
+          </div>
+        </div>
+        <div class="entreprise-meta">
+          <div class="entreprise-meta-row"><i class="fa-solid fa-envelope"></i> {{ offre.entreprise_email }}</div>
+          <div class="entreprise-meta-row"><i class="fa-solid fa-phone"></i> {{ offre.entreprise_telephone }}</div>
+          <div class="entreprise-meta-row"><i class="fa-solid fa-star"></i> {{ offre.entreprise_note }} / 5 — Note entreprise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="offre-aside">
+    <div class="offre-card-sticky">
+      <div class="offre-card-info">
+        <div class="offre-info-row">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <p class="offre-info-label">Localisation</p>
+            <p class="offre-info-value">{{ offre.ville }}</p>
+          </div>
+        </div>
+        <div class="offre-info-row">
+          <i class="fa-solid fa-earth-europe"></i>
+          <div>
+            <p class="offre-info-label">Rémunération</p>
+            <p class="offre-info-value">{{ offre.remuneration }}</p>
+          </div>
+        </div>
+        <div class="offre-info-row">
+          <i class="fa-solid fa-briefcase"></i>
+          <div>
+            <p class="offre-info-label">Type de contrat</p>
+            <p class="offre-info-value">{{ offre.type }}</p>
+          </div>
+        </div>
+        <div class="offre-info-row">
+          <i class="fa-solid fa-users"></i>
+          <div>
+            <p class="offre-info-label">Candidatures</p>
+            <p class="offre-info-value">{{ offre.nb_candidatures }} candidats</p>
+          </div>
+        </div>
+      </div>
+      <a href="/postuler/{{ offre.id }}" class="btn-postuler">Postuler à cette offre</a>
+      <button class="btn-wishlist"><i class="fa-regular fa-bookmark"></i> Sauvegarder</button>
+    </div>
+  </aside>
+</main>
+{% endblock %}
