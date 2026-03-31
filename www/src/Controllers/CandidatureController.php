@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Models\CandidatureModel;
 use App\Models\OffreModel;
 

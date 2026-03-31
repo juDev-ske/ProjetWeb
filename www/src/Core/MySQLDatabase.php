@@ -1,9 +1,8 @@
 <?php
-namespace App\Models;
+namespace App\Core;
 
 use PDO;
 use PDOException;
-
 
 class MySQLDatabase implements Database
 {
@@ -11,7 +10,7 @@ class MySQLDatabase implements Database
 
     public function __construct()
     {
-        $host     = 'db';           
+        $host     = 'db';
         $dbname   = 'monsite';
         $user     = 'user';
         $password = 'userpass';
@@ -37,7 +36,6 @@ class MySQLDatabase implements Database
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
-
 
     public function execute(string $sql, array $params = []): bool
     {

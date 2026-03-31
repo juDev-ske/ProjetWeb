@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Models\UserModel;
 
 class AuthController extends Controller
@@ -13,7 +14,9 @@ class AuthController extends Controller
 
     public function loginPage(): string
     {
-        return $this->render('connexion.html.twig');
+        return $this->render('connexion.html.twig', [
+            'error' => $_GET['error'] ?? null,
+        ]);
     }
 
     public function login(): void

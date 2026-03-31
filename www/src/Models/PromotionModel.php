@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Core\Model;
+
 class PromotionModel extends Model
 {
     public function getAllPromotions(): array

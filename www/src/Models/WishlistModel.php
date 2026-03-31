@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Core\Model;
+
 class WishlistModel extends Model
 {
     public function getWishlistByStudent(int $studentId): array

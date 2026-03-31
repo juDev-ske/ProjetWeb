@@ -3,6 +3,7 @@ session_start();
 require 'vendor/autoload.php';
 require 'src/auth.php';
 
+use App\Core\Router;
 use App\Controllers\AuthController;
 use App\Controllers\OffreController;
 use App\Controllers\EntrepriseController;
@@ -13,266 +14,287 @@ use App\Controllers\PiloteController;
 use App\Controllers\DashboardController;
 use App\Models\UserModel;
 
+// --- Twig ---
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig   = new \Twig\Environment($loader, ['debug' => true]);
-
 $twig->addGlobal('session', [
     'user_id'   => $_SESSION['user_id']   ?? null,
     'user_role' => $_SESSION['user_role'] ?? null,
     'user_name' => $_SESSION['user_name'] ?? null,
 ]);
 
-$uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri    = rtrim($uri, '/');
-if ($uri === '') $uri = '/';
-$method = $_SERVER['REQUEST_METHOD'];
+// --- URL ---
+$url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$url = rtrim($url, '/');
+if ($url === '') $url = '/';
+
+$router = new Router($url);
 
 // =============================================
-// ROUTEUR
+// AUTHENTIFICATION
 // =============================================
+$router->get('/connexion', function () use ($twig) {
+    echo (new AuthController($twig))->loginPage();
+});
 
-// --- Authentification ---
-if ($uri === '/connexion' && $method === 'GET') {
-    $controller = new AuthController($twig);
-    echo $controller->loginPage();
+$router->post('/connexion', function () use ($twig) {
+    (new AuthController($twig))->login();
+});
 
-} elseif ($uri === '/connexion' && $method === 'POST') {
-    $controller = new AuthController($twig);
-    $controller->login();
+$router->get('/deconnexion', function () use ($twig) {
+    (new AuthController($twig))->logout();
+});
 
-} elseif ($uri === '/deconnexion') {
-    $controller = new AuthController($twig);
-    $controller->logout();
-
-// --- Accueil ---
-} elseif ($uri === '/') {
+// =============================================
+// ACCUEIL
+// =============================================
+$router->get('/', function () use ($twig) {
     $controller = new OffreController($twig);
     echo $twig->render('accueil.html.twig', ['offres' => $controller->getLatestOffers()]);
+});
 
-// --- Offres ---
-} elseif ($uri === '/offres' && $method === 'GET') {
-    $controller = new OffreController($twig);
-    echo $controller->index();
+// =============================================
+// OFFRES
+// =============================================
+$router->get('/offres', function () use ($twig) {
+    echo (new OffreController($twig))->index();
+});
 
-} elseif (preg_match('#^/offre/(\d+)$#', $uri, $m) && $method === 'GET') {
-    $controller = new OffreController($twig);
-    echo $controller->show((int) $m[1]);
+$router->get('/offre/:id', function ($id) use ($twig) {
+    echo (new OffreController($twig))->show((int) $id);
+});
 
-} elseif ($uri === '/creation-offre' && $method === 'GET') {
+$router->get('/creation-offre', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new OffreController($twig);
-    echo $controller->createPage();
+    echo (new OffreController($twig))->createPage();
+});
 
-} elseif ($uri === '/creation-offre' && $method === 'POST') {
+$router->post('/creation-offre', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new OffreController($twig);
-    $controller->create();
+    (new OffreController($twig))->create();
+});
 
-} elseif (preg_match('#^/offre/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+$router->get('/offre/:id/modifier', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new OffreController($twig);
-    echo $controller->editPage((int) $m[1]);
+    echo (new OffreController($twig))->editPage((int) $id);
+});
 
-} elseif (preg_match('#^/offre/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+$router->post('/offre/:id/modifier', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new OffreController($twig);
-    $controller->edit((int) $m[1]);
+    (new OffreController($twig))->edit((int) $id);
+});
 
-} elseif (preg_match('#^/offre/(\d+)/supprimer$#', $uri, $m)) {
+$router->get('/offre/:id/supprimer', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new OffreController($twig);
-    $controller->delete((int) $m[1]);
+    (new OffreController($twig))->delete((int) $id);
+});
 
-// --- Candidatures ---
-} elseif ($uri === '/mes-candidatures') {
+// =============================================
+// CANDIDATURES
+// =============================================
+$router->get('/mes-candidatures', function () use ($twig) {
     requireRole('etudiant');
-    $controller = new CandidatureController($twig);
-    echo $controller->index();
+    echo (new CandidatureController($twig))->index();
+});
 
-} elseif ($uri === '/candidatures-pilote') {
+$router->get('/candidatures-pilote', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new CandidatureController($twig);
-    echo $controller->piloteView();
+    echo (new CandidatureController($twig))->piloteView();
+});
 
-} elseif (preg_match('#^/postuler/(\d+)$#', $uri, $m) && $method === 'GET') {
+$router->get('/postuler/:id', function ($id) use ($twig) {
     requireRole('etudiant');
-    $controller = new CandidatureController($twig);
-    echo $controller->applyPage((int) $m[1]);
+    echo (new CandidatureController($twig))->applyPage((int) $id);
+});
 
-} elseif (preg_match('#^/postuler/(\d+)$#', $uri, $m) && $method === 'POST') {
+$router->post('/postuler/:id', function ($id) use ($twig) {
     requireRole('etudiant');
-    $controller = new CandidatureController($twig);
-    $controller->apply((int) $m[1]);
+    (new CandidatureController($twig))->apply((int) $id);
+});
 
-} elseif ($uri === '/candidature-spontanee') {
-    $controller = new CandidatureController($twig);
-    echo $controller->spontaneous();
-
-// --- Wishlist ---
-} elseif ($uri === '/wishlist') {
+// =============================================
+// WISHLIST
+// =============================================
+$router->get('/wishlist', function () use ($twig) {
     requireRole('etudiant');
-    $controller = new WishlistController($twig);
-    echo $controller->index();
+    echo (new WishlistController($twig))->index();
+});
 
-} elseif (preg_match('#^/wishlist/ajouter/(\d+)$#', $uri, $m)) {
+$router->get('/wishlist/ajouter/:id', function ($id) use ($twig) {
     requireRole('etudiant');
-    $controller = new WishlistController($twig);
-    $controller->add((int) $m[1]);
+    (new WishlistController($twig))->add((int) $id);
+});
 
-} elseif (preg_match('#^/wishlist/retirer/(\d+)$#', $uri, $m)) {
+$router->get('/wishlist/retirer/:id', function ($id) use ($twig) {
     requireRole('etudiant');
-    $controller = new WishlistController($twig);
-    $controller->remove((int) $m[1]);
+    (new WishlistController($twig))->remove((int) $id);
+});
 
-// --- Dashboard & Statistiques ---
-} elseif ($uri === '/dashboard') {
+// =============================================
+// DASHBOARD & STATISTIQUES
+// =============================================
+$router->get('/dashboard', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new DashboardController($twig);
-    echo $controller->index();
+    echo (new DashboardController($twig))->index();
+});
 
-} elseif ($uri === '/statistiques') {
+$router->get('/statistiques', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new DashboardController($twig);
-    echo $controller->statistiques();
+    echo (new DashboardController($twig))->statistiques();
+});
 
-// --- Entreprises ---
-} elseif ($uri === '/entreprises' && $method === 'GET') {
+// =============================================
+// ENTREPRISES
+// =============================================
+$router->get('/entreprises', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    echo $controller->index();
+    echo (new EntrepriseController($twig))->index();
+});
 
-} elseif (preg_match('#^/entreprise/(\d+)$#', $uri, $m) && $method === 'GET') {
+$router->get('/entreprise/:id', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    echo $controller->show((int) $m[1]);
+    echo (new EntrepriseController($twig))->show((int) $id);
+});
 
-} elseif ($uri === '/creation-entreprise' && $method === 'GET') {
+$router->get('/creation-entreprise', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    echo $controller->createPage();
+    echo (new EntrepriseController($twig))->createPage();
+});
 
-} elseif ($uri === '/creation-entreprise' && $method === 'POST') {
+$router->post('/creation-entreprise', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    $controller->create();
+    (new EntrepriseController($twig))->create();
+});
 
-} elseif (preg_match('#^/entreprise/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+$router->get('/entreprise/:id/modifier', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    echo $controller->editPage((int) $m[1]);
+    echo (new EntrepriseController($twig))->editPage((int) $id);
+});
 
-} elseif (preg_match('#^/entreprise/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+$router->post('/entreprise/:id/modifier', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    $controller->edit((int) $m[1]);
+    (new EntrepriseController($twig))->edit((int) $id);
+});
 
-} elseif (preg_match('#^/entreprise/(\d+)/evaluer$#', $uri, $m) && $method === 'POST') {
+$router->post('/entreprise/:id/evaluer', function ($id) use ($twig) {
     requireRole(['admin', 'pilote', 'etudiant']);
-    $controller = new EntrepriseController($twig);
-    $controller->rate((int) $m[1]);
+    (new EntrepriseController($twig))->rate((int) $id);
+});
 
-} elseif (preg_match('#^/entreprise/(\d+)/supprimer$#', $uri, $m)) {
+$router->get('/entreprise/:id/supprimer', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EntrepriseController($twig);
-    $controller->delete((int) $m[1]);
+    (new EntrepriseController($twig))->delete((int) $id);
+});
 
-// --- Étudiants ---
-} elseif ($uri === '/etudiants' && $method === 'GET') {
+// =============================================
+// ÉTUDIANTS
+// =============================================
+$router->get('/etudiants', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EtudiantController($twig);
-    echo $controller->index();
+    echo (new EtudiantController($twig))->index();
+});
 
-} elseif ($uri === '/creation-etudiant' && $method === 'GET') {
+$router->get('/creation-etudiant', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EtudiantController($twig);
-    echo $controller->createPage();
+    echo (new EtudiantController($twig))->createPage();
+});
 
-} elseif ($uri === '/creation-etudiant' && $method === 'POST') {
+$router->post('/creation-etudiant', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EtudiantController($twig);
-    $controller->create();
+    (new EtudiantController($twig))->create();
+});
 
-} elseif (preg_match('#^/etudiant/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+$router->get('/etudiant/:id/modifier', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EtudiantController($twig);
-    echo $controller->editPage((int) $m[1]);
+    echo (new EtudiantController($twig))->editPage((int) $id);
+});
 
-} elseif (preg_match('#^/etudiant/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+$router->post('/etudiant/:id/modifier', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EtudiantController($twig);
-    $controller->edit((int) $m[1]);
+    (new EtudiantController($twig))->edit((int) $id);
+});
 
-} elseif (preg_match('#^/etudiant/(\d+)/supprimer$#', $uri, $m)) {
+$router->get('/etudiant/:id/supprimer', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new EtudiantController($twig);
-    $controller->delete((int) $m[1]);
+    (new EtudiantController($twig))->delete((int) $id);
+});
 
-// --- Pilotes ---
-} elseif ($uri === '/pilotes' && $method === 'GET') {
+// =============================================
+// PILOTES
+// =============================================
+$router->get('/pilotes', function () use ($twig) {
     requireRole('admin');
-    $controller = new PiloteController($twig);
-    echo $controller->index();
+    echo (new PiloteController($twig))->index();
+});
 
-} elseif ($uri === '/creation-pilote' && $method === 'GET') {
+$router->get('/creation-pilote', function () use ($twig) {
     requireRole('admin');
-    $controller = new PiloteController($twig);
-    echo $controller->createPage();
+    echo (new PiloteController($twig))->createPage();
+});
 
-} elseif ($uri === '/creation-pilote' && $method === 'POST') {
+$router->post('/creation-pilote', function () use ($twig) {
     requireRole('admin');
-    $controller = new PiloteController($twig);
-    $controller->create();
+    (new PiloteController($twig))->create();
+});
 
-} elseif (preg_match('#^/pilote/(\d+)/modifier$#', $uri, $m) && $method === 'GET') {
+$router->get('/pilote/:id/modifier', function ($id) use ($twig) {
     requireRole('admin');
-    $controller = new PiloteController($twig);
-    echo $controller->editPage((int) $m[1]);
+    echo (new PiloteController($twig))->editPage((int) $id);
+});
 
-} elseif (preg_match('#^/pilote/(\d+)/modifier$#', $uri, $m) && $method === 'POST') {
+$router->post('/pilote/:id/modifier', function ($id) use ($twig) {
     requireRole('admin');
-    $controller = new PiloteController($twig);
-    $controller->edit((int) $m[1]);
+    (new PiloteController($twig))->edit((int) $id);
+});
 
-} elseif (preg_match('#^/pilote/(\d+)/supprimer$#', $uri, $m)) {
+$router->get('/pilote/:id/supprimer', function ($id) use ($twig) {
     requireRole('admin');
-    $controller = new PiloteController($twig);
-    $controller->delete((int) $m[1]);
+    (new PiloteController($twig))->delete((int) $id);
+});
 
-// --- Promotions ---
-} elseif ($uri === '/promotions') {
+// =============================================
+// PROMOTIONS
+// =============================================
+$router->get('/promotions', function () use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new PiloteController($twig);
-    echo $controller->promotions();
+    echo (new PiloteController($twig))->promotions();
+});
 
-} elseif (preg_match('#^/promotion/(\d+)$#', $uri, $m)) {
+$router->get('/promotion/:id', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
-    $controller = new PiloteController($twig);
-    echo $controller->promotionDetail((int) $m[1]);
+    echo (new PiloteController($twig))->promotionDetail((int) $id);
+});
 
-// --- Profil ---
-} elseif ($uri === '/profil') {
+// =============================================
+// PROFIL
+// =============================================
+$router->get('/profil', function () use ($twig) {
     requireLogin();
-    $userModel = new UserModel();
-    $user      = $userModel->getUserById($_SESSION['user_id']);
+    $user = (new UserModel())->getUserById($_SESSION['user_id']);
     echo $twig->render('profil.html.twig', ['user' => [
         'prenom' => $user['first_name'],
         'nom'    => $user['last_name'],
         'email'  => $user['email'],
         'role'   => $user['role'],
     ]]);
+});
 
-// --- Pages statiques ---
-} elseif ($uri === '/a-propos') {
+// =============================================
+// PAGES STATIQUES
+// =============================================
+$router->get('/a-propos', function () use ($twig) {
     echo $twig->render('a-propos.html.twig', ['equipe' => []]);
+});
 
-} elseif ($uri === '/contact') {
+$router->get('/contact', function () use ($twig) {
     echo $twig->render('contact.html.twig');
+});
 
-} elseif ($uri === '/mentions-legales') {
+$router->get('/mentions-legales', function () use ($twig) {
     echo $twig->render('mentions-legales.html.twig');
+});
 
-// --- 404 ---
-} else {
-    http_response_code(404);
-    echo '404 - Page non trouvée';
-}
+// =============================================
+// LANCEMENT
+// =============================================
+$router->run();

@@ -6,6 +6,17 @@
   <link rel="icon" type="image/svg+xml" href="/public/images/logo-header.svg">
   <link rel="stylesheet" href="/public/css/layout.css">
   <link rel="stylesheet" href="/public/css/connexion.css">
+  <style>
+    .error-msg {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.875rem;
+      margin-bottom: 12px;
+    }
+  </style>
   <script src="https://kit.fontawesome.com/bb09137a9a.js" crossorigin="anonymous"></script>
   <title>CesiTonJob — Se connecter</title>
 </head>
@@ -16,6 +27,11 @@
         <img class="logo" src="/public/images/logo-header.svg" alt="CesiTonJob">
       </a>
       <h1 class="title">Se connecter</h1>
+      {% if error == '1' %}
+        <p class="error-msg">Email ou mot de passe incorrect.</p>
+      {% elseif error == '2' %}
+        <p class="error-msg">Votre compte est désactivé.</p>
+      {% endif %}
       <form class="login-form" action="/connexion" method="post" novalidate>
         <label>
           <span class="label-text">Adresse mail</span>

@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Core\Model;
+
 class OffreModel extends Model
 {
     // -------------------------------------------------------

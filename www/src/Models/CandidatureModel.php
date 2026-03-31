@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Core\Model;
+
 class CandidatureModel extends Model
 {
     public function getApplicationsByStudent(int $studentId): array
