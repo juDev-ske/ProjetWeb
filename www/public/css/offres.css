@@ -2,6 +2,7 @@
 
 .offres-page {
   display: flex;
+  flex-direction: row;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -19,6 +20,7 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.25rem;
+  align-self: flex-start;  /* ← ajoute */
 }
 
 .sidebar-title {
@@ -122,11 +124,83 @@
   cursor: pointer;
   transition: background .2s;
 }
-.offres-search button:hover { background: var(--color-primary-hover); }
+.offres-search button:hover { background: var(--color-secondary); }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
-  .offres-page    { flex-direction: column; }
-  .offres-sidebar { width: 100%; position: static; }
-  .offres-grid    { grid-template-columns: 1fr; }
+  .offres-page {
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+
+  /* Sidebar pleine largeur, collapsible */
+  .offres-sidebar {
+    width: 100%;
+    position: static;
+  }
+
+  /* Filtre masqué par défaut sur mobile, toggle JS */
+  .offres-sidebar-body {
+    display: none;
+  }
+  .offres-sidebar-body.is-open {
+    display: block;
+  }
+
+  /* Main prend toute la largeur */
+  .offres-main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Grille 1 colonne */
+  .offres-grid { grid-template-columns: 1fr; }
+
+  /* Barre de recherche pleine largeur */
+  .offres-search { width: 100%; }
+  .offres-search input { flex: 1; width: 100%; }
+
+  .offres-page { padding: 1rem; }
+  .offres-header { flex-direction: column; align-items: flex-start; gap: .5rem; }
+
+  /* Bouton toggle filtres */
+  .offres-filter-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--color-text);
+    padding: 0;
+  }
+  .offres-filter-toggle i.fa-chevron-down { transition: transform .2s; }
+  .offres-filter-toggle.is-open i.fa-chevron-down { transform: rotate(180deg); }
+
+  /* Espace entre toggle et contenu filtres */
+  .offres-sidebar-body {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Supprimer le titre "Filtres" desktop dans le sidebar-body sur mobile */
+  .offres-sidebar-body .sidebar-title {
+    margin-bottom: .75rem;
+  }
+}
+
+/* Cacher le toggle sur desktop */
+@media (min-width: 900px) {
+  .offres-filter-toggle { display: none; }
+  .offres-sidebar-body  { display: block !important; }
+}
+
+@media (max-width: 480px) {
+  .offres-search input { min-width: 0; }
+  .filter-group-title { font-size: .72rem; }
 }
