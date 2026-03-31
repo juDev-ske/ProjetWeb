@@ -23,29 +23,27 @@ class EntrepriseControllerTest extends TestCase
         $model = new class($total, $pagedResults) {
             private $total; private $paged;
             public function __construct($t, $p) { $this->total=$t; $this->paged=$p; }
-            public function countAllCompanies() { return $this->total; }
-            public function getCompaniesPaginated($limit, $offset) { return $this->paged; }
+            public function countCompaniesFiltered($search) { return $this->total; }
+            public function getCompaniesFiltered($limit, $offset, $search) { return $this->paged; }
         };
 
-        $controller = $this->getMockBuilder(EntrepriseController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['render'])
-            ->getMock();
+        $controller = new class extends EntrepriseController {
+            public $captured = [];
+            public function __construct() {}
+            public function setModelPublic($m) { $this->model = $m; }
+            public function render(string $template, array $data = []): string { $this->captured = ['template'=>$template,'data'=>$data]; return 'rendered-index'; }
+        };
 
-        $ref = new \ReflectionClass('App\\Controllers\\Controller');
-        $prop = $ref->getProperty('model');
-        $prop->setAccessible(true);
-        $prop->setValue($controller, $model);
-
-        $controller->expects($this->once())->method('render')
-            ->with('entreprises.html.twig', $this->callback(function($data) use ($total, $par_page) {
-                return isset($data['pages']) && $data['pages'] === (int) ceil($total / $par_page)
-                    && isset($data['entreprises']) && is_array($data['entreprises']);
-            }))
-            ->willReturn('rendered-index');
+        $controller->setModelPublic($model);
 
         $out = $controller->index();
         $this->assertEquals('rendered-index', $out);
+        $this->assertEquals('entreprises.html.twig', $controller->captured['template']);
+        $data = $controller->captured['data'];
+        $this->assertArrayHasKey('pages', $data);
+        $this->assertEquals((int) ceil($total / $par_page), $data['pages']);
+        $this->assertArrayHasKey('entreprises', $data);
+        $this->assertIsArray($data['entreprises']);
     }
 
     /**
@@ -65,28 +63,22 @@ class EntrepriseControllerTest extends TestCase
         $model = new class($total, $pagedResults) {
             private $total; private $paged;
             public function __construct($t, $p) { $this->total=$t; $this->paged=$p; }
-            public function countAllCompanies() { return $this->total; }
-            public function getCompaniesPaginated($limit, $offset) { return $this->paged; }
+            public function countCompaniesFiltered($search) { return $this->total; }
+            public function getCompaniesFiltered($limit, $offset, $search) { return $this->paged; }
         };
 
-        $controller = $this->getMockBuilder(EntrepriseController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['render'])
-            ->getMock();
+        $controller = new class extends EntrepriseController {
+            public $captured = [];
+            public function __construct() {}
+            public function setModelPublic($m) { $this->model = $m; }
+            public function render(string $template, array $data = []): string { $this->captured = ['template'=>$template,'data'=>$data]; return 'rendered-index'; }
+        };
 
-        $ref = new \ReflectionClass('App\\Controllers\\Controller');
-        $prop = $ref->getProperty('model');
-        $prop->setAccessible(true);
-        $prop->setValue($controller, $model);
-
-        $controller->expects($this->exactly(2))->method('render')
-            ->with('entreprises.html.twig', $this->callback(function($data) {
-                return isset($data['page_courante']) && $data['page_courante'] === 1;
-            }))
-            ->willReturn('rendered-index');
+        $controller->setModelPublic($model);
 
         $out = $controller->index();
         $this->assertEquals('rendered-index', $out);
+        $this->assertEquals(1, $controller->captured['data']['page_courante']);
 
         // upper bound
         $_GET['page'] = '999';
@@ -100,17 +92,16 @@ class EntrepriseControllerTest extends TestCase
      */
     public function testCreatePageRendersTemplate()
     {
-        $controller = $this->getMockBuilder(EntrepriseController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['render'])
-            ->getMock();
-
-        $controller->expects($this->once())->method('render')
-            ->with('creation-entreprise.html.twig', [])
-            ->willReturn('rendered-create');
+        $controller = new class extends EntrepriseController {
+            public $captured = [];
+            public function __construct() {}
+            public function render(string $template, array $data = []): string { $this->captured = ['template'=>$template,'data'=>$data]; return 'rendered-create'; }
+        };
 
         $out = $controller->createPage();
         $this->assertEquals('rendered-create', $out);
+        $this->assertEquals('creation-entreprise.html.twig', $controller->captured['template']);
+        $this->assertEquals([], $controller->captured['data']);
     }
 
     /**
@@ -133,22 +124,21 @@ class EntrepriseControllerTest extends TestCase
             public function createCompany($data) { $this->calledRef->create = $data; }
         };
 
-        $controller = $this->getMockBuilder(EntrepriseController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['redirect'])
-            ->getMock();
+        $controller = new class extends EntrepriseController {
+            public $redirects = [];
+            public function __construct() {}
+            public function setModelPublic($m) { $this->model = $m; }
+            public function redirect(string $url): void { $this->redirects[] = $url; }
+        };
 
-        $ref = new \ReflectionClass('App\\Controllers\\Controller');
-        $prop = $ref->getProperty('model');
-        $prop->setAccessible(true);
-        $prop->setValue($controller, $model);
-
-        $controller->expects($this->once())->method('redirect')->with('/dashboard');
+        $controller->setModelPublic($model);
 
         $controller->create();
 
         $this->assertTrue(isset($called->create));
         $this->assertEquals('Acme', $called->create['name']);
+        $this->assertCount(1, $controller->redirects);
+        $this->assertEquals('/entreprises', $controller->redirects[0]);
     }
 
     /**
@@ -173,24 +163,24 @@ class EntrepriseControllerTest extends TestCase
             public function deleteCompany($id) { $this->calledRef->delete = $id; }
         };
 
-        $controller = $this->getMockBuilder(EntrepriseController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['redirect'])
-            ->getMock();
+        $controller = new class extends EntrepriseController {
+            public $redirects = [];
+            public function __construct() {}
+            public function setModelPublic($m) { $this->model = $m; }
+            public function redirect(string $url): void { $this->redirects[] = $url; }
+        };
 
-        $ref = new \ReflectionClass('App\\Controllers\\Controller');
-        $prop = $ref->getProperty('model');
-        $prop->setAccessible(true);
-        $prop->setValue($controller, $model);
+        $controller->setModelPublic($model);
 
-        $controller->expects($this->exactly(2))->method('redirect')->with('/dashboard');
-
-        $controller->update(5);
+        $controller->edit(5);
         $controller->delete(7);
 
         $this->assertEquals(5, $called->update['id']);
         $this->assertEquals('NewName', $called->update['data']['name']);
         $this->assertEquals(7, $called->delete);
+        $this->assertCount(2, $controller->redirects);
+        $this->assertEquals('/entreprise/5', $controller->redirects[0]);
+        $this->assertEquals('/entreprises', $controller->redirects[1]);
     }
 
     protected function tearDown(): void

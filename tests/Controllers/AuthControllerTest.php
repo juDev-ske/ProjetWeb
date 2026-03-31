@@ -27,11 +27,13 @@ class AuthControllerTest extends TestCase
             'is_active' => true
         ];
 
-        // Crée un mock du contrôleur en remplaçant `redirect`
-        $controller = $this->getMockBuilder(AuthController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['redirect'])
-            ->getMock();
+        // Crée une instance de contrôleur de test qui capture le redirect
+        $controller = new class extends AuthController {
+            public $redirectTo = null;
+            public function __construct() {}
+            public function setModelPublic($m) { $this->model = $m; }
+            public function redirect(string $url): void { $this->redirectTo = $url; }
+        };
 
         // Stub du modèle pour retourner l'utilisateur et valider le mot de passe
         $model = new class($user) {
@@ -41,23 +43,15 @@ class AuthControllerTest extends TestCase
             public function verifyPassword($given, $hash) { return true; }
         };
 
-        // Injecte le modèle dans la propriété protégée
-        $ref = new \ReflectionClass('App\\Controllers\\Controller');
-        $prop = $ref->getProperty('model');
-        $prop->setAccessible(true);
-        $prop->setValue($controller, $model);
-
-        // Attend un redirect vers la home et lève une exception pour stopper l'exécution (simule exit())
-        $controller->expects($this->once())
-            ->method('redirect')
-            ->with('/')
-            ->will($this->throwException(new \RuntimeException('redirect')));
+        $controller->setModelPublic($model);
 
         try {
             $controller->login();
         } catch (\RuntimeException $e) {
-            // expected to stop execution
+            // expected to stop execution (redirect)
         }
+
+        $this->assertEquals('/', $controller->redirectTo);
 
         $this->assertEquals(3, $_SESSION['user_id']);
         $this->assertEquals('etudiant', $_SESSION['user_role']);
@@ -69,31 +63,24 @@ class AuthControllerTest extends TestCase
         $_POST['email'] = 'unknown@x.com';
         $_POST['password'] = 'bad';
 
-        $controller = $this->getMockBuilder(AuthController::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['redirect'])
-            ->getMock();
-
         // Le modèle retourne null (utilisateur introuvable)
-        $model = new class {
-            public function getUserByEmail($email) { return null; }
+        $model = new class { public function getUserByEmail($email) { return null; } };
+
+        $controller = new class extends AuthController {
+            public $redirectTo = null;
+            public function __construct() {}
+            public function setModelPublic($m) { $this->model = $m; }
+            public function redirect(string $url): void { $this->redirectTo = $url; }
         };
 
-        $ref = new \ReflectionClass('App\\Controllers\\Controller');
-        $prop = $ref->getProperty('model');
-        $prop->setAccessible(true);
-        $prop->setValue($controller, $model);
-
-        // Attend un redirect vers la page de connexion avec erreur=1 et lève une exception pour arrêter l'exécution
-        $controller->expects($this->once())
-            ->method('redirect')
-            ->with('/connexion?error=1')
-            ->will($this->throwException(new \RuntimeException('redirect')));
+        $controller->setModelPublic($model);
 
         try {
             $controller->login();
         } catch (\RuntimeException $e) {
             // expected
         }
+
+        $this->assertEquals('/connexion?error=1', $controller->redirectTo);
     }
 }
