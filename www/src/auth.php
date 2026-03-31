@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Redirect to login if user is not connected.
+ * Redirige vers la page de connexion si l'utilisateur n'est pas connecté.
  */
 function requireLogin(): void
 {
@@ -12,8 +12,8 @@ function requireLogin(): void
 }
 
 /**
- * Redirect to home if user doesn't have the required role.
- * Usage: requireRole('admin') or requireRole(['admin', 'pilote'])
+ * Redirige vers la page d'accueil si l'utilisateur n'a pas le rôle requis.
+ * Usage : requireRole('admin') ou requireRole(['admin', 'pilote'])
  */
 function requireRole(string|array $roles): void
 {

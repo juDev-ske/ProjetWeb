@@ -4,8 +4,8 @@ namespace App\Controllers;
 use Twig\Environment;
 
 /**
- * Base class for all controllers.
- * Provides access to Twig and the model.
+ * Classe de base pour tous les contrôleurs.
+ * Fournit l'accès à l'environnement Twig et une propriété modèle partagée.
  */
 abstract class Controller
 {
@@ -18,7 +18,7 @@ abstract class Controller
     }
 
     /**
-     * Render a Twig template with data.
+     * Rend un template Twig avec les données fournies.
      */
     protected function render(string $template, array $data = []): string
     {
@@ -26,7 +26,7 @@ abstract class Controller
     }
 
     /**
-     * Redirect to a given URL.
+     * Redirige vers une URL donnée.
      */
     protected function redirect(string $url): void
     {

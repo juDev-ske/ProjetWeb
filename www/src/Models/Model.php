@@ -2,8 +2,8 @@
 namespace App\Models;
 
 /**
- * Base class for all models.
- * Provides a shared database connection to all child models.
+ * Classe de base pour tous les modèles.
+ * Fournit une connexion à la base de données partagée pour les modèles enfants.
  */
 abstract class Model
 {
