@@ -8,54 +8,95 @@
 
 {% block content %}
 <div class="page-content">
-  <div class="content-block" style="max-width:680px">
+  <div class="content-block" style="max-width:640px">
+
     <div class="form-page-header">
-      <a href="/offre/{{ offre.id }}" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour à l'offre</a>
+      <a href="/offre/{{ offre.id }}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> Retour à l'offre
+      </a>
       <h1>Postuler à l'offre</h1>
     </div>
 
+    {# ── Résumé offre ── #}
     <div class="postuler-offre-resume">
       <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
       <div>
         <p class="postuler-titre">{{ offre.titre }}</p>
-        <p class="postuler-meta">{{ offre.entreprise }} · {{ offre.ville }} · {{ offre.type }}</p>
+        <p class="postuler-meta">
+          {{ offre.entreprise }}
+          <span class="postuler-meta-dot"></span>
+          {{ offre.ville }}
+          <span class="postuler-meta-dot"></span>
+          <span class="badge badge-blue" style="font-size:.68rem">{{ offre.type }}</span>
+        </p>
       </div>
     </div>
 
     <form action="/postuler/{{ offre.id }}" method="post" enctype="multipart/form-data" novalidate>
 
+      {# ── CV ── #}
       <div class="form-group">
-        <label>Curriculum Vitae (CV) <span style="color:#ef4444">*</span></label>
-        <div class="file-upload">
+        <label for="cv">
+          Curriculum Vitae (CV) <span class="required-star">*</span>
+        </label>
+        <div class="file-upload" id="cv-zone">
           <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
-          <label for="cv" class="file-upload-label">
-            <i class="fa-solid fa-upload"></i>
-            <span>Choisir un fichier PDF ou Word</span>
-          </label>
+          <div class="file-upload-label">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span id="cv-label">Choisir un fichier PDF ou Word</span>
+            <small>PDF, DOC, DOCX · max 5 Mo</small>
+          </div>
         </div>
       </div>
 
+      {# ── LM ── #}
       <div class="form-group">
-        <label>Lettre de motivation (LM) <span style="color:#ef4444">*</span></label>
-        <div class="file-upload">
+        <label for="lm">
+          Lettre de motivation (LM) <span class="required-star">*</span>
+        </label>
+        <div class="file-upload" id="lm-zone">
           <input type="file" id="lm" name="lm" accept=".pdf,.doc,.docx" required>
-          <label for="lm" class="file-upload-label">
-            <i class="fa-solid fa-upload"></i>
-            <span>Choisir un fichier PDF ou Word</span>
-          </label>
+          <div class="file-upload-label">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span id="lm-label">Choisir un fichier PDF ou Word</span>
+            <small>PDF, DOC, DOCX · max 5 Mo</small>
+          </div>
         </div>
       </div>
 
+      {# ── Message ── #}
       <div class="form-group">
-        <label for="message">Message (optionnel)</label>
-        <textarea id="message" name="message" rows="5" placeholder="Présentez-vous brièvement..."></textarea>
+        <label for="message">Message <span style="font-weight:400;color:var(--color-text-muted)">(optionnel)</span></label>
+        <textarea id="message" name="message" rows="4"
+          placeholder="Présentez-vous brièvement, expliquez votre motivation..."></textarea>
       </div>
 
       <div class="form-actions">
         <a href="/offre/{{ offre.id }}" class="btn-cancel">Annuler</a>
-        <button type="submit" class="btn-submit">Envoyer ma candidature</button>
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-paper-plane"></i> Envoyer ma candidature
+        </button>
       </div>
+
     </form>
   </div>
 </div>
+
+<script>
+  // Feedback nom de fichier sélectionné
+  [['cv', 'cv-zone', 'cv-label'], ['lm', 'lm-zone', 'lm-label']].forEach(([id, zone, lbl]) => {
+    document.getElementById(id).addEventListener('change', function() {
+      const file = this.files[0];
+      const zoneEl = document.getElementById(zone);
+      const lblEl  = document.getElementById(lbl);
+      if (file) {
+        lblEl.textContent = file.name;
+        zoneEl.classList.add('has-file');
+      } else {
+        lblEl.textContent = 'Choisir un fichier PDF ou Word';
+        zoneEl.classList.remove('has-file');
+      }
+    });
+  });
+</script>
 {% endblock %}

@@ -9,55 +9,65 @@
 {% block content %}
 <main class="offres-page">
 
-  <form method="GET" action="/offres" id="filter-form">
   <aside class="offres-sidebar">
-    <div class="sidebar-title">
-      <span>Filtres</span>
-      <a href="/offres" class="sidebar-reset">Réinitialiser</a>
-    </div>
-    <div class="filter-group">
-      <p class="filter-group-title">Type de contrat</p>
-      {% set types = [
-        {val: 'internship',     label: 'Stage'},
-        {val: 'apprenticeship', label: 'Alternance'},
-      ] %}
-      {% for t in types %}
-        <label class="filter-option">
-          <input type="checkbox" name="type[]" value="{{ t.val }}"
-            {{ filters.type is defined and t.val in filters.type ? 'checked' : '' }}>
-          {{ t.label }}
-        </label>
-      {% endfor %}
-    </div>
-    <div class="filter-group">
-      <p class="filter-group-title">Localisation</p>
-      <input type="text" class="filter-input" name="ville"
-             value="{{ filters.ville ?? '' }}" placeholder="Ville, département...">
-    </div>
-    <div class="filter-group">
-      <p class="filter-group-title">Mode</p>
-      {% set modes = [
-        {val: 'on_site', label: 'Sur site'},
-        {val: 'remote',  label: 'Télétravail'},
-        {val: 'hybrid',  label: 'Hybride'},
-      ] %}
-      {% for m in modes %}
-        <label class="filter-option">
-          <input type="checkbox" name="mode[]" value="{{ m.val }}"
-            {{ filters.mode is defined and m.val in filters.mode ? 'checked' : '' }}>
-          {{ m.label }}
-        </label>
-      {% endfor %}
-    </div>
-    <button type="submit" class="btn-submit" style="width:100%;margin-top:1rem">Appliquer</button>
+    {# Bouton toggle visible uniquement sur mobile #}
+    <button class="offres-filter-toggle" id="filterToggle" type="button" aria-expanded="false">
+      <span><i class="fa-solid fa-sliders"></i> Filtres</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <form method="GET" action="/offres" id="filter-form">
+      <div class="offres-sidebar-body" id="filterBody">
+      <div class="sidebar-title">
+        <span>Filtres</span>
+        <a href="/offres" class="sidebar-reset">Réinitialiser</a>
+      </div>
+      <div class="filter-group">
+        <p class="filter-group-title">Type de contrat</p>
+        {% set types = [
+          {val: 'internship',     label: 'Stage'},
+          {val: 'apprenticeship', label: 'Alternance'},
+        ] %}
+        {% for t in types %}
+          <label class="filter-option">
+            <input type="checkbox" name="type[]" value="{{ t.val }}"
+              {{ filters.type is defined and t.val in filters.type ? 'checked' : '' }}>
+            {{ t.label }}
+          </label>
+        {% endfor %}
+      </div>
+      <div class="filter-group">
+        <p class="filter-group-title">Localisation</p>
+        <input type="text" class="filter-input" name="ville"
+               value="{{ filters.ville ?? '' }}" placeholder="Ville, département...">
+      </div>
+      <div class="filter-group">
+        <p class="filter-group-title">Mode</p>
+        {% set modes = [
+          {val: 'on_site', label: 'Sur site'},
+          {val: 'remote',  label: 'Télétravail'},
+          {val: 'hybrid',  label: 'Hybride'},
+        ] %}
+        {% for m in modes %}
+          <label class="filter-option">
+            <input type="checkbox" name="mode[]" value="{{ m.val }}"
+              {{ filters.mode is defined and m.val in filters.mode ? 'checked' : '' }}>
+            {{ m.label }}
+          </label>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn-submit" style="width:100%;margin-top:1rem">Appliquer</button>
+      </div>{# /offres-sidebar-body #}
+    </form>
   </aside>
 
   <div class="offres-main">
-    <div class="offres-search">
-      <input type="text" name="search" value="{{ filters.search ?? '' }}"
-             placeholder="Rechercher une offre...">
-      <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
+    <form method="GET" action="/offres">
+      <div class="offres-search">
+        <input type="text" name="search" value="{{ filters.search ?? '' }}"
+               placeholder="Rechercher une offre...">
+        <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </form>
     <div class="offres-header">
       <p class="offres-count"><strong>{{ total }}</strong> offres trouvées</p>
     </div>
@@ -108,6 +118,6 @@
     </nav>
     {% endif %}
   </div>
-  </form>
+
 </main>
 {% endblock %}

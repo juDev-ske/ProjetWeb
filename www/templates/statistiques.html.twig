@@ -3,118 +3,95 @@
 {% block title %}CesiTonJob — Statistiques{% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href="/public/css/dashboard.css">
-  <style>
-    .carousel-wrapper { position:relative; overflow:hidden; width:100%; }
-    .carousel-track {
-      display:flex; gap:1.5rem;
-      transition:transform .4s ease;
-      padding:0.5rem 0;
-    }
-    .stat-card {
-      min-width:300px; flex-shrink:0;
-      background:#fff; border:1px solid #e2e8f0;
-      border-radius:12px; padding:2rem;
-      box-shadow:0 1px 4px rgba(0,0,0,.06);
-    }
-    .stat-card h2 { font-size:.9rem; color:#64748b; margin-bottom:1rem; text-transform:uppercase; letter-spacing:.05em; }
-    .stat-big { font-size:3rem; font-weight:800; color:#3730a3; line-height:1; }
-    .stat-label { font-size:.85rem; color:#94a3b8; margin-top:.25rem; }
-    .carousel-nav { display:flex; gap:.75rem; margin-top:1.25rem; justify-content:center; }
-    .carousel-btn {
-      width:36px; height:36px; border-radius:50%; border:2px solid #e2e8f0;
-      background:#fff; cursor:pointer; font-size:1rem; display:flex;
-      align-items:center; justify-content:center; transition:all .2s;
-    }
-    .carousel-btn:hover { background:#3730a3; color:#fff; border-color:#3730a3; }
-    .type-bar { display:flex; align-items:center; gap:.75rem; margin:.4rem 0; }
-    .type-bar-fill { height:10px; border-radius:999px; background:#3730a3; min-width:4px; transition:width .4s; }
-    .type-bar-label { font-size:.85rem; color:#374151; white-space:nowrap; }
-    .type-bar-count { margin-left:auto; font-weight:700; font-size:.85rem; color:#3730a3; }
-    .wishlist-item { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; border-bottom:1px solid #f1f5f9; }
-    .wishlist-item:last-child { border-bottom:none; }
-  </style>
+  <link rel="stylesheet" href="../public/css/dashboard.css">
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-page">
-  <div class="dashboard-header">
+<div class="stats-page">
+
+  <div class="stats-header">
     <a href="/dashboard" class="back-link"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
     <h1>Statistiques des offres</h1>
   </div>
 
-  <div class="carousel-wrapper">
-    <div class="carousel-track" id="carouselTrack">
+  {# ── Ligne KPI ── #}
+  <div class="stats-kpi-row">
 
-      {# Carte 1 — Total offres #}
-      <div class="stat-card">
-        <h2><i class="fa-solid fa-briefcase"></i> Offres disponibles</h2>
-        <p class="stat-big">{{ stats.total }}</p>
-        <p class="stat-label">offres actives en base</p>
+    <div class="stat-kpi-card">
+      <div class="stat-kpi-icon"><i class="fa-solid fa-briefcase"></i></div>
+      <div class="stat-kpi-body">
+        <span class="stat-kpi-title">Offres disponibles</span>
+        <span class="stat-kpi-value">{{ stats.total }}</span>
+        <span class="stat-kpi-label">offres actives en base</span>
       </div>
+    </div>
 
-      {# Carte 2 — Moyenne candidatures #}
-      <div class="stat-card">
-        <h2><i class="fa-solid fa-users"></i> Candidatures par offre</h2>
-        <p class="stat-big">{{ stats.moy_candidatures }}</p>
-        <p class="stat-label">en moyenne par offre</p>
+    <div class="stat-kpi-card">
+      <div class="stat-kpi-icon"><i class="fa-solid fa-users"></i></div>
+      <div class="stat-kpi-body">
+        <span class="stat-kpi-title">Candidatures par offre</span>
+        <span class="stat-kpi-value">{{ stats.moy_candidatures }}</span>
+        <span class="stat-kpi-label">en moyenne par offre</span>
       </div>
+    </div>
 
-      {# Carte 3 — Répartition par type #}
-      <div class="stat-card" style="min-width:360px">
-        <h2><i class="fa-solid fa-chart-bar"></i> Répartition par type de contrat</h2>
-        {% set max_type = 1 %}
-        {% for row in stats.par_type %}
-          {% if row.total > max_type %}{% set max_type = row.total %}{% endif %}
-        {% endfor %}
+  </div>
+
+  {# ── Ligne graphiques ── #}
+  <div class="stats-bottom-row">
+
+    {# Répartition par type #}
+    <div class="stat-card">
+      <p class="stat-card-title">
+        <i class="fa-solid fa-chart-bar"></i>
+        Répartition par type de contrat
+      </p>
+      {% set max_type = 1 %}
+      {% for row in stats.par_type %}
+        {% if row.total > max_type %}{% set max_type = row.total %}{% endif %}
+      {% endfor %}
+      <div class="type-bars">
         {% for row in stats.par_type %}
           <div class="type-bar">
-            <span class="type-bar-label" style="width:110px">{{ row.type }}</span>
-            <div class="type-bar-fill" style="width:{{ (row.total / max_type * 160)|round }}px"></div>
-            <span class="type-bar-count">{{ row.total }}</span>
+            <div class="type-bar-header">
+              <span class="type-bar-label">{{ row.type }}</span>
+              <span class="type-bar-count">{{ row.total }}</span>
+            </div>
+            <div class="type-bar-track">
+              <div class="type-bar-fill" style="width: {{ (row.total / max_type * 100)|round }}%"></div>
+            </div>
           </div>
         {% else %}
-          <p style="color:#94a3b8">Aucune donnée.</p>
+          <p style="color:var(--color-text-muted);font-size:.85rem">Aucune donnée.</p>
         {% endfor %}
       </div>
+    </div>
 
-      {# Carte 4 — Top wishlist #}
-      <div class="stat-card" style="min-width:380px">
-        <h2><i class="fa-solid fa-bookmark"></i> Top 5 offres les plus wishlistées</h2>
+    {# Top wishlist #}
+    <div class="stat-card">
+      <p class="stat-card-title">
+        <i class="fa-solid fa-bookmark"></i>
+        Top 5 offres les plus wishlistées
+      </p>
+      <div class="wishlist-list">
         {% for offre in stats.top_wishlist %}
           <div class="wishlist-item">
-            <div>
-              <a href="/offre/{{ offre.id }}" style="font-weight:600;color:#1e293b;text-decoration:none;">{{ offre.titre }}</a>
-              <p style="font-size:.8rem;color:#94a3b8;margin:0">{{ offre.entreprise }}</p>
+            <span class="wishlist-item-rank">#{{ loop.index }}</span>
+            <div class="wishlist-item-info">
+              <a href="/offre/{{ offre.id }}" class="wishlist-item-title">{{ offre.titre }}</a>
+              <p class="wishlist-item-company">{{ offre.entreprise }}</p>
             </div>
-            <span style="background:#ede9fe;color:#3730a3;padding:.2rem .6rem;border-radius:999px;font-size:.8rem;font-weight:700;">
-              ♥ {{ offre.nb_wishlist }}
+            <span class="wishlist-badge">
+              <i class="fa-solid fa-heart"></i> {{ offre.nb_wishlist }}
             </span>
           </div>
         {% else %}
-          <p style="color:#94a3b8">Aucune donnée.</p>
+          <p style="color:var(--color-text-muted);font-size:.85rem">Aucune donnée.</p>
         {% endfor %}
       </div>
-
     </div>
+
   </div>
 
-  <div class="carousel-nav">
-    <button class="carousel-btn" id="prev"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="carousel-btn" id="next"><i class="fa-solid fa-chevron-right"></i></button>
-  </div>
 </div>
-
-<script>
-  const track = document.getElementById('carouselTrack');
-  const cards = track.querySelectorAll('.stat-card');
-  let current = 0;
-  function go(n) {
-    current = Math.max(0, Math.min(n, cards.length - 1));
-    const offset = Array.from(cards).slice(0, current).reduce((acc, c) => acc + c.offsetWidth + 24, 0);
-    track.style.transform = `translateX(-${offset}px)`;
-  }
-  document.getElementById('prev').addEventListener('click', () => go(current - 1));
-  document.getElementById('next').addEventListener('click', () => go(current + 1));
-</script>
 {% endblock %}

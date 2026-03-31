@@ -29,7 +29,7 @@
   <section class="section">
     <div class="section-title">
       <h2>Offres Tendances</h2>
-      <a href="/offres"><i class="fa-solid fa-chevron-right"></i></a>
+      <a href="/offres"><i class="fa-solid fa-caret-right"></i></a>
     </div>
     <div class="cards-grid">
       {% for offre in offres %}
@@ -43,15 +43,22 @@
           </div>
           <div class="card-badges">
             <span class="badge badge-blue">{{ offre.type }}</span>
-            <span class="badge badge-gray">{{ offre.lieu }}</span>
+            <span class="badge badge-gray">{{ offre.mode }}</span>
             <span class="card-date">{{ offre.date }}</span>
           </div>
           <div class="card-meta">
             <div class="card-meta-row"><i class="fa-solid fa-location-dot"></i> {{ offre.ville }}</div>
-            <div class="card-meta-row"><i class="fa-solid fa-earth-europe"></i> {{ offre.salaire }}</div>
+            <div class="card-meta-row"><i class="fa-solid fa-euro-sign"></i> {{ offre.remuneration }}</div>
+          </div>
+          <div class="skill-tags">
+            {% for competence in competences %}
+              <span class="skill-tag">{{ competence }}</span>
+            {% endfor %}
           </div>
           <div class="card-footer">
-            <button class="btn-bookmark"><i class="fa-regular fa-bookmark"></i></button>
+            <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
+              <i class="fa-regular fa-bookmark"></i>
+            </a>
             <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
           </div>
         </div>

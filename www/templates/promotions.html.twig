@@ -8,36 +8,64 @@
 
 {% block content %}
 <main class="liste-page">
+
   <div class="liste-header">
-    <h1>Promotions</h1>
-    <a href="/creation-promotion" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle promotion</a>
+    <h1>Promotions
+      {% if promotions|length > 0 %}
+        <span class="liste-count">{{ promotions|length }}</span>
+      {% endif %}
+    </h1>
+    <a href="/creation-promotion" class="btn-add">
+      <i class="fa-solid fa-plus"></i> Nouvelle promotion
+    </a>
   </div>
 
-  <div class="liste-search">
-    <input type="text" placeholder="Rechercher une promotion...">
-  </div>
+  <form method="GET" action="/promotions" class="liste-search">
+    <input type="text" name="search" value="{{ search ?? '' }}" placeholder="Rechercher une promotion...">
+    <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
 
   <div class="promo-grid">
     {% for promo in promotions %}
       <div class="promo-card">
+        <div class="promo-card-banner"></div>
         <div class="promo-card-body">
-          <p class="promo-card-title">{{ promo.nom }}</p>
+          <div class="promo-card-header">
+            <p class="promo-card-title">{{ promo.nom }}</p>
+            {% if promo.annee is defined and promo.annee %}
+              <span class="promo-card-year">{{ promo.annee }}</span>
+            {% endif %}
+          </div>
           <div class="promo-card-meta">
-            <span><i class="fa-solid fa-chalkboard-user"></i> Pilote : {{ promo.pilote }}</span>
-            <span><i class="fa-solid fa-user-graduate"></i> {{ promo.nb_etudiants }} étudiants</span>
+            <span>
+              <i class="fa-solid fa-chalkboard-user"></i>
+              Pilote : {{ promo.pilote ?: '—' }}
+            </span>
+            <span>
+              <i class="fa-solid fa-user-graduate"></i>
+              {{ promo.nb_etudiants }} étudiant{{ promo.nb_etudiants != 1 ? 's' : '' }}
+            </span>
           </div>
         </div>
-        <a href="/promotion/{{ promo.id }}" class="btn-primary">Voir la promo</a>
+        <div class="promo-card-footer">
+          <a href="/promotion/{{ promo.id }}" class="btn-primary">
+            <i class="fa-solid fa-arrow-right"></i> Voir la promo
+          </a>
+        </div>
       </div>
     {% else %}
-      <p>Aucune promotion disponible.</p>
+      <p style="color: var(--color-text-muted); font-size: .9rem;">Aucune promotion disponible.</p>
     {% endfor %}
   </div>
 
+  {% if pages > 1 %}
   <nav class="pagination">
     {% for i in 1..pages %}
-      <a href="/promotions?page={{ i }}" class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
+      <a href="/promotions?page={{ i }}&search={{ search ?? '' }}"
+         class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
     {% endfor %}
   </nav>
+  {% endif %}
+
 </main>
 {% endblock %}
