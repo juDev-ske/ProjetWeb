@@ -4,7 +4,33 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 64px - 4rem); /* hauteur header + footer */
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .35rem;
+  margin-top: 2rem;
+}
+.pagination a,
+.pagination span,
+.pagination-item {
+  padding: .4rem .75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: .85rem;
+  color: var(--color-text-muted);
+  transition: all .2s;
+  text-decoration: none;
+}
+.pagination a:hover,
+.pagination-item:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.pagination .active,
+.pagination-item.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
 
 .liste-header {
   display: flex;
@@ -88,34 +114,175 @@
 }
 
 /* WISHLIST */
-.wishlist-empty {
-  text-align: center; padding: 3rem 1rem;
+
+/* ── En-tête avec compteur ── */
+.wishlist-header-sub {
+  font-size: .85rem;
   color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
 }
-.wishlist-empty i  { font-size: 2.5rem; margin-bottom: 1rem; color: #d1d5db; }
-.wishlist-empty p  { font-size: .9rem; }
-.wishlist-empty a  { color: var(--color-primary); font-weight: 600; }
+
+/* ── État vide ── */
+.wishlist-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 1.5rem;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.wishlist-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: var(--color-light);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  margin-bottom: .25rem;
+}
+
+.wishlist-empty-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.wishlist-empty-sub {
+  font-size: .875rem;
+  color: var(--color-text-muted);
+  max-width: 300px;
+  line-height: 1.6;
+  margin-top: -.5rem;
+}
+
+.wishlist-empty .btn-primary {
+  margin-top: .25rem;
+  padding: .65rem 1.5rem;
+  font-size: .9rem;
+}
+
+/* ── Bookmark actif sur les cartes wishlist ── */
+.wishlist-page .btn-bookmark {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: var(--color-light);
+}
+
+/* ── Grid wishlist — même que cards-grid mais chargé ici aussi ── */
+.wishlist-page .cards-grid {
+  animation: fadeSlideUp .35s ease both;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* PROMOTIONS LISTE */
 .promo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.1rem;
 }
 
 .promo-card {
   background: #fff;
   border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  display: flex; flex-direction: column; gap: .5rem;
-  transition: box-shadow .2s;
+  border-radius: 14px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  transition: box-shadow .2s, transform .2s;
 }
-.promo-card:hover { box-shadow: var(--shadow-md); }
-.promo-name  { font-weight: 700; font-size: 1rem; }
-.promo-meta  { font-size: .82rem; color: var(--color-text-muted); }
-.promo-count { font-size: .82rem; color: var(--color-text-muted); margin-top: .25rem; }
-.promo-link  { margin-top: .75rem; }
+.promo-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+  transform: translateY(-2px);
+}
+
+.promo-card-banner {
+  height: 6px;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.promo-card-body {
+  flex: 1;
+  padding: 1.25rem 1.25rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.promo-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.promo-card-title {
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.promo-card-year {
+  font-size: .72rem;
+  font-weight: 700;
+  padding: .2rem .6rem;
+  background: var(--color-light);
+  color: var(--color-primary);
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.promo-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.promo-card-meta span {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .82rem;
+  color: var(--color-text-muted);
+}
+
+.promo-card-meta span i {
+  width: 14px;
+  color: var(--color-primary);
+  opacity: .8;
+  flex-shrink: 0;
+}
+
+.promo-card-footer {
+  padding: .9rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  background: #fafafa;
+}
+
+.promo-card-footer .btn-primary {
+  width: 100%;
+  justify-content: center;
+  font-size: .82rem;
+  padding: .55rem 1rem;
+}
 
 /* LISTE AVEC TABLE */
 .table-wrapper {
@@ -125,7 +292,137 @@
   overflow: hidden;
 }
 
+/* ─── PROMOTION INFO ─── */
+.promo-info {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-light);
+  border-radius: 10px;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.promo-info span { display: flex; align-items: center; gap: .4rem; }
+
+.liste-count {
+  background: var(--color-light);
+  color: var(--color-primary);
+  font-size: .8rem;
+  font-weight: 700;
+  padding: .3rem .85rem;
+  border-radius: 999px;
+}
+
+/* ─── TABLE ─── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .875rem;
+}
+
+.data-table thead tr {
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.data-table th {
+  padding: .85rem 1.25rem;
+  text-align: left;
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--color-text-muted);
+}
+
+.data-table td {
+  padding: .85rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.data-table tbody tr:hover { background: var(--color-bg); }
+
+/* ─── ACTIONS ─── */
+.table-actions { display: flex; align-items: center; gap: .5rem; }
+
+.btn-edit {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--color-light);
+  color: var(--color-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+  transition: background .2s;
+}
+.btn-edit:hover { background: var(--color-primary); color: #fff; }
+
+/* btn-delete défini globalement dans layout.css */
+/* Version icône seule pour les tables */
+.btn-delete {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: #fff;
+  color: #dc2626;
+  border: 1.5px solid #fca5a5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s;
+  text-decoration: none;
+}
+.btn-delete:hover { background: #dc2626; border-color: #dc2626; color: #fff; }
+
+/* ─── BTN ADD ─── */
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .5rem 1.1rem;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 8px;
+  font-size: .875rem;
+  font-weight: 600;
+  transition: background .2s;
+}
+.btn-add:hover { background: var(--color-secondary); }
+
+/* ─── SEARCH BTN liste-search ─── */
+.liste-search .search-btn {
+  padding: .6rem 1rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: .9rem;
+  cursor: pointer;
+  transition: background .2s;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.liste-search .search-btn:hover { background: var(--color-secondary); }
+
+@media (max-width: 1024px) {
+  .promo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 768px) {
   .promo-grid { grid-template-columns: 1fr; }
   .candidature-item { flex-wrap: wrap; }
+  .candidature-actions { width: 100%; justify-content: flex-end; }
+  .table-wrapper { overflow-x: auto; }
+  .data-table { min-width: 600px; }
+  .liste-header { flex-direction: column; align-items: flex-start; }
+  .offres-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .filter-tabs { gap: .35rem; }
+  .filter-tab { padding: .35rem .75rem; font-size: .78rem; }
 }
