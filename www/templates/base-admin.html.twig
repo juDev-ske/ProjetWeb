@@ -9,7 +9,7 @@
   <script src="https://kit.fontawesome.com/bb09137a9a.js" crossorigin="anonymous"></script>
   <title>{% block title %}CesiTonJob — Admin{% endblock %}</title>
 </head>
-<body>
+<body class="theme-admin">
 
   <header class="header">
     <nav class="nav">
@@ -18,21 +18,54 @@
         <span>CesiTonJob</span>
       </a>
       <ul class="nav-links">
-        <li><a href="/dashboard" class="nav-item">Dashboard</a></li>
-        <li><a href="/offres" class="nav-item">Offres</a></li>
-        <li><a href="/entreprises" class="nav-item">Entreprises</a></li>
-        <li><a href="/etudiants" class="nav-item">Étudiants</a></li>
+        <li><a href="/dashboard"           class="nav-item">Dashboard</a></li>
+        <li><a href="/offres"              class="nav-item">Offres</a></li>
+        <li><a href="/entreprises"         class="nav-item">Entreprises</a></li>
+        <li><a href="/etudiants"           class="nav-item">Étudiants</a></li>
         {% if session.user_role == 'admin' %}
-          <li><a href="/pilotes" class="nav-item">Pilotes</a></li>
+          <li><a href="/pilotes"           class="nav-item">Pilotes</a></li>
         {% endif %}
         <li><a href="/candidatures-pilote" class="nav-item">Candidatures</a></li>
-        <li><a href="/statistiques" class="nav-item">Statistiques</a></li>
+        <li><a href="/statistiques"        class="nav-item">Statistiques</a></li>
       </ul>
-      <a href="/profil" class="nav-btn">{{ session.user_name }}</a>
-      <a href="/deconnexion" class="nav-btn" style="background:#ef4444">Déconnexion</a>
-      <button class="nav-burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+      <a href="/profil"      class="nav-btn">{{ session.user_name }}</a>
+      <a href="/deconnexion" class="nav-btn" style="background:var(--color-text)">Déconnexion</a>
+      <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </nav>
   </header>
+
+  {# ── Menu mobile admin ── #}
+  <div class="nav-mobile" id="navMobile">
+    <div class="nav-mobile-backdrop" id="navMobileBackdrop"></div>
+    <div class="nav-mobile-panel">
+      <div class="nav-mobile-header">
+        <a href="/" class="nav-mobile-logo">
+          <img src="/public/images/logo-header.svg" alt="CesiTonJob">
+          <span>CesiTonJob</span>
+        </a>
+        <button class="nav-mobile-close" id="navMobileClose" aria-label="Fermer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <nav class="nav-mobile-links">
+        <a href="/dashboard"           class="nav-mobile-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="/offres"              class="nav-mobile-item"><i class="fa-solid fa-briefcase"></i> Offres</a>
+        <a href="/entreprises"         class="nav-mobile-item"><i class="fa-solid fa-building"></i> Entreprises</a>
+        <a href="/etudiants"           class="nav-mobile-item"><i class="fa-solid fa-user-graduate"></i> Étudiants</a>
+        {% if session.user_role == 'admin' %}
+          <a href="/pilotes"           class="nav-mobile-item"><i class="fa-solid fa-chalkboard-user"></i> Pilotes</a>
+        {% endif %}
+        <a href="/candidatures-pilote" class="nav-mobile-item"><i class="fa-solid fa-folder-open"></i> Candidatures</a>
+        <a href="/statistiques"        class="nav-mobile-item"><i class="fa-solid fa-chart-bar"></i> Statistiques</a>
+      </nav>
+      <div class="nav-mobile-footer">
+        <a href="/profil"      class="nav-btn">{{ session.user_name }}</a>
+        <a href="/deconnexion" class="nav-btn" style="background:var(--color-text)">Déconnexion</a>
+      </div>
+    </div>
+  </div>
 
   <main>
     {% block content %}{% endblock %}

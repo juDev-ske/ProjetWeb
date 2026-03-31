@@ -7,10 +7,14 @@
 {% endblock %}
 
 {% block content %}
-<main class="liste-page">
+<main class="liste-page wishlist-page">
+
   <div class="liste-header">
-    <h1>Ma Wish-list</h1>
-    <span class="liste-count">{{ offres|length }} offres sauvegardées</span>
+    <h1>Ma Wish-list
+      {% if offres|length > 0 %}
+        <span class="liste-count">{{ offres|length }}</span>
+      {% endif %}
+    </h1>
   </div>
 
   {% if offres|length > 0 %}
@@ -30,27 +34,48 @@
             <span class="card-date">{{ offre.date }}</span>
           </div>
           <div class="card-meta">
-            <div class="card-meta-row"><i class="fa-solid fa-location-dot"></i> {{ offre.ville }}</div>
-            <div class="card-meta-row"><i class="fa-solid fa-earth-europe"></i> {{ offre.remuneration }}</div>
+            <div class="card-meta-row">
+              <i class="fa-solid fa-location-dot"></i> {{ offre.ville }}
+            </div>
+            <div class="card-meta-row">
+              <i class="fa-solid fa-euro-sign"></i> {{ offre.remuneration ?: 'Non précisée' }}
+            </div>
           </div>
-          <div class="skill-tags">
-            {% for competence in offre.competences %}
-              <span class="skill-tag">{{ competence }}</span>
-            {% endfor %}
-          </div>
+          {% if offre.competences is defined and offre.competences|length > 0 %}
+            <div class="skill-tags">
+              {% for competence in offre.competences %}
+                <span class="skill-tag">{{ competence }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
           <div class="card-footer">
-            <button class="btn-bookmark active"><i class="fa-solid fa-bookmark"></i></button>
-            <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
+            <a href="/wishlist/retirer/{{ offre.id }}"
+               class="btn-bookmark active"
+               title="Retirer de la wish-list">
+              <i class="fa-solid fa-bookmark"></i>
+            </a>
+            <a href="/offre/{{ offre.id }}" class="btn-primary">
+              Voir l'offre
+            </a>
           </div>
         </div>
       {% endfor %}
     </div>
+
   {% else %}
     <div class="wishlist-empty">
-      <div class="wishlist-empty-icon"><i class="fa-regular fa-bookmark"></i></div>
+      <div class="wishlist-empty-icon">
+        <i class="fa-regular fa-bookmark"></i>
+      </div>
       <p class="wishlist-empty-text">Votre wish-list est vide</p>
-      <a href="/offres" class="btn-primary">Parcourir les offres</a>
+      <p class="wishlist-empty-sub">
+        Sauvegardez des offres qui vous intéressent pour les retrouver facilement ici.
+      </p>
+      <a href="/offres" class="btn-primary">
+        <i class="fa-solid fa-magnifying-glass"></i> Parcourir les offres
+      </a>
     </div>
   {% endif %}
+
 </main>
 {% endblock %}

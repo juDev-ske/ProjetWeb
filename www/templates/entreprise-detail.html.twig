@@ -4,6 +4,7 @@
 
 {% block styles %}
   <link rel="stylesheet" href="/public/css/secondaires.css">
+  <link rel="stylesheet" href="/public/css/liste.css">
 {% endblock %}
 
 {% block content %}
@@ -14,56 +15,161 @@
       <h1>{{ entreprise.nom }}</h1>
     </div>
 
-    <div class="detail-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
-      <div class="detail-card" style="background:#f8fafc;border-radius:8px;padding:1.5rem;">
-        <h2 style="margin-bottom:1rem;font-size:1rem;color:#64748b">Informations</h2>
+    <div class="detail-grid">
+      {# ── Carte Informations ── #}
+      <div class="detail-card">
+        <h2>Informations</h2>
         <p><strong>Email :</strong> {{ entreprise.email ?: '—' }}</p>
         <p><strong>Téléphone :</strong> {{ entreprise.phone ?: '—' }}</p>
         <p><strong>Offres :</strong> {{ entreprise.nb_offres }}</p>
         <p><strong>Stagiaires ayant postulé :</strong> {{ entreprise.nb_stagiaires }}</p>
-        <p style="margin-top:0.75rem"><strong>Description :</strong><br>{{ entreprise.description ?: 'Aucune description.' }}</p>
+        <p class="detail-desc"><strong>Description :</strong><br>{{ entreprise.description ?: 'Aucune description.' }}</p>
       </div>
 
-      <div class="detail-card" style="background:#f8fafc;border-radius:8px;padding:1.5rem;">
-        <h2 style="margin-bottom:1rem;font-size:1rem;color:#64748b">Évaluation</h2>
-        <p style="font-size:2rem;font-weight:700;color:#f59e0b;">
-          {{ entreprise.rating > 0 ? entreprise.rating ~ ' / 5' : 'Pas encore évaluée' }}
-        </p>
-        <form action="/entreprise/{{ entreprise.id }}/evaluer" method="post" style="margin-top:1rem;display:flex;gap:0.5rem;align-items:center;">
-          <select name="note" style="padding:0.5rem;border:1px solid #e2e8f0;border-radius:6px;">
+      {# ── Carte Évaluation ── #}
+      <div class="detail-card">
+        <h2>Évaluation</h2>
+
+        {# Affichage de la note actuelle #}
+        {% if entreprise.rating > 0 %}
+          <div class="detail-rating-block">
+            <span class="detail-rating-score">{{ entreprise.rating }}</span>
+            <div class="detail-rating-right">
+              <div class="detail-rating-stars">
+                {% for i in 1..5 %}
+                  {% if entreprise.rating >= i %}
+                    <i class="fa-solid fa-star"></i>
+                  {% elseif entreprise.rating >= i - 0.5 %}
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                  {% else %}
+                    <i class="fa-regular fa-star empty"></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <span class="detail-rating-label">Note sur 5</span>
+            </div>
+          </div>
+        {% else %}
+          <div class="detail-rating-none">Pas encore évaluée</div>
+        {% endif %}
+
+        {# Formulaire avec demi-étoiles cliquables — JS driven #}
+        <form action="/entreprise/{{ entreprise.id }}/evaluer" method="post" class="detail-eval-form">
+          <div class="star-picker-js" id="starPicker" data-value="{{ entreprise.rating }}">
             {% for i in 1..5 %}
-              <option value="{{ i }}" {{ entreprise.rating == i ? 'selected' : '' }}>{{ i }} / 5</option>
+              <span class="star-js" data-full="{{ i }}" data-half="{{ i - 0.5 }}">
+                <i class="fa-regular fa-star"></i>
+              </span>
             {% endfor %}
-          </select>
-          <button type="submit" class="btn-submit" style="padding:0.5rem 1rem">Évaluer</button>
+          </div>
+          <input type="hidden" name="note" id="noteInput" value="{{ entreprise.rating }}">
+          <p class="star-picker-label" id="starLabel">
+            {% if entreprise.rating > 0 %}Note actuelle : {{ entreprise.rating }} / 5{% else %}Aucune note{% endif %}
+          </p>
+          <button type="submit" class="btn-submit">Évaluer</button>
         </form>
-        <div style="margin-top:1.5rem;display:flex;gap:0.75rem;">
+
+        <div class="detail-actions">
           <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-submit">Modifier</a>
-          <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-delete" style="padding:0.5rem 1rem;background:#ef4444;color:#fff;border-radius:6px;text-decoration:none;">Supprimer</a>
+          <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-danger">
+            <i class="fa-solid fa-trash"></i> Supprimer
+          </a>
         </div>
       </div>
     </div>
 
-    <h2 style="margin-bottom:1rem;">Offres de l'entreprise</h2>
-    <table class="data-table">
-      <thead>
-        <tr><th>Titre</th><th>Type</th><th>Mode</th><th>Date</th><th>Candidatures</th><th>Statut</th></tr>
-      </thead>
-      <tbody>
-        {% for offre in offres %}
+    <h2 class="detail-section-title">Offres de l'entreprise</h2>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
           <tr>
-            <td><a href="/offre/{{ offre.id }}">{{ offre.titre }}</a></td>
-            <td>{{ offre.type }}</td>
-            <td>{{ offre.mode }}</td>
-            <td>{{ offre.date }}</td>
-            <td>{{ offre.nb_candidatures }}</td>
-            <td>{{ offre.is_active ? 'Active' : 'Inactive' }}</td>
+            <th>Titre</th><th>Type</th><th>Mode</th><th>Date</th><th>Candidatures</th><th>Statut</th>
           </tr>
-        {% else %}
-          <tr><td colspan="6">Aucune offre pour cette entreprise.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for offre in offres %}
+            <tr>
+              <td><a href="/offre/{{ offre.id }}">{{ offre.titre }}</a></td>
+              <td>{{ offre.type }}</td>
+              <td>{{ offre.mode }}</td>
+              <td>{{ offre.date }}</td>
+              <td>{{ offre.nb_candidatures }}</td>
+              <td>
+                <span class="badge {{ offre.is_active ? 'badge-green' : 'badge-gray' }}">
+                  {{ offre.is_active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6">Aucune offre pour cette entreprise.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function() {
+  const picker  = document.getElementById('starPicker');
+  const input   = document.getElementById('noteInput');
+  const label   = document.getElementById('starLabel');
+  const stars   = picker.querySelectorAll('.star-js');
+
+  // Valeur initiale depuis Twig
+  let current = parseFloat(picker.dataset.value) || 0;
+
+  // Peint les étoiles selon une valeur donnée
+  function paint(val) {
+    stars.forEach((star, idx) => {
+      const full = parseFloat(star.dataset.full);   // ex: 1, 2, 3…
+      const half = parseFloat(star.dataset.half);   // ex: 0.5, 1.5…
+      const icon = star.querySelector('i');
+      icon.className = 'fa-solid fa-star';          // reset
+      if (val >= full) {
+        icon.className = 'fa-solid fa-star star-full';
+      } else if (val >= half) {
+        icon.className = 'fa-solid fa-star-half-stroke star-half';
+      } else {
+        icon.className = 'fa-regular fa-star star-empty';
+      }
+    });
+  }
+
+  // Calcule la valeur selon la position X dans l'étoile (gauche = .5, droite = entier)
+  function valueFromEvent(star, e) {
+    const rect = star.getBoundingClientRect();
+    const x    = e.clientX - rect.left;
+    return x < rect.width / 2
+      ? parseFloat(star.dataset.half)
+      : parseFloat(star.dataset.full);
+  }
+
+  // Hover — preview
+  stars.forEach(star => {
+    star.addEventListener('mousemove', e => {
+      paint(valueFromEvent(star, e));
+    });
+  });
+
+  picker.addEventListener('mouseleave', () => {
+    paint(current); // Revenir à la valeur sélectionnée
+  });
+
+  // Click — sélection
+  stars.forEach(star => {
+    star.addEventListener('click', e => {
+      const val = valueFromEvent(star, e);
+      current = val;
+      input.value = val;
+      paint(val);
+      label.textContent = 'Note sélectionnée : ' + val + ' / 5';
+    });
+  });
+
+  // Peinture initiale
+  paint(current);
+})();
+</script>
 {% endblock %}
