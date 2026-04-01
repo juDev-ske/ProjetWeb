@@ -98,9 +98,15 @@
 
       {% if session.user_role == 'etudiant' %}
         <a href="/postuler/{{ offre.id }}" class="btn-postuler">Postuler à cette offre</a>
-        <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-wishlist">
-          <i class="fa-regular fa-bookmark"></i> Sauvegarder
-        </a>
+        {% if in_wishlist %}
+          <a href="/wishlist/retirer/{{ offre.id }}" class="btn-wishlist active">
+            <i class="fa-solid fa-bookmark"></i> Sauvegardée
+          </a>
+        {% else %}
+          <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-wishlist">
+            <i class="fa-regular fa-bookmark"></i> Sauvegarder
+          </a>
+        {% endif %}
       {% elseif session.user_role == 'admin' or session.user_role == 'pilote' %}
         <a href="/offre/{{ offre.id }}/modifier" class="btn-postuler">Modifier l'offre</a>
         <a href="/offre/{{ offre.id }}/supprimer" class="btn-wishlist" style="color:#ef4444">

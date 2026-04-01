@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\OffreModel;
 use App\Models\EntrepriseModel;
+use App\Models\WishlistModel;
 
 class OffreController extends Controller
 {
@@ -35,12 +36,18 @@ class OffreController extends Controller
         $page   = min($page, $pages);
         $offset = ($page - 1) * $par_page;
 
+        $wishlistIds = [];
+        if (($_SESSION['user_role'] ?? '') === 'etudiant') {
+            $wishlistIds = (new WishlistModel())->getWishlistOfferIds($_SESSION['user_id'] ?? 0);
+        }
+
         return $this->render('offres.html.twig', [
             'offres'        => $this->model->getOffersFiltered($par_page, $offset, $filters),
             'total'         => $total,
             'pages'         => $pages,
             'page_courante' => $page,
             'filters'       => $filters,
+            'wishlist_ids'  => $wishlistIds,
         ]);
     }
 
@@ -55,7 +62,15 @@ class OffreController extends Controller
         $offre['competences']     = array_column($skills, 'name');
         $offre['nb_candidatures'] = $this->model->getOfferApplicationCount($id);
 
-        return $this->render('offre-detail.html.twig', ['offre' => $offre]);
+        $inWishlist = false;
+        if (($_SESSION['user_role'] ?? '') === 'etudiant') {
+            $inWishlist = (new WishlistModel())->isInWishlist($_SESSION['user_id'] ?? 0, $id);
+        }
+
+        return $this->render('offre-detail.html.twig', [
+            'offre'       => $offre,
+            'in_wishlist' => $inWishlist,
+        ]);
     }
 
     public function createPage(): string

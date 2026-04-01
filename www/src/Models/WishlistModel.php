@@ -44,6 +44,14 @@ class WishlistModel extends Model
         ", [$studentId, $offerId]);
     }
 
+    public function getWishlistOfferIds(int $studentId): array
+    {
+        $rows = $this->db->query("
+            SELECT offer_id FROM wishlist WHERE student_id = ?
+        ", [$studentId]);
+        return array_column($rows, 'offer_id');
+    }
+
     public function isInWishlist(int $studentId, int $offerId): bool
     {
         $result = $this->db->query("

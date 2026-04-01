@@ -88,6 +88,31 @@ class CandidatureController extends Controller
 
     public function spontaneous(): string
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $cvPath = '';
+            $lmPath = '';
+
+            if (!empty($_FILES['cv']['tmp_name'])) {
+                $cvPath = $this->saveFile($_FILES['cv'], 'cv');
+            }
+            if (!empty($_FILES['lm']['tmp_name'])) {
+                $lmPath = $this->saveFile($_FILES['lm'], 'lm');
+            }
+
+            $studentId = $_SESSION['user_id'] ?? 0;
+            $this->model->createSpontaneousApplication(
+                $studentId,
+                $_POST['entreprise'] ?? '',
+                $_POST['poste'] ?? '',
+                $_POST['contrat'] ?? '',
+                $_POST['message'] ?? '',
+                $cvPath,
+                $lmPath
+            );
+
+            return $this->render('candidature-spontanee.html.twig', ['success' => true]);
+        }
+
         return $this->render('candidature-spontanee.html.twig');
     }
 }

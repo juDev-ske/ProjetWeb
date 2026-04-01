@@ -41,7 +41,12 @@
     <div class="two-col-right">
       <div class="form-card">
         <p class="form-card-title">Déposer ma candidature</p>
-        <form action="/candidature-spontanee" method="post" novalidate>
+        {% if success %}
+          <div class="alert-success" style="background:#d1fae5;color:#065f46;padding:1rem;border-radius:8px;margin-bottom:1.5rem;text-align:center;">
+            <i class="fa-solid fa-check-circle"></i> Votre candidature spontanée a bien été envoyée !
+          </div>
+        {% endif %}
+        <form action="/candidature-spontanee" method="post" enctype="multipart/form-data" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label for="prenom">Prénom</label>
@@ -84,10 +89,55 @@
             <textarea id="message" name="message" rows="4" placeholder="Présentez-vous et expliquez votre motivation..."></textarea>
           </div>
 
+          {# ── CV ── #}
+          <div class="form-group">
+            <label for="cv">Curriculum Vitae (CV) <span class="required-star">*</span></label>
+            <div class="file-upload" id="cv-zone">
+              <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+              <div class="file-upload-label">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                <span id="cv-label">Choisir un fichier PDF ou Word</span>
+                <small>PDF, DOC, DOCX · max 5 Mo</small>
+              </div>
+            </div>
+          </div>
+
+          {# ── LM ── #}
+          <div class="form-group">
+            <label for="lm">Lettre de motivation (LM)</label>
+            <div class="file-upload" id="lm-zone">
+              <input type="file" id="lm" name="lm" accept=".pdf,.doc,.docx">
+              <div class="file-upload-label">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                <span id="lm-label">Choisir un fichier PDF ou Word</span>
+                <small>PDF, DOC, DOCX · max 5 Mo</small>
+              </div>
+            </div>
+          </div>
+
           <button type="submit" class="btn-submit">Envoyer ma candidature</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  [['cv', 'cv-zone', 'cv-label'], ['lm', 'lm-zone', 'lm-label']].forEach(([id, zone, lbl]) => {
+    document.getElementById(id).addEventListener('change', function() {
+      const file = this.files[0];
+      const zoneEl = document.getElementById(zone);
+      const lblEl  = document.getElementById(lbl);
+      if (file) {
+        lblEl.textContent = file.name;
+        zoneEl.classList.add('has-file');
+      } else {
+        lblEl.textContent = 'Choisir un fichier PDF ou Word';
+        zoneEl.classList.remove('has-file');
+      }
+    });
+  });
+</script>
 {% endblock %}
