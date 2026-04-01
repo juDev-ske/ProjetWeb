@@ -1,4 +1,4 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}CesiTonJob — Candidatures de mes étudiants{% endblock %}
 
@@ -33,7 +33,7 @@
             <td><a href="/offre/{{ c.offre_id }}">{{ c.titre }}</a></td>
             <td>{{ c.entreprise }}</td>
             <td>{{ c.date }}</td>
-            <td><span class="statut statut-{{ c.statut|lower }}">{{ c.statut }}</span></td>
+            <td><span class="statut statut-{{ c.statut|lower }}">{{ c.statut == 'sent' ? 'Envoyée' : (c.statut == 'accepted' ? 'Acceptée' : 'Refusée') }}</span></td>
             <td style="display:flex;gap:0.5rem;">
               {% if c.cv_path %}
                 <a href="/{{ c.cv_path }}" target="_blank" class="fichier-link" title="CV">

@@ -18,7 +18,7 @@
           <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
           <div>
             <p class="contact-label">Email</p>
-            <p class="contact-value">contact@cesitionjob.fr</p>
+            <p class="contact-value">contact@cesitonjob.fr</p>
           </div>
         </div>
         <div class="contact-item">
@@ -40,6 +40,16 @@
 
     <div class="two-col-right">
       <div class="form-card">
+        {% if success is defined and success %}
+          <div style="text-align:center;padding:2rem 1rem;">
+            <div style="font-size:2.5rem;margin-bottom:.75rem;color:var(--color-primary);">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <p style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem;">Message envoy&eacute; !</p>
+            <p style="font-size:.875rem;color:var(--color-text-muted);">Merci pour votre message. Notre &eacute;quipe vous r&eacute;pondra dans les meilleurs d&eacute;lais.</p>
+            <a href="/contact" class="btn-primary" style="margin-top:1.25rem;display:inline-flex;">Envoyer un autre message</a>
+          </div>
+        {% else %}
         <p class="form-card-title">Envoyer un message</p>
         <form action="/contact" method="post" novalidate>
           <div class="form-row">
@@ -77,6 +87,7 @@
 
           <button type="submit" class="btn-submit">Envoyer le message</button>
         </form>
+        {% endif %}
       </div>
     </div>
   </div>

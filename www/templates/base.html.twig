@@ -23,18 +23,23 @@
         <span>CesiTonJob</span>
       </a>
       <ul class="nav-links">
-        <li><a href="/offres" class="nav-item">Emploi</a></li>
-        {% if session.user_role == 'etudiant' %}
+        {% if session.user_role in ['admin', 'pilote'] %}
+          <li><a href="/dashboard"           class="nav-item">Dashboard</a></li>
+          <li><a href="/offres"              class="nav-item">Offres</a></li>
+          <li><a href="/entreprises"         class="nav-item">Entreprises</a></li>
+          <li><a href="/etudiants"           class="nav-item">Étudiants</a></li>
+          {% if session.user_role == 'admin' %}
+            <li><a href="/pilotes"           class="nav-item">Pilotes</a></li>
+          {% endif %}
+          <li><a href="/candidatures-pilote" class="nav-item">Candidatures</a></li>
+          <li><a href="/statistiques"        class="nav-item">Statistiques</a></li>
+        {% elseif session.user_role == 'etudiant' %}
+          <li><a href="/offres" class="nav-item">Emploi</a></li>
           <li><a href="/candidature-spontanee" class="nav-item">Candidature Spontanée</a></li>
           <li><a href="/mes-candidatures" class="nav-item">Mes Candidatures</a></li>
           <li><a href="/wishlist" class="nav-item"><i class="fa-solid fa-bookmark"></i></a></li>
-        {% elseif session.user_role == 'pilote' %}
-          <li><a href="/dashboard" class="nav-item">Dashboard</a></li>
-          <li><a href="/promotions" class="nav-item">Promotions</a></li>
-          <li><a href="/candidatures-pilote" class="nav-item">Candidatures</a></li>
-        {% elseif session.user_role == 'admin' %}
-          <li><a href="/dashboard" class="nav-item">Dashboard</a></li>
-          <li><a href="/promotions" class="nav-item">Promotions</a></li>
+        {% else %}
+          <li><a href="/offres" class="nav-item">Emploi</a></li>
         {% endif %}
       </ul>
       {% if session.user_id %}
@@ -63,18 +68,23 @@
         </button>
       </div>
       <nav class="nav-mobile-links">
-        <a href="/offres" class="nav-mobile-item"><i class="fa-solid fa-briefcase"></i> Emploi</a>
-        {% if session.user_role == 'etudiant' %}
+        {% if session.user_role in ['admin', 'pilote'] %}
+          <a href="/dashboard"           class="nav-mobile-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+          <a href="/offres"              class="nav-mobile-item"><i class="fa-solid fa-briefcase"></i> Offres</a>
+          <a href="/entreprises"         class="nav-mobile-item"><i class="fa-solid fa-building"></i> Entreprises</a>
+          <a href="/etudiants"           class="nav-mobile-item"><i class="fa-solid fa-user-graduate"></i> Étudiants</a>
+          {% if session.user_role == 'admin' %}
+            <a href="/pilotes"           class="nav-mobile-item"><i class="fa-solid fa-chalkboard-user"></i> Pilotes</a>
+          {% endif %}
+          <a href="/candidatures-pilote" class="nav-mobile-item"><i class="fa-solid fa-folder-open"></i> Candidatures</a>
+          <a href="/statistiques"        class="nav-mobile-item"><i class="fa-solid fa-chart-bar"></i> Statistiques</a>
+        {% elseif session.user_role == 'etudiant' %}
+          <a href="/offres"              class="nav-mobile-item"><i class="fa-solid fa-briefcase"></i> Emploi</a>
           <a href="/candidature-spontanee" class="nav-mobile-item"><i class="fa-solid fa-paper-plane"></i> Candidature Spontanée</a>
           <a href="/mes-candidatures"      class="nav-mobile-item"><i class="fa-solid fa-folder-open"></i> Mes Candidatures</a>
           <a href="/wishlist"              class="nav-mobile-item"><i class="fa-solid fa-bookmark"></i> Ma Wish-list</a>
-        {% elseif session.user_role == 'pilote' %}
-          <a href="/dashboard"           class="nav-mobile-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
-          <a href="/promotions"          class="nav-mobile-item"><i class="fa-solid fa-users"></i> Promotions</a>
-          <a href="/candidatures-pilote" class="nav-mobile-item"><i class="fa-solid fa-folder-open"></i> Candidatures</a>
-        {% elseif session.user_role == 'admin' %}
-          <a href="/dashboard"  class="nav-mobile-item"><i class="fa-solid fa-gauge"></i> Dashboard</a>
-          <a href="/promotions" class="nav-mobile-item"><i class="fa-solid fa-users"></i> Promotions</a>
+        {% else %}
+          <a href="/offres" class="nav-mobile-item"><i class="fa-solid fa-briefcase"></i> Emploi</a>
         {% endif %}
       </nav>
       <div class="nav-mobile-footer">
@@ -101,9 +111,9 @@
         </a>
         <p class="footer-desc">La plateforme de stages et alternances pour les étudiants CESI.</p>
         <div class="footer-social">
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.instagram.com/cesi_officiel/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://fr.linkedin.com/school/cesi-officiel/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="https://x.com/GroupeCESI" target="_blank" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
         </div>
       </div>
       <nav class="footer-nav">
@@ -113,7 +123,7 @@
         <a href="/mentions-legales">Mentions légales</a>
       </nav>
     </div>
-    <div class="footer-bottom"><p>© 2025 CesiTonJob — Tous droits réservés</p></div>
+    <div class="footer-bottom"><p>© 2026 CesiTonJob — Tous droits réservés</p></div>
   </footer>
 
   <script src="/public/js/main.js"></script>

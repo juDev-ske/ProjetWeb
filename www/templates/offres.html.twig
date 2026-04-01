@@ -84,8 +84,8 @@
             </div>
           </div>
           <div class="card-badges">
-            <span class="badge badge-blue">{{ offre.type }}</span>
-            <span class="badge badge-gray">{{ offre.mode }}</span>
+            <span class="badge badge-blue">{{ offre.type == 'internship' ? 'Stage' : 'Alternance' }}</span>
+            <span class="badge badge-gray">{{ offre.mode == 'on_site' ? 'Sur site' : (offre.mode == 'remote' ? 'Télétravail' : 'Hybride') }}</span>
             <span class="card-date">{{ offre.date }}</span>
           </div>
           <div class="card-meta">

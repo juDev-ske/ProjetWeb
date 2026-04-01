@@ -304,15 +304,19 @@ $router->get('/profil', function () use ($twig) {
 // =============================================
 $router->get('/a-propos', function () use ($twig) {
     echo $twig->render('a-propos.html.twig', ['equipe' => [
-        ['nom' => 'Fred',    'role' => 'Chef de projet & Développeur',  'couleur' => '#1800ad'],
-        ['nom' => 'Julien',  'role' => 'Développeur Front-end',         'couleur' => '#00703c'],
-        ['nom' => 'Nicolas', 'role' => 'Développeur Back-end',          'couleur' => '#bd0000'],
-        ['nom' => 'Maxime',  'role' => 'Base de données & Intégration', 'couleur' => '#0d7aa5'],
+        ['nom' => 'Julien VOLTZ',      'role' => 'Chef de projet',          'couleur' => '#1800ad'],
+        ['nom' => 'Raphaël LINARD',    'role' => 'Développeur Front-end',   'couleur' => '#00703c'],
+        ['nom' => 'Esteban HUYGHE',    'role' => 'Développeur Back-end',    'couleur' => '#bd0000'],
+        ['nom' => 'Bilal ALLOUCH',     'role' => 'Développeur Back-end',    'couleur' => '#0d7aa5'],
     ]]);
 });
 
 $router->get('/contact', function () use ($twig) {
     echo $twig->render('contact.html.twig');
+});
+
+$router->post('/contact', function () use ($twig) {
+    echo $twig->render('contact.html.twig', ['success' => true]);
 });
 
 $router->get('/mentions-legales', function () use ($twig) {
