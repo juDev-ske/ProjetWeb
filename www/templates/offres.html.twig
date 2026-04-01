@@ -118,9 +118,11 @@
           </div>
 
           <div class="card-footer">
+            {% if session.user_role == 'etudiant' %}
             <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
               <i class="fa-regular fa-bookmark"></i>
             </a>
+            {% endif %}
             <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
           </div>
         </div>

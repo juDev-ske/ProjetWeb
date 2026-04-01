@@ -131,6 +131,8 @@ class OffreModel extends Model
                    o.mode,
                    o.publication_date AS date,
                    o.is_active,
+                   o.location_id,
+                   o.company_id,
                    c.name         AS entreprise,
                    c.email        AS entreprise_email,
                    c.phone        AS entreprise_telephone,
@@ -216,9 +218,9 @@ class OffreModel extends Model
     // Écriture
     // -------------------------------------------------------
 
-    public function createOffer(array $data): bool
+    public function createOffer(array $data): int
     {
-        return $this->db->execute("
+        $this->db->execute("
             INSERT INTO offer (title, description, salary, type, mode, publication_date, company_id, location_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ", [
@@ -226,15 +228,21 @@ class OffreModel extends Model
             $data['type'],  $data['mode'],        $data['publication_date'],
             $data['company_id'], $data['location_id'],
         ]);
+        return $this->db->lastInsertId();
     }
 
     public function updateOffer(int $id, array $data): bool
     {
         return $this->db->execute("
             UPDATE offer
-            SET title = ?, description = ?, salary = ?, type = ?, mode = ?
+            SET title = ?, description = ?, salary = ?, type = ?, mode = ?, location_id = ?
             WHERE id = ?
-        ", [$data['title'], $data['description'], $data['salary'], $data['type'], $data['mode'], $id]);
+        ", [$data['title'], $data['description'], $data['salary'], $data['type'], $data['mode'], $data['location_id'], $id]);
+    }
+
+    public function clearSkillsFromOffer(int $offerId): bool
+    {
+        return $this->db->execute("DELETE FROM offer_skill WHERE offer_id = ?", [$offerId]);
     }
 
     public function deleteOffer(int $id): bool
@@ -252,5 +260,25 @@ class OffreModel extends Model
     public function getAllSkills(): array
     {
         return $this->db->query("SELECT * FROM skill ORDER BY name ASC");
+    }
+
+    public function createSkill(string $name): int
+    {
+        $existing = $this->db->query("SELECT id FROM skill WHERE name = ?", [trim($name)]);
+        if (!empty($existing)) {
+            return (int) $existing[0]['id'];
+        }
+        $this->db->execute("INSERT INTO skill (name) VALUES (?)", [trim($name)]);
+        return $this->db->lastInsertId();
+    }
+
+    public function getAllLocations(): array
+    {
+        return $this->db->query("
+            SELECT id,
+                   CONCAT(city, ' (', department, ')') AS nom
+            FROM location
+            ORDER BY city ASC
+        ");
     }
 }

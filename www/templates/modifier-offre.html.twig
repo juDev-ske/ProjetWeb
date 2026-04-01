@@ -26,11 +26,6 @@
       </div>
 
       <div class="form-group">
-        <label for="salary">Rémunération</label>
-        <input type="text" id="salary" name="salary" value="{{ offre.remuneration }}" placeholder="Ex : 600€/mois">
-      </div>
-
-      <div class="form-group">
         <label for="type">Type de contrat</label>
         <select id="type" name="type">
           <option value="internship"     {{ offre.type == 'internship'     ? 'selected' : '' }}>Stage</option>
@@ -39,12 +34,138 @@
       </div>
 
       <div class="form-group">
+        <label for="location_id">Localisation</label>
+        <select id="location_id" name="location_id" required>
+          <option value="">Sélectionnez une localisation</option>
+          {% for location in locations %}
+            <option value="{{ location.id }}" {{ location.id == offre.location_id ? 'selected' : '' }}>
+              {{ location.nom }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Compétences requises</label>
+        <div class="skills-container">
+          <div class="skills-tags" id="skills-tags"></div>
+          <div class="search-container">
+            <input type="text" id="skills-input" placeholder="Ajouter un skill..." autocomplete="off">
+            <div class="select-items" id="skills-options"></div>
+          </div>
+          <input type="hidden" name="skills" id="skills-hidden">
+        </div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const skillsInput   = document.getElementById('skills-input');
+          const skillsOptions = document.getElementById('skills-options');
+          const skillsTags    = document.getElementById('skills-tags');
+          const skillsHidden  = document.getElementById('skills-hidden');
+
+          const allSkills     = {{ skills|map(s => s.name)|json_encode|raw }};
+          let selectedSkills  = {{ offre_skills|json_encode|raw }};
+
+          function updateHidden() {
+            skillsHidden.value = selectedSkills.join(',');
+          }
+
+          function addTag(name) {
+            if (selectedSkills.includes(name)) return;
+            selectedSkills.push(name);
+            updateHidden();
+
+            const tag = document.createElement('span');
+            tag.className = 'skill-tag';
+            tag.innerHTML = `${name} <button type="button" data-value="${name}">&times;</button>`;
+            tag.querySelector('button').addEventListener('click', function () {
+              selectedSkills = selectedSkills.filter(s => s !== this.dataset.value);
+              updateHidden();
+              tag.remove();
+            });
+            skillsTags.appendChild(tag);
+            skillsInput.value = '';
+            skillsOptions.style.display = 'none';
+            skillsInput.focus();
+          }
+
+          function renderOptions(filter) {
+            skillsOptions.innerHTML = '';
+
+            const filtered = allSkills.filter(s =>
+              (filter === '' || s.toLowerCase().includes(filter.toLowerCase())) &&
+              !selectedSkills.includes(s)
+            );
+
+            filtered.forEach(skill => {
+              const div = document.createElement('div');
+              div.className = 'select-option-search';
+              div.textContent = skill;
+              div.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                addTag(skill);
+              });
+              skillsOptions.appendChild(div);
+            });
+
+            const exactMatch = allSkills.some(s => s.toLowerCase() === filter.toLowerCase());
+            if (filter.length > 0 && !exactMatch) {
+              const div = document.createElement('div');
+              div.className = 'select-option-search select-option-new';
+              div.innerHTML = `<i class="fa-solid fa-plus"></i> Ajouter "<strong>${filter}</strong>"`;
+              div.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                addTag(filter);
+              });
+              skillsOptions.appendChild(div);
+            }
+
+            skillsOptions.style.display = skillsOptions.children.length > 0 ? 'block' : 'none';
+          }
+
+          // Pré-remplir les tags avec les skills existants de l'offre
+          selectedSkills.forEach(name => {
+            const tag = document.createElement('span');
+            tag.className = 'skill-tag';
+            tag.innerHTML = `${name} <button type="button" data-value="${name}">&times;</button>`;
+            tag.querySelector('button').addEventListener('click', function () {
+              selectedSkills = selectedSkills.filter(s => s !== this.dataset.value);
+              updateHidden();
+              tag.remove();
+            });
+            skillsTags.appendChild(tag);
+          });
+          updateHidden();
+
+          skillsInput.addEventListener('input', function () {
+            renderOptions(this.value.trim());
+          });
+
+          skillsInput.addEventListener('focus', function () {
+            renderOptions(this.value.trim());
+          });
+
+          document.addEventListener('click', function (e) {
+            if (!e.target.closest('.skills-container')) {
+              skillsOptions.style.display = 'none';
+            }
+          });
+        });
+      </script>
+
+      <div class="form-group">
         <label for="mode">Mode de travail</label>
         <select id="mode" name="mode">
           <option value="on_site"{{ offre.mode == 'on_site'? 'selected' : '' }}>Sur site</option>
           <option value="remote" {{ offre.mode == 'remote' ? 'selected' : '' }}>Télétravail</option>
           <option value="hybrid" {{ offre.mode == 'hybrid' ? 'selected' : '' }}>Hybride</option>
         </select>
+      </div>
+
+      <div class="form-group">
+        <label for="salary">Rémunération</label>
+        <input type="text" id="salary" name="salary" value="{{ offre.remuneration }}" placeholder="Ex : 600€/mois">
       </div>
 
       <div class="form-actions">

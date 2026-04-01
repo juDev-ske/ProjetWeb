@@ -21,6 +21,7 @@
 
     <hr class="profil-divider">
 
+    {% if session.user_role == 'admin' %}
     <form action="/profil" method="post" novalidate>
       <div class="form-group">
         <label for="prenom">Prénom</label>
@@ -38,6 +39,22 @@
         <button type="submit" class="btn-submit">Enregistrer les modifications</button>
       </div>
     </form>
+    {% endif %}
+
+    {% if session.user_role == 'etudiant' or session.user_role == 'pilote' %}
+    <div class="form-group">
+      <label for="prenom">Prénom</label>
+      <input type="text" id="prenom" name="prenom" value="{{ user.prenom }}" disabled>
+    </div>
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" value="{{ user.nom }}" disabled>
+    </div>
+    <div class="form-group">
+      <label for="email">Adresse e-mail</label>
+      <input type="email" id="email" name="email" value="{{ user.email }}" disabled>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

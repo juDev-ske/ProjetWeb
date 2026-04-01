@@ -11,7 +11,7 @@
 <div class="page-content">
   <div class="content-block">
     <div class="form-page-header">
-      <a href="/entreprises" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
+      <a href="#" onclick="history.back(); return false;" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour</a>
       <h1>{{ entreprise.nom }}</h1>
     </div>
 
@@ -69,12 +69,14 @@
           <button type="submit" class="btn-submit">Évaluer</button>
         </form>
 
+        {% if session.user_role == 'admin' or session.user_role == 'pilote' %}
         <div class="detail-actions">
           <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-submit">Modifier</a>
           <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-danger">
             <i class="fa-solid fa-trash"></i> Supprimer
           </a>
         </div>
+        {% endif %}
       </div>
     </div>
 

@@ -63,12 +63,14 @@ class OffreController extends Controller
         $entrepriseModel = new EntrepriseModel();
         return $this->render('creation-offre.html.twig', [
             'entreprises' => $entrepriseModel->getAllCompanies(),
+            'locations'   => $this->model->getAllLocations(),
+            'skills'      => $this->model->getAllSkills(),
         ]);
     }
 
     public function create(): void
     {
-        $this->model->createOffer([
+        $offerId = $this->model->createOffer([
             'title'            => $_POST['title']       ?? '',
             'description'      => $_POST['description'] ?? '',
             'salary'           => $_POST['salary']      ?? '',
@@ -76,8 +78,15 @@ class OffreController extends Controller
             'mode'             => $_POST['mode']        ?? '',
             'publication_date' => date('Y-m-d'),
             'company_id'       => (int) ($_POST['company_id']  ?? 0),
-            'location_id'      => (int) ($_POST['location_id'] ?? 1),
+            'location_id'      => (int) ($_POST['location_id'] ?? 0),
         ]);
+
+        $skillNames = array_filter(array_map('trim', explode(',', $_POST['skills'] ?? '')));
+        foreach ($skillNames as $name) {
+            $skillId = $this->model->createSkill($name);
+            $this->model->addSkillToOffer($offerId, $skillId);
+        }
+
         $this->redirect('/offres');
     }
 
@@ -88,7 +97,13 @@ class OffreController extends Controller
             http_response_code(404);
             return '404 - Offre non trouvée';
         }
-        return $this->render('modifier-offre.html.twig', ['offre' => $offre]);
+        $offreSkills = array_column($this->model->getOfferSkills($id), 'name');
+        return $this->render('modifier-offre.html.twig', [
+            'offre'        => $offre,
+            'locations'    => $this->model->getAllLocations(),
+            'skills'       => $this->model->getAllSkills(),
+            'offre_skills' => $offreSkills,
+        ]);
     }
 
     public function edit(int $id): void
@@ -99,7 +114,16 @@ class OffreController extends Controller
             'salary'      => $_POST['salary']      ?? '',
             'type'        => $_POST['type']        ?? '',
             'mode'        => $_POST['mode']        ?? '',
+            'location_id' => (int) ($_POST['location_id'] ?? 0),
         ]);
+
+        $this->model->clearSkillsFromOffer($id);
+        $skillNames = array_filter(array_map('trim', explode(',', $_POST['skills'] ?? '')));
+        foreach ($skillNames as $name) {
+            $skillId = $this->model->createSkill($name);
+            $this->model->addSkillToOffer($id, $skillId);
+        }
+
         $this->redirect('/offre/' . $id);
     }
 

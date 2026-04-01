@@ -123,6 +123,10 @@ form {
   gap: 1rem;
 }
 
+.about-hero-text p {
+  text-align: justify;
+}
+
 .about-img-placeholder {
   width: 220px;
   height: 100%;          /* ← remplace 160px par 100% */
@@ -136,7 +140,11 @@ form {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
-  margin-top: 2rem;
+  margin-top: .25rem;
+}
+
+.team-card-name {
+  font-weight: 600;
 }
 
 .team-card-img {
@@ -403,4 +411,123 @@ form {
 @media (max-width: 480px) {
   .team-grid { grid-template-columns: 1fr 1fr; }
   .page-content { padding: 1.25rem 1rem; }
+}
+
+/* ─── SKILL TAG INPUT ─── */
+.skills-container {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: #fff;
+  cursor: text;
+  transition: border-color .2s, box-shadow .2s;
+  min-height: 42px;
+}
+
+.skills-container:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.skills-container::placeholder {
+  border: 1px solid var(--color-primary);
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skills-tags:not(:empty) {
+  margin-bottom: 8px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ede9fe;
+  color: var(--color-primary);
+  padding: 3px 8px 3px 11px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.skill-tag button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity .15s;
+  display: flex;
+  align-items: center;
+}
+
+.skill-tag button:hover {
+  opacity: 1;
+}
+
+.search-container {
+  position: relative;
+}
+
+#skills-input {
+  width: 100%;
+  border: none;
+  box-shadow: none !important;
+  padding: 2px 0;
+  font-size: 0.9rem;
+  background: transparent;
+  color: var(--color-text);
+  font-family: inherit;
+}
+
+#skills-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+#skills-options {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -12px;
+  right: -12px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+  z-index: 100;
+  max-height: 220px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.select-option-search {
+  padding: 9px 14px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background .12s;
+  color: var(--color-text);
+}
+
+.select-option-search:hover {
+  background: #f5f3ff;
+  color: var(--color-primary);
+}
+
+.select-option-new {
+  color: var(--color-primary);
+  font-weight: 500;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
 }

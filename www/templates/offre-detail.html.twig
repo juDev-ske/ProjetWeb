@@ -47,7 +47,7 @@
         <div class="entreprise-card-header">
           <div class="card-logo-placeholder">{{ offre.entreprise|first }}</div>
           <div>
-            <p class="entreprise-nom">{{ offre.entreprise }}</p>
+             <p class="entreprise-nom"><a href="/entreprise/{{ offre.company_id }}">{{ offre.entreprise }}</a></p>
             <p class="entreprise-desc">{{ offre.entreprise_description }}</p>
           </div>
         </div>
