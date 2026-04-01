@@ -7,15 +7,19 @@
 {% endblock %}
 
 {% block content %}
-<main class="liste-page">
+<div class="liste-page">
   <div class="liste-header">
     <h1>Entreprises</h1>
-    <a href="/creation-entreprise" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvelle entreprise</a>
+    <a href="/creation-entreprise" class="btn-add">
+      <i class="fa-solid fa-plus"></i> Nouvelle entreprise
+    </a>
   </div>
 
   <form method="GET" action="/entreprises" class="liste-search">
     <input type="text" name="search" value="{{ search ?? '' }}" placeholder="Rechercher une entreprise...">
-    <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    <button type="submit" class="search-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
   </form>
 
   <div class="table-wrapper">
@@ -36,27 +40,24 @@
             <td><a href="/entreprise/{{ entreprise.id }}">{{ entreprise.nom }}</a></td>
             <td>{{ entreprise.email }}</td>
             <td>{{ entreprise.phone }}</td>
-            <td>{{ entreprise.rating > 0 ? entreprise.rating ~ ' / 5' : '—' }}</td>
+            <td>{{ entreprise.rating }} / 5</td>
             <td>{{ entreprise.nb_offres }}</td>
             <td class="table-actions">
-              <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-edit"><i class="fa-solid fa-pen"></i></a>
-              <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-delete"><i class="fa-solid fa-trash"></i></a>
+              <a href="/entreprise/{{ entreprise.id }}/modifier" class="btn-edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="/entreprise/{{ entreprise.id }}/supprimer" class="btn-delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
             </td>
           </tr>
         {% else %}
-          <tr><td colspan="6">Aucune entreprise enregistrée.</td></tr>
+          <tr>
+            <td colspan="6">Aucune entreprise trouvée.</td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-
-  {% if pages > 1 %}
-  <div class="pagination">
-    {% for i in 1..pages %}
-      <a href="/entreprises?page={{ i }}&search={{ search ?? '' }}"
-         class="pagination-item {{ i == page_courante ? 'active' : '' }}">{{ i }}</a>
-    {% endfor %}
-  </div>
-  {% endif %}
-</main>
+</div>
 {% endblock %}
