@@ -1,4 +1,4 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}CesiTonJob — {{ entreprise.nom }}{% endblock %}
 
@@ -90,8 +90,8 @@
           {% for offre in offres %}
             <tr>
               <td><a href="/offre/{{ offre.id }}">{{ offre.titre }}</a></td>
-              <td>{{ offre.type }}</td>
-              <td>{{ offre.mode }}</td>
+              <td>{{ offre.type == 'internship' ? 'Stage' : 'Alternance' }}</td>
+              <td>{{ offre.mode == 'on_site' ? 'Sur site' : (offre.mode == 'remote' ? 'Télétravail' : 'Hybride') }}</td>
               <td>{{ offre.date }}</td>
               <td>{{ offre.nb_candidatures }}</td>
               <td>

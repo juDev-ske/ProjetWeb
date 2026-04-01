@@ -22,7 +22,7 @@
             <div class="candidature-meta">
               <span><i class="fa-solid fa-location-dot"></i> {{ candidature.ville }}</span>
               <span><i class="fa-solid fa-calendar"></i> {{ candidature.date }}</span>
-              <span><i class="fa-solid fa-briefcase"></i> {{ candidature.type }}</span>
+              <span><i class="fa-solid fa-briefcase"></i> {{ candidature.type == 'internship' ? 'Stage' : 'Alternance' }}</span>
             </div>
             <div class="candidature-fichiers" style="margin-top:0.5rem;display:flex;gap:1rem;">
               {% if candidature.cv_path %}
@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="candidature-actions">
-          <span class="statut statut-{{ candidature.statut|lower }}">{{ candidature.statut }}</span>
+          <span class="statut statut-{{ candidature.statut|lower }}">{{ candidature.statut == 'sent' ? 'Envoyée' : (candidature.statut == 'accepted' ? 'Acceptée' : 'Refusée') }}</span>
           <a href="/offre/{{ candidature.offre_id }}" class="btn-voir">Voir l'offre</a>
         </div>
       </div>

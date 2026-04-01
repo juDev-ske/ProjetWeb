@@ -14,17 +14,17 @@
     </div>
   </div>
 
-  <div class="search-bar">
+  <form class="search-bar" method="GET" action="/offres">
     <div class="search-field">
       <span class="search-field-label">QUOI ?</span>
-      <input type="text" placeholder="Métier, entreprise, compétence...">
+      <input type="text" name="search" placeholder="Métier, entreprise, compétence...">
     </div>
     <div class="search-field">
       <span class="search-field-label">OÙ ?</span>
-      <input type="text" placeholder="Ville, département, code postal...">
+      <input type="text" name="ville" placeholder="Ville, département, code postal...">
     </div>
-    <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-  </div>
+    <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
 
   <section class="section">
     <div class="section-title">
@@ -42,8 +42,8 @@
             </div>
           </div>
           <div class="card-badges">
-            <span class="badge badge-blue">{{ offre.type }}</span>
-            <span class="badge badge-gray">{{ offre.mode }}</span>
+            <span class="badge badge-blue">{{ offre.type == 'internship' ? 'Stage' : 'Alternance' }}</span>
+            <span class="badge badge-gray">{{ offre.mode == 'on_site' ? 'Sur site' : (offre.mode == 'remote' ? 'Télétravail' : 'Hybride') }}</span>
             <span class="card-date">{{ offre.date }}</span>
           </div>
           <div class="card-meta">

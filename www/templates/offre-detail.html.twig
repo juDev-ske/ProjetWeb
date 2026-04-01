@@ -20,8 +20,8 @@
     </div>
 
     <div class="offre-badges">
-      <span class="badge badge-blue">{{ offre.type }}</span>
-      <span class="badge badge-gray">{{ offre.mode }}</span>
+      <span class="badge badge-blue">{{ offre.type == 'internship' ? 'Stage' : 'Alternance' }}</span>
+      <span class="badge badge-gray">{{ offre.mode == 'on_site' ? 'Sur site' : (offre.mode == 'remote' ? 'Télétravail' : 'Hybride') }}</span>
       <span class="offre-date">Publiée le {{ offre.date }}</span>
     </div>
 
@@ -84,7 +84,7 @@
           <i class="fa-solid fa-briefcase"></i>
           <div>
             <p class="offre-info-label">Type de contrat</p>
-            <p class="offre-info-value">{{ offre.type }}</p>
+            <p class="offre-info-value">{{ offre.type == 'internship' ? 'Stage' : 'Alternance' }}</p>
           </div>
         </div>
         <div class="offre-info-row">
