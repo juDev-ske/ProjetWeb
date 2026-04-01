@@ -26,49 +26,61 @@
       <a href="/" class="logo-link">
         <img class="logo" src="/public/images/logo-header.svg" alt="CesiTonJob">
       </a>
+
       <h1 class="title">Se connecter</h1>
+
       {% if error == '1' %}
         <p class="error-msg">Email ou mot de passe incorrect.</p>
       {% elseif error == '2' %}
         <p class="error-msg">Votre compte est désactivé.</p>
       {% endif %}
+
       <form class="login-form" action="/connexion" method="post" novalidate>
-        <label>
+        <label for="email">
           <span class="label-text">Adresse mail</span>
-          <input type="email" name="email" placeholder="jean.dupont@cesi.fr" required autocomplete="email">
+          <input id="email" type="email" name="email" placeholder="jean.dupont@cesi.fr" required autocomplete="email">
         </label>
-        <label class="password-row">
-          <span class="label-text">Mot de passe</span>
+
+        <div class="password-row">
+          <label for="pw" class="label-text">Mot de passe</label>
           <div class="pw-wrap">
-            <input type="password" name="password" id="pw" placeholder="Mot de passe..." required>
-            <button class="eye-btn" type="button" onclick="togglePw()" aria-label="Afficher">
-              <svg id="eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/></svg>
+            <input id="pw" type="password" name="password" placeholder="Mot de passe..." required>
+            <button class="eye-btn" type="button" onclick="togglePw()" aria-label="Afficher le mot de passe">
+              <svg id="eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>
+              </svg>
             </button>
           </div>
-        </label>
+        </div>
+
         <div class="form-meta">
           <div class="toggle-row">
             <span class="toggle-label">Rester connecté·e</span>
-            <label class="toggle" aria-label="Rester connecté">
-              <input type="checkbox" name="remember">
+            <label class="toggle" for="remember">
+              <input id="remember" type="checkbox" name="remember">
               <span class="track"></span>
             </label>
           </div>
         </div>
+
         <button class="primary" type="submit">Je me connecte</button>
       </form>
     </section>
   </main>
+
   <script>
     let shownPw = false;
+
     function togglePw() {
       shownPw = !shownPw;
       const pw = document.getElementById('pw');
       const eye = document.getElementById('eye');
+
       pw.type = shownPw ? 'text' : 'password';
       eye.innerHTML = shownPw
-        ? `<path d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18 18 0 0 1 5.06-5.94M9.9 4.24A9 9 0 0 1 12 4c7 0 11 8 11 8a18 18 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
-        : `<circle cx="12" cy="12" r="3"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>`;
+        ? `<path d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18 18 0 0 1 5.06-5.94M9.9 4.24A9 9 0 0 1 12 4c7 0 11 8 11 8a18 18 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`
+        : `<circle cx="12" cy="12" r="3"></circle><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>`;
     }
   </script>
 </body>

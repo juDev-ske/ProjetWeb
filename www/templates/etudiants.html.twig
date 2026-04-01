@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-admin.html.twig' %}
 
 {% block title %}CesiTonJob — Étudiants{% endblock %}
 
@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<main class="liste-page">
+<div class="liste-page">
   <div class="liste-header">
     <h1>Étudiants</h1>
     <a href="/creation-etudiant" class="btn-add"><i class="fa-solid fa-plus"></i> Nouvel étudiant</a>
@@ -34,13 +34,13 @@
       <tbody>
         {% for etudiant in etudiants %}
           {% set statut_label = {
-            'searching':     'En recherche',
-            'found':         'Stage trouvé',
+            'searching': 'En recherche',
+            'found': 'Stage trouvé',
             'not_searching': 'Pas en recherche'
           } %}
           {% set statut_color = {
-            'searching':     '#f59e0b',
-            'found':         '#10b981',
+            'searching': '#f59e0b',
+            'found': '#10b981',
             'not_searching': '#94a3b8'
           } %}
           <tr>
@@ -74,5 +74,5 @@
     {% endfor %}
   </div>
   {% endif %}
-</main>
+</div>
 {% endblock %}

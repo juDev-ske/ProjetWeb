@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-admin.html.twig' %}
 
 {% block title %}CesiTonJob — Pilotes{% endblock %}
 
@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<main class="liste-page">
+<div class="liste-page">
   <div class="liste-header">
     <h1>Pilotes</h1>
     <a href="/creation-pilote" class="btn-add"><i class="fa-solid fa-plus"></i> Nouveau pilote</a>
@@ -56,5 +56,5 @@
     {% endfor %}
   </div>
   {% endif %}
-</main>
+</div>
 {% endblock %}
