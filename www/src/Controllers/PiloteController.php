@@ -85,6 +85,25 @@ class PiloteController extends Controller
         ]);
     }
 
+    public function createPromotionPage(): string
+    {
+        $pilotes = $this->model->getAllPilots();
+        return $this->render('creation-promotion.html.twig', [
+            'pilotes' => $pilotes,
+        ]);
+    }
+
+    public function createPromotion(): void
+    {
+        $promotionModel = new PromotionModel();
+        $promotionModel->createPromotion(
+            $_POST['name'] ?? '',
+            (int) ($_POST['year'] ?? date('Y')),
+            (int) ($_POST['pilot_id'] ?? 0)
+        );
+        $this->redirect('/promotions');
+    }
+
     public function promotionDetail(int $id): string
     {
         $promotionModel = new PromotionModel();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Script de seeds — vide toutes les tables et reinsère des données de test.
+ * Seeds — charge le schéma (database.sql) puis insère les données de test.
  * Lancer : docker-compose exec web php seeds.php
  */
 
@@ -14,6 +14,17 @@ $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $passwo
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);
 
+// ============================================================
+// SCHÉMA — exécution de database.sql
+// ============================================================
+echo "Création des tables (database.sql)...\n";
+$sql = file_get_contents(__DIR__ . '/database.sql');
+$pdo->exec($sql);
+echo "  Tables prêtes.\n\n";
+
+// ============================================================
+// VIDAGE DES DONNÉES
+// ============================================================
 echo "Vidage des tables...\n";
 
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
@@ -63,11 +74,11 @@ $profiles = [
     [1,  'Admin',   'CESI',     'not_searching'],
     [2,  'Marie',   'Martin',   'not_searching'],
     [3,  'Paul',    'Durand',   'not_searching'],
-    [4,  'Lea',     'Simon',    'not_searching'],
+    [4,  'Léa',     'Simon',    'not_searching'],
     [5,  'Lucas',   'Bernard',  'searching'],
     [6,  'Emma',    'Petit',    'searching'],
     [7,  'Hugo',    'Rousseau', 'found'],
-    [8,  'Chloe',   'Leblanc',  'searching'],
+    [8,  'Chloé',   'Leblanc',  'searching'],
     [9,  'Tom',     'Moreau',   'searching'],
     [10, 'Alice',   'Garnier',  'found'],
     [11, 'Maxime',  'Henry',    'searching'],
@@ -250,4 +261,5 @@ echo "\n✓ Seeds chargés avec succès !\n";
 echo "\nComptes disponibles (mot de passe : password) :\n";
 echo "  admin@cesi.fr          → admin\n";
 echo "  marie.martin@cesi.fr   → pilote\n";
+echo "  lea.simon@cesi.fr      → pilote\n";
 echo "  lucas.bernard@cesi.fr  → étudiant\n";

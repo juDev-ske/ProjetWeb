@@ -17,6 +17,12 @@ class WishlistController extends Controller
         $studentId = $_SESSION['user_id'] ?? 0;
         $offres    = $this->model->getWishlistByStudent($studentId);
 
+        foreach ($offres as &$offre) {
+            $offre['competences'] = !empty($offre['skill_names'])
+                ? explode('|', $offre['skill_names'])
+                : [];
+        }
+
         return $this->render('wishlist.html.twig', ['offres' => $offres]);
     }
 

@@ -97,6 +97,16 @@ $router->get('/mes-candidatures', function () use ($twig) {
     echo (new CandidatureController($twig))->index();
 });
 
+$router->get('/candidature-spontanee', function () use ($twig) {
+    requireRole('etudiant');
+    echo (new CandidatureController($twig))->spontaneous();
+});
+
+$router->post('/candidature-spontanee', function () use ($twig) {
+    requireRole('etudiant');
+    (new CandidatureController($twig))->spontaneous();
+});
+
 $router->get('/candidatures-pilote', function () use ($twig) {
     requireRole(['admin', 'pilote']);
     echo (new CandidatureController($twig))->piloteView();
@@ -260,6 +270,16 @@ $router->get('/promotions', function () use ($twig) {
     echo (new PiloteController($twig))->promotions();
 });
 
+$router->get('/creation-promotion', function () use ($twig) {
+    requireRole(['admin', 'pilote']);
+    echo (new PiloteController($twig))->createPromotionPage();
+});
+
+$router->post('/creation-promotion', function () use ($twig) {
+    requireRole(['admin', 'pilote']);
+    (new PiloteController($twig))->createPromotion();
+});
+
 $router->get('/promotion/:id', function ($id) use ($twig) {
     requireRole(['admin', 'pilote']);
     echo (new PiloteController($twig))->promotionDetail((int) $id);
@@ -283,7 +303,12 @@ $router->get('/profil', function () use ($twig) {
 // PAGES STATIQUES
 // =============================================
 $router->get('/a-propos', function () use ($twig) {
-    echo $twig->render('a-propos.html.twig', ['equipe' => []]);
+    echo $twig->render('a-propos.html.twig', ['equipe' => [
+        ['nom' => 'Fred',    'role' => 'Chef de projet & Développeur',  'couleur' => '#1800ad'],
+        ['nom' => 'Julien',  'role' => 'Développeur Front-end',         'couleur' => '#00703c'],
+        ['nom' => 'Nicolas', 'role' => 'Développeur Back-end',          'couleur' => '#bd0000'],
+        ['nom' => 'Maxime',  'role' => 'Base de données & Intégration', 'couleur' => '#0d7aa5'],
+    ]]);
 });
 
 $router->get('/contact', function () use ($twig) {

@@ -8,8 +8,11 @@ class PromotionModel extends Model
     public function getAllPromotions(): array
     {
         return $this->db->query("
-            SELECT p.*, pr.first_name AS pilot_first_name, pr.last_name AS pilot_last_name,
-                   COUNT(sp.student_id) AS student_count
+            SELECT p.id,
+                   p.name                                         AS nom,
+                   p.year                                         AS annee,
+                   CONCAT(pr.first_name, ' ', pr.last_name)      AS pilote,
+                   COUNT(sp.student_id)                           AS nb_etudiants
             FROM promotion p
             JOIN user u       ON p.pilot_id  = u.id
             JOIN profile pr   ON u.id        = pr.user_id
@@ -22,7 +25,11 @@ class PromotionModel extends Model
     public function getPromotionById(int $id): ?array
     {
         $results = $this->db->query("
-            SELECT p.*, pr.first_name AS pilot_first_name, pr.last_name AS pilot_last_name
+            SELECT p.id,
+                   p.name                                    AS nom,
+                   p.year                                    AS annee,
+                   CONCAT(pr.first_name, ' ', pr.last_name) AS pilote,
+                   (SELECT COUNT(*) FROM student_promotion sp2 WHERE sp2.promotion_id = p.id) AS nb_etudiants
             FROM promotion p
             JOIN user u     ON p.pilot_id = u.id
             JOIN profile pr ON u.id       = pr.user_id
@@ -35,8 +42,10 @@ class PromotionModel extends Model
     public function getStudentsByPromotion(int $promotionId): array
     {
         return $this->db->query("
-            SELECT u.id, u.email, p.first_name, p.last_name,
-                   COUNT(a.id) AS application_count
+            SELECT u.id, u.email,
+                   p.first_name  AS prenom,
+                   p.last_name   AS nom,
+                   COUNT(a.id)   AS nb_candidatures
             FROM student_promotion sp
             JOIN user u    ON sp.student_id  = u.id
             JOIN profile p ON u.id           = p.user_id

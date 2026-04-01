@@ -1,0 +1,46 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}CesiTonJob — Nouvelle promotion{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/liste.css">
+{% endblock %}
+
+{% block content %}
+<main class="liste-page">
+  <a href="/promotions" class="back-link"><i class="fa-solid fa-arrow-left"></i> Retour aux promotions</a>
+
+  <div class="liste-header">
+    <h1>Créer une promotion</h1>
+  </div>
+
+  <div style="max-width:540px;">
+    <form method="POST" action="/creation-promotion">
+      <div class="form-group" style="margin-bottom:1rem;">
+        <label for="name">Nom de la promotion</label>
+        <input type="text" id="name" name="name" placeholder="Ex : BTS SIO 2026" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom:1rem;">
+        <label for="year">Année</label>
+        <input type="number" id="year" name="year" value="{{ 'now'|date('Y') }}" min="2020" max="2040" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom:1.5rem;">
+        <label for="pilot_id">Pilote responsable</label>
+        <select id="pilot_id" name="pilot_id" required>
+          <option value="">Sélectionnez un pilote</option>
+          {% for pilote in pilotes %}
+            <option value="{{ pilote.id }}">{{ pilote.prenom }} {{ pilote.nom }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <a href="/promotions" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit" style="width:auto;padding:.7rem 2rem;">Créer la promotion</button>
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}
