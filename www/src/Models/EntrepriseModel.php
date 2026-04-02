@@ -64,8 +64,9 @@ class EntrepriseModel extends Model
     {
         $results = $this->db->query("
             SELECT c.id, c.name AS nom, c.description, c.email, c.phone, c.rating,
-                   COUNT(o.id) AS nb_offres,
-                   COUNT(DISTINCT a.student_id) AS nb_stagiaires
+                   COUNT(DISTINCT o.id) AS nb_offres,
+                   COUNT(DISTINCT a.student_id) AS nb_stagiaires,
+                   (SELECT COUNT(*) FROM company_rating cr WHERE cr.company_id = c.id) AS nb_evaluations
             FROM company c
             LEFT JOIN offer o       ON c.id = o.company_id
             LEFT JOIN application a ON o.id = a.offer_id
@@ -109,11 +110,24 @@ class EntrepriseModel extends Model
         ", [$data['name'], $data['description'], $data['email'], $data['phone'], $id]);
     }
 
-    public function updateRating(int $id, float $rating): bool
+    public function updateRating(int $companyId, float $rating, int $userId): bool
     {
+        // Insérer ou mettre à jour la note de cet utilisateur
+        $this->db->execute("
+            INSERT INTO company_rating (company_id, user_id, rating)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE rating = VALUES(rating), created_at = CURRENT_TIMESTAMP
+        ", [$companyId, $userId, $rating]);
+
+        // Recalculer la moyenne et mettre à jour la colonne company.rating
+        $result = $this->db->query("
+            SELECT ROUND(AVG(rating), 1) AS avg_rating FROM company_rating WHERE company_id = ?
+        ", [$companyId]);
+
+        $avg = (float) ($result[0]['avg_rating'] ?? 0);
         return $this->db->execute("
             UPDATE company SET rating = ? WHERE id = ?
-        ", [$rating, $id]);
+        ", [$avg, $companyId]);
     }
 
     public function deleteCompany(int $id): bool

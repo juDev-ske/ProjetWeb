@@ -82,8 +82,9 @@ class EntrepriseController extends Controller
 
     public function rate(int $id): void
     {
-        $note = max(1, min(5, (float) ($_POST['note'] ?? 0)));
-        $this->model->updateRating($id, $note);
+        $note   = max(1, min(5, (float) ($_POST['note'] ?? 0)));
+        $userId = $_SESSION['user_id'] ?? 0;
+        $this->model->updateRating($id, $note, $userId);
         $this->redirect('/entreprise/' . $id);
     }
 

@@ -30,13 +30,15 @@ class WishlistController extends Controller
     {
         $studentId = $_SESSION['user_id'] ?? 0;
         $this->model->addToWishlist($studentId, $offerId);
-        $this->redirect('/wishlist');
+        $referer = $_SERVER['HTTP_REFERER'] ?? '/offres';
+        $this->redirect($referer);
     }
 
     public function remove(int $offerId): void
     {
         $studentId = $_SESSION['user_id'] ?? 0;
         $this->model->removeFromWishlist($studentId, $offerId);
-        $this->redirect('/wishlist');
+        $referer = $_SERVER['HTTP_REFERER'] ?? '/wishlist';
+        $this->redirect($referer);
     }
 }

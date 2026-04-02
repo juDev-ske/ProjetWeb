@@ -40,6 +40,17 @@ CREATE TABLE IF NOT EXISTS company (
     rating      DECIMAL(2,1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS company_rating (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,
+    user_id    INT NOT NULL,
+    rating     DECIMAL(2,1) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_user_company (company_id, user_id),
+    FOREIGN KEY (company_id) REFERENCES company(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id)    REFERENCES user(id)    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS offer (
     id               INT AUTO_INCREMENT PRIMARY KEY,
     title            VARCHAR(255) NOT NULL,
@@ -79,6 +90,19 @@ CREATE TABLE IF NOT EXISTS application (
     application_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE,
     FOREIGN KEY (offer_id)   REFERENCES offer(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS spontaneous_application (
+    id               INT AUTO_INCREMENT PRIMARY KEY,
+    student_id       INT NOT NULL,
+    target_company   VARCHAR(255) DEFAULT '',
+    target_position  VARCHAR(255) DEFAULT '',
+    contract_type    VARCHAR(50) DEFAULT '',
+    message          TEXT,
+    cv_path          VARCHAR(255) DEFAULT '',
+    lm_path          VARCHAR(255) DEFAULT '',
+    application_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS wishlist (

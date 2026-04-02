@@ -82,6 +82,14 @@ class CandidatureModel extends Model
         ", [$status, $id]);
     }
 
+    public function createSpontaneousApplication(int $studentId, string $company, string $position, string $contract, string $message, string $cvPath = '', string $lmPath = ''): bool
+    {
+        return $this->db->execute("
+            INSERT INTO spontaneous_application (student_id, target_company, target_position, contract_type, message, cv_path, lm_path)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ", [$studentId, $company, $position, $contract, $message, $cvPath, $lmPath]);
+    }
+
     public function hasAlreadyApplied(int $studentId, int $offerId): bool
     {
         $result = $this->db->query("

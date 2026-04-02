@@ -119,9 +119,15 @@
 
           <div class="card-footer">
             {% if session.user_role == 'etudiant' %}
-            <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
-              <i class="fa-regular fa-bookmark"></i>
-            </a>
+              {% if offre.id in wishlist_ids %}
+                <a href="/wishlist/retirer/{{ offre.id }}" class="btn-bookmark active" title="Retirer de la wish-list">
+                  <i class="fa-solid fa-bookmark"></i>
+                </a>
+              {% else %}
+                <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
+                  <i class="fa-regular fa-bookmark"></i>
+                </a>
+              {% endif %}
             {% endif %}
             <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
           </div>

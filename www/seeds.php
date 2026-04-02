@@ -28,7 +28,7 @@ echo "  Tables prêtes.\n\n";
 echo "Vidage des tables...\n";
 
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
-foreach (['student_promotion','promotion','wishlist','application','offer_skill','offer','skill','company','location','profile','user'] as $table) {
+foreach (['student_promotion','promotion','wishlist','spontaneous_application','company_rating','application','offer_skill','offer','skill','company','location','profile','user'] as $table) {
     $pdo->exec("TRUNCATE TABLE $table");
     echo "  TRUNCATE $table\n";
 }
