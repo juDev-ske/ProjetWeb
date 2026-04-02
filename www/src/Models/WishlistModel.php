@@ -5,7 +5,7 @@ use App\Core\Model;
 
 class WishlistModel extends Model
 {
-    public function getWishlistByStudent(int $studentId): array
+   public function getWishlistByStudent(int $studentId): array
     {
         return $this->db->query("
             SELECT o.id,
@@ -15,8 +15,8 @@ class WishlistModel extends Model
                    o.type,
                    o.mode,
                    o.publication_date AS date,
-                   c.name        AS entreprise,
-                   l.city        AS ville,
+                   c.name         AS entreprise,
+                   l.city         AS ville,
                    GROUP_CONCAT(s.name ORDER BY s.name SEPARATOR '|') AS skill_names
             FROM wishlist w
             JOIN offer o    ON w.offer_id    = o.id
@@ -25,7 +25,7 @@ class WishlistModel extends Model
             LEFT JOIN offer_skill os ON o.id = os.offer_id
             LEFT JOIN skill s        ON os.skill_id = s.id
             WHERE w.student_id = ?
-            GROUP BY o.id
+            GROUP BY o.id, w.added_at
             ORDER BY w.added_at DESC
         ", [$studentId]);
     }

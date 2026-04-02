@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find /c/Users/Fred/Desktop/ProjetWeb -type f -name *.html.twig)"
-    ]
-  }
-}
