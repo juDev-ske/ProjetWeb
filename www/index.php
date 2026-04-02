@@ -162,7 +162,6 @@ $router->get('/entreprises', function () use ($twig) {
 });
 
 $router->get('/entreprise/:id', function ($id) use ($twig) {
-    requireRole(['admin', 'pilote', 'etudiant']);
     echo (new EntrepriseController($twig))->show((int) $id);
 });
 
