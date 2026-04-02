@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Validator;
 use App\Models\EntrepriseModel;
 
 class EntrepriseController extends Controller
@@ -50,11 +51,31 @@ class EntrepriseController extends Controller
 
     public function create(): void
     {
+        $nom         = trim($_POST['nom']         ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $email       = trim($_POST['email']       ?? '');
+        $telephone   = trim($_POST['telephone']   ?? '');
+
+        $v = new Validator();
+        $v->required('nom', $nom, 'Nom de l\'entreprise')
+          ->minLength('nom', $nom, 2, 'Nom de l\'entreprise')
+          ->maxLength('nom', $nom, 255, 'Nom de l\'entreprise')
+          ->maxLength('description', $description, 2000, 'Description')
+          ->required('email', $email, 'Email')
+          ->email('email', $email)
+          ->maxLength('email', $email, 255, 'Email')
+          ->phone('telephone', $telephone);
+
+        if ($v->hasErrors()) {
+            echo $this->render('creation-entreprise.html.twig', ['errors' => $v->getErrors()]);
+            return;
+        }
+
         $this->model->createCompany([
-            'name'        => $_POST['nom']         ?? '',
-            'description' => $_POST['description'] ?? '',
-            'email'       => $_POST['email']       ?? '',
-            'phone'       => $_POST['telephone']   ?? '',
+            'name'        => $nom,
+            'description' => $description,
+            'email'       => $email,
+            'phone'       => $telephone,
         ]);
         $this->redirect('/entreprises');
     }
@@ -71,11 +92,34 @@ class EntrepriseController extends Controller
 
     public function edit(int $id): void
     {
+        $nom         = trim($_POST['nom']         ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $email       = trim($_POST['email']       ?? '');
+        $telephone   = trim($_POST['telephone']   ?? '');
+
+        $v = new Validator();
+        $v->required('nom', $nom, 'Nom de l\'entreprise')
+          ->minLength('nom', $nom, 2, 'Nom de l\'entreprise')
+          ->maxLength('nom', $nom, 255, 'Nom de l\'entreprise')
+          ->maxLength('description', $description, 2000, 'Description')
+          ->email('email', $email)
+          ->maxLength('email', $email, 255, 'Email')
+          ->phone('telephone', $telephone);
+
+        if ($v->hasErrors()) {
+            $entreprise = $this->model->getCompanyById($id);
+            echo $this->render('modifier-entreprise.html.twig', [
+                'entreprise' => $entreprise,
+                'errors'     => $v->getErrors(),
+            ]);
+            return;
+        }
+
         $this->model->updateCompany($id, [
-            'name'        => $_POST['nom']         ?? '',
-            'description' => $_POST['description'] ?? '',
-            'email'       => $_POST['email']       ?? '',
-            'phone'       => $_POST['telephone']   ?? '',
+            'name'        => $nom,
+            'description' => $description,
+            'email'       => $email,
+            'phone'       => $telephone,
         ]);
         $this->redirect('/entreprise/' . $id);
     }

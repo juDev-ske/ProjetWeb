@@ -545,7 +545,12 @@ body.theme-admin .nav-mobile-logo img {
   transition: border-color .2s, color .2s;
 }
 .file-upload:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.file-upload.has-file { border-color: var(--color-primary); border-style: solid; color: var(--color-primary); background: var(--color-light); }
 .file-upload input[type="file"] { display: none; }
+.file-upload-label { display: flex; flex-direction: column; align-items: center; gap: .25rem; width: 100%; text-align: center; }
+.file-upload-label i { font-size: 1.5rem; }
+.file-upload-label small { font-size: .75rem; opacity: .7; }
+.required-star { color: #dc2626; }
 
 /* =============================================
    PAGINATION

@@ -51,21 +51,21 @@
           </div>
         {% else %}
         <p class="form-card-title">Envoyer un message</p>
-        <form action="/contact" method="post" novalidate>
+        <form action="/contact" method="post">
           <div class="form-row">
             <div class="form-group">
               <label for="prenom">Prénom</label>
-              <input type="text" id="prenom" name="prenom" placeholder="Jean" required>
+              <input type="text" id="prenom" name="prenom" placeholder="Jean" required minlength="2" maxlength="100">
             </div>
             <div class="form-group">
               <label for="nom">Nom</label>
-              <input type="text" id="nom" name="nom" placeholder="Dupont" required>
+              <input type="text" id="nom" name="nom" placeholder="Dupont" required minlength="2" maxlength="100">
             </div>
           </div>
 
           <div class="form-group">
             <label for="email">Adresse e-mail</label>
-            <input type="email" id="email" name="email" placeholder="jean.dupont@cesi.fr" required>
+            <input type="email" id="email" name="email" placeholder="jean.dupont@cesi.fr" required maxlength="255">
           </div>
 
           <div class="form-group">

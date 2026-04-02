@@ -13,6 +13,7 @@ use App\Controllers\EtudiantController;
 use App\Controllers\PiloteController;
 use App\Controllers\DashboardController;
 use App\Models\UserModel;
+use App\Models\WishlistModel;
 
 // --- Twig ---
 $loader = new \Twig\Loader\FilesystemLoader('templates');
@@ -50,7 +51,14 @@ $router->get('/deconnexion', function () use ($twig) {
 // =============================================
 $router->get('/', function () use ($twig) {
     $controller = new OffreController($twig);
-    echo $twig->render('accueil.html.twig', ['offres' => $controller->getLatestOffers()]);
+    $wishlistIds = [];
+    if (($_SESSION['user_role'] ?? '') === 'etudiant') {
+        $wishlistIds = (new WishlistModel())->getWishlistOfferIds($_SESSION['user_id'] ?? 0);
+    }
+    echo $twig->render('accueil.html.twig', [
+        'offres'       => $controller->getLatestOffers(),
+        'wishlist_ids' => $wishlistIds,
+    ]);
 });
 
 // =============================================
@@ -187,7 +195,7 @@ $router->post('/entreprise/:id/modifier', function ($id) use ($twig) {
 });
 
 $router->post('/entreprise/:id/evaluer', function ($id) use ($twig) {
-    requireRole(['admin', 'pilote', 'etudiant']);
+    requireRole(['admin', 'pilote']);
     (new EntrepriseController($twig))->rate((int) $id);
 });
 

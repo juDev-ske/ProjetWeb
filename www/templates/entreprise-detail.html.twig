@@ -53,7 +53,8 @@
           <div class="detail-rating-none">Pas encore évaluée</div>
         {% endif %}
 
-        {# Formulaire avec demi-étoiles cliquables — JS driven #}
+        {# Formulaire avec demi-étoiles cliquables — JS driven (admin/pilote uniquement) #}
+        {% if session.user_role in ['admin', 'pilote'] %}
         <form action="/entreprise/{{ entreprise.id }}/evaluer" method="post" class="detail-eval-form">
           <div class="star-picker-js" id="starPicker" data-value="{{ entreprise.rating }}">
             {% for i in 1..5 %}
@@ -68,6 +69,7 @@
           </p>
           <button type="submit" class="btn-submit">Évaluer</button>
         </form>
+        {% endif %}
 
         {% if session.user_role == 'admin' or session.user_role == 'pilote' %}
         <div class="detail-actions">
