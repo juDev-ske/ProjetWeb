@@ -14,10 +14,11 @@
       <h1>Créer une offre</h1>
     </div>
 
-    <form action="/creation-offre" method="post" novalidate>
+    {% include '_errors.html.twig' %}
+    <form action="/creation-offre" method="post">
       <div class="form-group">
         <label for="title">Titre du poste</label>
-        <input type="text" id="title" name="title" placeholder="Ex : Développeur Front-end" required>
+        <input type="text" id="title" name="title" placeholder="Ex : Développeur Front-end" required minlength="3" maxlength="255">
       </div>
 
       <div class="form-group">
@@ -32,7 +33,7 @@
 
       <div class="form-group">
         <label for="description">Description du poste</label>
-        <textarea id="description" name="description" rows="5" placeholder="Décrivez le poste, les missions..."></textarea>
+        <textarea id="description" name="description" rows="5" placeholder="Décrivez le poste, les missions..." maxlength="5000"></textarea>
       </div>
 
       <div class="form-group">
@@ -163,7 +164,7 @@
 
       <div class="form-group">
         <label for="salary">Rémunération</label>
-        <input type="text" id="salary" name="salary" placeholder="Ex : 600€/mois">
+        <input type="text" id="salary" name="salary" placeholder="Ex : 600€/mois" maxlength="100">
       </div>
 
       <div class="form-actions">

@@ -32,7 +32,8 @@
       </div>
     </div>
 
-    <form action="/postuler/{{ offre.id }}" method="post" enctype="multipart/form-data" novalidate>
+    {% include '_errors.html.twig' %}
+    <form action="/postuler/{{ offre.id }}" method="post" enctype="multipart/form-data">
 
       {# ── CV ── #}
       <div class="form-group">
@@ -67,7 +68,7 @@
       {# ── Message ── #}
       <div class="form-group">
         <label for="message">Message <span style="font-weight:400;color:var(--color-text-muted)">(optionnel)</span></label>
-        <textarea id="message" name="message" rows="4"
+        <textarea id="message" name="message" rows="4" maxlength="2000"
           placeholder="Présentez-vous brièvement, expliquez votre motivation..."></textarea>
       </div>
 
@@ -82,13 +83,21 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
-  // Feedback nom de fichier sélectionné
   [['cv', 'cv-zone', 'cv-label'], ['lm', 'lm-zone', 'lm-label']].forEach(([id, zone, lbl]) => {
-    document.getElementById(id).addEventListener('change', function() {
+    const input  = document.getElementById(id);
+    const zoneEl = document.getElementById(zone);
+    const lblEl  = document.getElementById(lbl);
+
+    // Clic sur la zone → ouvre le sélecteur de fichier
+    zoneEl.addEventListener('click', () => input.click());
+
+    // Feedback nom de fichier
+    input.addEventListener('change', function() {
       const file = this.files[0];
-      const zoneEl = document.getElementById(zone);
-      const lblEl  = document.getElementById(lbl);
       if (file) {
         lblEl.textContent = file.name;
         zoneEl.classList.add('has-file');

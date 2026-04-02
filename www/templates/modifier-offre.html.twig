@@ -14,15 +14,16 @@
       <h1>Modifier l'offre</h1>
     </div>
 
-    <form action="/offre/{{ offre.id }}/modifier" method="post" novalidate>
+    {% include '_errors.html.twig' %}
+    <form action="/offre/{{ offre.id }}/modifier" method="post">
       <div class="form-group">
         <label for="title">Titre du poste</label>
-        <input type="text" id="title" name="title" value="{{ offre.titre }}" required>
+        <input type="text" id="title" name="title" value="{{ offre.titre }}" required minlength="3" maxlength="255">
       </div>
 
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea id="description" name="description" rows="5">{{ offre.description }}</textarea>
+        <textarea id="description" name="description" rows="5" maxlength="5000">{{ offre.description }}</textarea>
       </div>
 
       <div class="form-group">
@@ -165,7 +166,7 @@
 
       <div class="form-group">
         <label for="salary">Rémunération</label>
-        <input type="text" id="salary" name="salary" value="{{ offre.remuneration }}" placeholder="Ex : 600€/mois">
+        <input type="text" id="salary" name="salary" value="{{ offre.remuneration }}" placeholder="Ex : 600€/mois" maxlength="100">
       </div>
 
       <div class="form-actions">

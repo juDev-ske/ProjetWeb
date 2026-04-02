@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Validator;
 use App\Models\CandidatureModel;
 use App\Models\OffreModel;
 
@@ -53,15 +54,33 @@ class CandidatureController extends Controller
     public function apply(int $offerId): void
     {
         $studentId = $_SESSION['user_id'] ?? 0;
-        $message   = $_POST['message'] ?? '';
-        $cvPath    = '';
-        $lmPath    = '';
+        $message   = trim($_POST['message'] ?? '');
+        $cvFile    = $_FILES['cv'] ?? [];
+        $lmFile    = $_FILES['lm'] ?? [];
 
-        if (!empty($_FILES['cv']['tmp_name'])) {
-            $cvPath = $this->saveFile($_FILES['cv'], 'cv');
+        $v = new Validator();
+        $v->maxLength('message', $message, 2000, 'Message')
+          ->file('cv', $cvFile, ['pdf', 'doc', 'docx'], 5, 'CV', true)
+          ->file('lm', $lmFile, ['pdf', 'doc', 'docx'], 5, 'Lettre de motivation', true);
+
+        if ($v->hasErrors()) {
+            $offreModel = new OffreModel();
+            $offre      = $offreModel->getOfferById($offerId);
+            echo $this->render('postuler.html.twig', [
+                'offre'  => $offre,
+                'errors' => $v->getErrors(),
+            ]);
+            return;
         }
-        if (!empty($_FILES['lm']['tmp_name'])) {
-            $lmPath = $this->saveFile($_FILES['lm'], 'lm');
+
+        $cvPath = '';
+        $lmPath = '';
+
+        if (!empty($cvFile['tmp_name'])) {
+            $cvPath = $this->saveFile($cvFile, 'cv');
+        }
+        if (!empty($lmFile['tmp_name'])) {
+            $lmPath = $this->saveFile($lmFile, 'lm');
         }
 
         if (!$this->model->hasAlreadyApplied($studentId, $offerId)) {
@@ -81,6 +100,10 @@ class CandidatureController extends Controller
             return '';
         }
 
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
         $filename = $prefix . '_' . uniqid() . '.' . $ext;
         move_uploaded_file($file['tmp_name'], $uploadDir . $filename);
         return 'public/uploads/' . $filename;
@@ -89,25 +112,50 @@ class CandidatureController extends Controller
     public function spontaneous(): string
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $prenom    = trim($_POST['prenom']     ?? '');
+            $nom       = trim($_POST['nom']        ?? '');
+            $email     = trim($_POST['email']      ?? '');
+            $entreprise = trim($_POST['entreprise'] ?? '');
+            $poste     = trim($_POST['poste']      ?? '');
+            $contrat   = $_POST['contrat']   ?? '';
+            $message   = trim($_POST['message']    ?? '');
+            $cvFile    = $_FILES['cv'] ?? [];
+            $lmFile    = $_FILES['lm'] ?? [];
+
+            $v = new Validator();
+            $v->required('prenom', $prenom, 'Prénom')
+              ->minLength('prenom', $prenom, 2, 'Prénom')
+              ->maxLength('prenom', $prenom, 100, 'Prénom')
+              ->required('nom', $nom, 'Nom')
+              ->minLength('nom', $nom, 2, 'Nom')
+              ->maxLength('nom', $nom, 100, 'Nom')
+              ->required('email', $email, 'Email')
+              ->email('email', $email)
+              ->maxLength('email', $email, 255, 'Email')
+              ->maxLength('entreprise', $entreprise, 255, 'Entreprise ciblée')
+              ->maxLength('poste', $poste, 255, 'Poste visé')
+              ->inList('contrat', $contrat, ['', 'stage', 'alternance', 'cdi', 'cdd'], 'Type de contrat')
+              ->maxLength('message', $message, 2000, 'Message')
+              ->file('cv', $cvFile, ['pdf', 'doc', 'docx'], 5, 'CV', true)
+              ->file('lm', $lmFile, ['pdf', 'doc', 'docx'], 5, 'Lettre de motivation', false);
+
+            if ($v->hasErrors()) {
+                return $this->render('candidature-spontanee.html.twig', ['errors' => $v->getErrors()]);
+            }
+
             $cvPath = '';
             $lmPath = '';
 
-            if (!empty($_FILES['cv']['tmp_name'])) {
-                $cvPath = $this->saveFile($_FILES['cv'], 'cv');
+            if (!empty($cvFile['tmp_name'])) {
+                $cvPath = $this->saveFile($cvFile, 'cv');
             }
-            if (!empty($_FILES['lm']['tmp_name'])) {
-                $lmPath = $this->saveFile($_FILES['lm'], 'lm');
+            if (!empty($lmFile['tmp_name'])) {
+                $lmPath = $this->saveFile($lmFile, 'lm');
             }
 
             $studentId = $_SESSION['user_id'] ?? 0;
             $this->model->createSpontaneousApplication(
-                $studentId,
-                $_POST['entreprise'] ?? '',
-                $_POST['poste'] ?? '',
-                $_POST['contrat'] ?? '',
-                $_POST['message'] ?? '',
-                $cvPath,
-                $lmPath
+                $studentId, $entreprise, $poste, $contrat, $message, $cvPath, $lmPath
             );
 
             return $this->render('candidature-spontanee.html.twig', ['success' => true]);

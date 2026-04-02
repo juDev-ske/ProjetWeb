@@ -42,6 +42,32 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ── Validation HTML5 — messages en français ─────────────────
+  document.querySelectorAll('form:not([novalidate])').forEach(function (form) {
+    form.querySelectorAll('input, textarea, select').forEach(function (field) {
+      field.addEventListener('invalid', function () {
+        if (field.validity.valueMissing) {
+          field.setCustomValidity('Ce champ est obligatoire.');
+        } else if (field.validity.typeMismatch && field.type === 'email') {
+          field.setCustomValidity('Veuillez saisir une adresse email valide.');
+        } else if (field.validity.tooShort) {
+          field.setCustomValidity('Minimum ' + field.minLength + ' caractères requis.');
+        } else if (field.validity.tooLong) {
+          field.setCustomValidity('Maximum ' + field.maxLength + ' caractères autorisés.');
+        } else if (field.validity.patternMismatch) {
+          field.setCustomValidity('Le format saisi n\'est pas valide.');
+        } else if (field.validity.rangeUnderflow || field.validity.rangeOverflow) {
+          field.setCustomValidity('La valeur doit être entre ' + field.min + ' et ' + field.max + '.');
+        } else {
+          field.setCustomValidity('');
+        }
+      });
+      field.addEventListener('input', function () {
+        field.setCustomValidity('');
+      });
+    });
+  });
+
   // ── Toggle filtres offres (mobile) ──────────────────────────
   var filterToggle = document.getElementById('filterToggle');
   var filterBody   = document.getElementById('filterBody');

@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Validator;
 use App\Models\UserModel;
 
 class EtudiantController extends Controller
@@ -37,12 +38,31 @@ class EtudiantController extends Controller
 
     public function create(): void
     {
-        $userId = $this->model->createUser(
-            $_POST['email']    ?? '',
-            $_POST['password'] ?? '',
-            'etudiant'
-        );
-        $this->model->createProfile($userId, $_POST['prenom'] ?? '', $_POST['nom'] ?? '');
+        $prenom   = trim($_POST['prenom']   ?? '');
+        $nom      = trim($_POST['nom']      ?? '');
+        $email    = trim($_POST['email']    ?? '');
+        $password = $_POST['password'] ?? '';
+
+        $v = new Validator();
+        $v->required('prenom', $prenom, 'Prénom')
+          ->minLength('prenom', $prenom, 2, 'Prénom')
+          ->maxLength('prenom', $prenom, 100, 'Prénom')
+          ->required('nom', $nom, 'Nom')
+          ->minLength('nom', $nom, 2, 'Nom')
+          ->maxLength('nom', $nom, 100, 'Nom')
+          ->required('email', $email, 'Email')
+          ->email('email', $email)
+          ->maxLength('email', $email, 255, 'Email')
+          ->required('password', $password, 'Mot de passe')
+          ->password('password', $password);
+
+        if ($v->hasErrors()) {
+            echo $this->render('creation-etudiant.html.twig', ['errors' => $v->getErrors()]);
+            return;
+        }
+
+        $userId = $this->model->createUser($email, $password, 'etudiant');
+        $this->model->createProfile($userId, $prenom, $nom);
         $this->redirect('/etudiants');
     }
 
@@ -58,18 +78,39 @@ class EtudiantController extends Controller
 
     public function edit(int $id): void
     {
+        $prenom = trim($_POST['prenom'] ?? '');
+        $nom    = trim($_POST['nom']    ?? '');
+        $email  = trim($_POST['email']  ?? '');
+        $status = $_POST['stage_status'] ?? 'searching';
+
+        $v = new Validator();
+        $v->required('prenom', $prenom, 'Prénom')
+          ->minLength('prenom', $prenom, 2, 'Prénom')
+          ->maxLength('prenom', $prenom, 100, 'Prénom')
+          ->required('nom', $nom, 'Nom')
+          ->minLength('nom', $nom, 2, 'Nom')
+          ->maxLength('nom', $nom, 100, 'Nom')
+          ->email('email', $email)
+          ->maxLength('email', $email, 255, 'Email')
+          ->inList('stage_status', $status, ['searching', 'found', 'not_searching'], 'Statut de stage');
+
+        if ($v->hasErrors()) {
+            $etudiant = $this->model->getUserById($id);
+            echo $this->render('modifier-etudiant.html.twig', [
+                'etudiant' => $etudiant,
+                'errors'   => $v->getErrors(),
+            ]);
+            return;
+        }
+
         $this->model->updateProfile($id, [
-            'first_name' => $_POST['prenom'] ?? '',
-            'last_name'  => $_POST['nom']    ?? '',
+            'first_name' => $prenom,
+            'last_name'  => $nom,
         ]);
-        if (!empty($_POST['email'])) {
-            $this->model->updateEmail($id, $_POST['email']);
+        if ($email !== '') {
+            $this->model->updateEmail($id, $email);
         }
-        $allowed = ['searching', 'found', 'not_searching'];
-        $status  = $_POST['stage_status'] ?? 'searching';
-        if (in_array($status, $allowed)) {
-            $this->model->updateStageStatus($id, $status);
-        }
+        $this->model->updateStageStatus($id, $status);
         $this->redirect('/etudiants');
     }
 

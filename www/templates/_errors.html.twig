@@ -1,0 +1,11 @@
+{# Affiche les erreurs de validation backend #}
+{% if errors is defined and errors|length > 0 %}
+  <div class="form-errors" style="background:#fee2e2;color:#991b1b;padding:.75rem 1rem;border-radius:8px;margin-bottom:1.25rem;font-size:.85rem;">
+    <p style="font-weight:700;margin-bottom:.35rem;"><i class="fa-solid fa-circle-exclamation"></i> Veuillez corriger les erreurs suivantes :</p>
+    <ul style="margin:0;padding-left:1.25rem;">
+      {% for field, message in errors %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

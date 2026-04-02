@@ -88,6 +88,37 @@
 
 .candidature-actions { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
 
+/* LIENS FICHIERS CV/LM */
+.fichier-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .7rem;
+  background: var(--color-light);
+  color: var(--color-primary);
+  border-radius: 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.fichier-link:hover { background: var(--color-primary); color: #fff; }
+
+/* BTN VOIR OFFRE */
+.btn-voir {
+  display: inline-flex;
+  align-items: center;
+  padding: .4rem .9rem;
+  background: var(--color-light);
+  color: var(--color-primary);
+  border-radius: 8px;
+  font-size: .82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.btn-voir:hover { background: var(--color-primary); color: #fff; }
+
 /* STATUT CANDIDATURE */
 .statut {
   display: inline-flex; align-items: center; gap: .4rem;

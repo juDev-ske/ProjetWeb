@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Validator;
 use App\Models\UserModel;
 
 class AuthController extends Controller
@@ -21,8 +22,18 @@ class AuthController extends Controller
 
     public function login(): void
     {
-        $email    = $_POST['email']    ?? '';
+        $email    = trim($_POST['email']    ?? '');
         $password = $_POST['password'] ?? '';
+
+        $v = new Validator();
+        $v->required('email', $email, 'Email')
+          ->email('email', $email)
+          ->required('password', $password, 'Mot de passe');
+
+        if ($v->hasErrors()) {
+            $this->redirect('/connexion?error=1');
+            return;
+        }
 
         $user = $this->model->getUserByEmail($email);
 

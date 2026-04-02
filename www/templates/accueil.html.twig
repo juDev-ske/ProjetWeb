@@ -50,6 +50,7 @@
             <div class="card-meta-row"><i class="fa-solid fa-location-dot"></i> {{ offre.ville }}</div>
             <div class="card-meta-row"><i class="fa-solid fa-euro-sign"></i> {{ offre.remuneration }}</div>
           </div>
+          {% set competences = offre.skill_names ? offre.skill_names|split('|') : [] %}
           <div class="skill-tags">
             {% for competence in competences %}
               <span class="skill-tag">{{ competence }}</span>
@@ -57,9 +58,15 @@
           </div>
           <div class="card-footer">
             {% if session.user_role == 'etudiant' %}
-            <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
-              <i class="fa-regular fa-bookmark"></i>
-            </a>
+              {% if wishlist_ids is defined and offre.id in wishlist_ids %}
+                <a href="/wishlist/retirer/{{ offre.id }}" class="btn-bookmark active" title="Retirer de la wish-list">
+                  <i class="fa-solid fa-bookmark"></i>
+                </a>
+              {% else %}
+                <a href="/wishlist/ajouter/{{ offre.id }}" class="btn-bookmark" title="Sauvegarder">
+                  <i class="fa-regular fa-bookmark"></i>
+                </a>
+              {% endif %}
             {% endif %}
             <a href="/offre/{{ offre.id }}" class="btn-primary">Voir l'offre</a>
           </div>

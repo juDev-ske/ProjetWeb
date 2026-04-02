@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Validator;
 use App\Models\OffreModel;
 use App\Models\EntrepriseModel;
 use App\Models\WishlistModel;
@@ -85,15 +86,47 @@ class OffreController extends Controller
 
     public function create(): void
     {
+        $title       = trim($_POST['title']       ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $salary      = trim($_POST['salary']      ?? '');
+        $type        = $_POST['type']        ?? '';
+        $mode        = $_POST['mode']        ?? '';
+        $companyId   = $_POST['company_id']  ?? '0';
+        $locationId  = $_POST['location_id'] ?? '0';
+
+        $v = new Validator();
+        $v->required('title', $title, 'Titre')
+          ->minLength('title', $title, 3, 'Titre')
+          ->maxLength('title', $title, 255, 'Titre')
+          ->maxLength('description', $description, 5000, 'Description')
+          ->maxLength('salary', $salary, 100, 'Rémunération')
+          ->required('type', $type, 'Type de contrat')
+          ->inList('type', $type, ['internship', 'apprenticeship'], 'Type de contrat')
+          ->required('mode', $mode, 'Mode de travail')
+          ->inList('mode', $mode, ['on_site', 'remote', 'hybrid'], 'Mode de travail')
+          ->positiveInt('company_id', $companyId, 'Entreprise')
+          ->positiveInt('location_id', $locationId, 'Localisation');
+
+        if ($v->hasErrors()) {
+            $entrepriseModel = new EntrepriseModel();
+            echo $this->render('creation-offre.html.twig', [
+                'entreprises' => $entrepriseModel->getAllCompanies(),
+                'locations'   => $this->model->getAllLocations(),
+                'skills'      => $this->model->getAllSkills(),
+                'errors'      => $v->getErrors(),
+            ]);
+            return;
+        }
+
         $offerId = $this->model->createOffer([
-            'title'            => $_POST['title']       ?? '',
-            'description'      => $_POST['description'] ?? '',
-            'salary'           => $_POST['salary']      ?? '',
-            'type'             => $_POST['type']        ?? '',
-            'mode'             => $_POST['mode']        ?? '',
+            'title'            => $title,
+            'description'      => $description,
+            'salary'           => $salary,
+            'type'             => $type,
+            'mode'             => $mode,
             'publication_date' => date('Y-m-d'),
-            'company_id'       => (int) ($_POST['company_id']  ?? 0),
-            'location_id'      => (int) ($_POST['location_id'] ?? 0),
+            'company_id'       => (int) $companyId,
+            'location_id'      => (int) $locationId,
         ]);
 
         $skillNames = array_filter(array_map('trim', explode(',', $_POST['skills'] ?? '')));
@@ -123,13 +156,45 @@ class OffreController extends Controller
 
     public function edit(int $id): void
     {
+        $title       = trim($_POST['title']       ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $salary      = trim($_POST['salary']      ?? '');
+        $type        = $_POST['type']        ?? '';
+        $mode        = $_POST['mode']        ?? '';
+        $locationId  = $_POST['location_id'] ?? '0';
+
+        $v = new Validator();
+        $v->required('title', $title, 'Titre')
+          ->minLength('title', $title, 3, 'Titre')
+          ->maxLength('title', $title, 255, 'Titre')
+          ->maxLength('description', $description, 5000, 'Description')
+          ->maxLength('salary', $salary, 100, 'Rémunération')
+          ->required('type', $type, 'Type de contrat')
+          ->inList('type', $type, ['internship', 'apprenticeship'], 'Type de contrat')
+          ->required('mode', $mode, 'Mode de travail')
+          ->inList('mode', $mode, ['on_site', 'remote', 'hybrid'], 'Mode de travail')
+          ->positiveInt('location_id', $locationId, 'Localisation');
+
+        if ($v->hasErrors()) {
+            $offre       = $this->model->getOfferById($id);
+            $offreSkills = array_column($this->model->getOfferSkills($id), 'name');
+            echo $this->render('modifier-offre.html.twig', [
+                'offre'        => $offre,
+                'locations'    => $this->model->getAllLocations(),
+                'skills'       => $this->model->getAllSkills(),
+                'offre_skills' => $offreSkills,
+                'errors'       => $v->getErrors(),
+            ]);
+            return;
+        }
+
         $this->model->updateOffer($id, [
-            'title'       => $_POST['title']       ?? '',
-            'description' => $_POST['description'] ?? '',
-            'salary'      => $_POST['salary']      ?? '',
-            'type'        => $_POST['type']        ?? '',
-            'mode'        => $_POST['mode']        ?? '',
-            'location_id' => (int) ($_POST['location_id'] ?? 0),
+            'title'       => $title,
+            'description' => $description,
+            'salary'      => $salary,
+            'type'        => $type,
+            'mode'        => $mode,
+            'location_id' => (int) $locationId,
         ]);
 
         $this->model->clearSkillsFromOffer($id);

@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="candidature-actions">
-          <span class="statut statut-{{ candidature.statut|lower }}">{{ candidature.statut == 'sent' ? 'Envoyée' : (candidature.statut == 'accepted' ? 'Acceptée' : 'Refusée') }}</span>
+          <span class="statut statut-{{ candidature.statut == 'sent' ? 'envoyee' : (candidature.statut == 'accepted' ? 'acceptee' : 'refusee') }}">{{ candidature.statut == 'sent' ? 'Envoyée' : (candidature.statut == 'accepted' ? 'Acceptée' : 'Refusée') }}</span>
           <a href="/offre/{{ candidature.offre_id }}" class="btn-voir">Voir l'offre</a>
         </div>
       </div>
