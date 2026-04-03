@@ -9,7 +9,8 @@ services:
     ports:
       - "8080:80"        
     volumes:
-      - ./www:/var/www/html 
+      - ./www:/var/www/html
+      - ./tests:/var/www/tests
     depends_on:
       - db                   
   

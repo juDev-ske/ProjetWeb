@@ -115,7 +115,7 @@ class EntrepriseControllerTest extends TestCase
         $_POST['nom'] = 'Acme';
         $_POST['description'] = 'Desc';
         $_POST['email'] = 'a@b.c';
-        $_POST['telephone'] = '123';
+        $_POST['telephone'] = '0123456789';
 
         $called = new \stdClass();
         $model = new class($called) {
@@ -129,6 +129,7 @@ class EntrepriseControllerTest extends TestCase
             public function __construct() {}
             public function setModelPublic($m) { $this->model = $m; }
             public function redirect(string $url): void { $this->redirects[] = $url; }
+            public function render(string $template, array $data = []): string { return ''; }
         };
 
         $controller->setModelPublic($model);
@@ -153,7 +154,7 @@ class EntrepriseControllerTest extends TestCase
         $_POST['nom'] = 'NewName';
         $_POST['description'] = 'NewDesc';
         $_POST['email'] = 'n@e.com';
-        $_POST['telephone'] = '999';
+        $_POST['telephone'] = '0612345678';
 
         $called = new \stdClass();
         $model = new class($called) {
@@ -161,6 +162,7 @@ class EntrepriseControllerTest extends TestCase
             public function __construct($r) { $this->calledRef = $r; }
             public function updateCompany($id, $data) { $this->calledRef->update = ['id'=>$id,'data'=>$data]; }
             public function deleteCompany($id) { $this->calledRef->delete = $id; }
+            public function getCompanyById($id) { return ['id'=>$id,'name'=>'Test']; }
         };
 
         $controller = new class extends EntrepriseController {
@@ -168,6 +170,7 @@ class EntrepriseControllerTest extends TestCase
             public function __construct() {}
             public function setModelPublic($m) { $this->model = $m; }
             public function redirect(string $url): void { $this->redirects[] = $url; }
+            public function render(string $template, array $data = []): string { return ''; }
         };
 
         $controller->setModelPublic($model);
