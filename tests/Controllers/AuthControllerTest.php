@@ -9,7 +9,7 @@ use App\Controllers\AuthController;
  */
 class AuthControllerTest extends TestCase
 {
-    // Nettoyage des variables globales après chaque test pour éviter les effets de bord
+    // Nettoyage des variables globales après chaque test 
     protected function tearDown(): void
     {
         $_POST = [];
