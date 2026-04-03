@@ -16,6 +16,7 @@
 
     {% include '_errors.html.twig' %}
     <form action="/offre/{{ offre.id }}/modifier" method="post">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
       <div class="form-group">
         <label for="title">Titre du poste</label>
         <input type="text" id="title" name="title" value="{{ offre.titre }}" required minlength="3" maxlength="255">
@@ -48,7 +49,9 @@
 
       <div class="form-group">
         <label>Compétences requises</label>
-        <div class="skills-container">
+        <div class="skills-container" id="skills-container"
+             data-all-skills="{{ skills|map(s => s.name)|json_encode }}"
+             data-selected-skills="{{ offre_skills|json_encode }}">
           <div class="skills-tags" id="skills-tags"></div>
           <div class="search-container">
             <input type="text" id="skills-input" placeholder="Ajouter un skill..." autocomplete="off">
@@ -58,102 +61,7 @@
         </div>
       </div>
 
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const skillsInput   = document.getElementById('skills-input');
-          const skillsOptions = document.getElementById('skills-options');
-          const skillsTags    = document.getElementById('skills-tags');
-          const skillsHidden  = document.getElementById('skills-hidden');
-
-          const allSkills     = {{ skills|map(s => s.name)|json_encode|raw }};
-          let selectedSkills  = {{ offre_skills|json_encode|raw }};
-
-          function updateHidden() {
-            skillsHidden.value = selectedSkills.join(',');
-          }
-
-          function addTag(name) {
-            if (selectedSkills.includes(name)) return;
-            selectedSkills.push(name);
-            updateHidden();
-
-            const tag = document.createElement('span');
-            tag.className = 'skill-tag';
-            tag.innerHTML = `${name} <button type="button" data-value="${name}">&times;</button>`;
-            tag.querySelector('button').addEventListener('click', function () {
-              selectedSkills = selectedSkills.filter(s => s !== this.dataset.value);
-              updateHidden();
-              tag.remove();
-            });
-            skillsTags.appendChild(tag);
-            skillsInput.value = '';
-            skillsOptions.style.display = 'none';
-            skillsInput.focus();
-          }
-
-          function renderOptions(filter) {
-            skillsOptions.innerHTML = '';
-
-            const filtered = allSkills.filter(s =>
-              (filter === '' || s.toLowerCase().includes(filter.toLowerCase())) &&
-              !selectedSkills.includes(s)
-            );
-
-            filtered.forEach(skill => {
-              const div = document.createElement('div');
-              div.className = 'select-option-search';
-              div.textContent = skill;
-              div.addEventListener('mousedown', function (e) {
-                e.preventDefault();
-                addTag(skill);
-              });
-              skillsOptions.appendChild(div);
-            });
-
-            const exactMatch = allSkills.some(s => s.toLowerCase() === filter.toLowerCase());
-            if (filter.length > 0 && !exactMatch) {
-              const div = document.createElement('div');
-              div.className = 'select-option-search select-option-new';
-              div.innerHTML = `<i class="fa-solid fa-plus"></i> Ajouter "<strong>${filter}</strong>"`;
-              div.addEventListener('mousedown', function (e) {
-                e.preventDefault();
-                addTag(filter);
-              });
-              skillsOptions.appendChild(div);
-            }
-
-            skillsOptions.style.display = skillsOptions.children.length > 0 ? 'block' : 'none';
-          }
-
-          // Pré-remplir les tags avec les skills existants de l'offre
-          selectedSkills.forEach(name => {
-            const tag = document.createElement('span');
-            tag.className = 'skill-tag';
-            tag.innerHTML = `${name} <button type="button" data-value="${name}">&times;</button>`;
-            tag.querySelector('button').addEventListener('click', function () {
-              selectedSkills = selectedSkills.filter(s => s !== this.dataset.value);
-              updateHidden();
-              tag.remove();
-            });
-            skillsTags.appendChild(tag);
-          });
-          updateHidden();
-
-          skillsInput.addEventListener('input', function () {
-            renderOptions(this.value.trim());
-          });
-
-          skillsInput.addEventListener('focus', function () {
-            renderOptions(this.value.trim());
-          });
-
-          document.addEventListener('click', function (e) {
-            if (!e.target.closest('.skills-container')) {
-              skillsOptions.style.display = 'none';
-            }
-          });
-        });
-      </script>
+      <script src="/public/js/skills-picker.js"></script>
 
       <div class="form-group">
         <label for="mode">Mode de travail</label>

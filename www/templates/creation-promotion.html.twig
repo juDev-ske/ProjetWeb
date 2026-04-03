@@ -17,6 +17,7 @@
   <div style="max-width:540px;">
     {% include '_errors.html.twig' %}
     <form method="POST" action="/creation-promotion">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
       <div class="form-group" style="margin-bottom:1rem;">
         <label for="name">Nom de la promotion</label>
         <input type="text" id="name" name="name" placeholder="Ex : BTS SIO 2026" required minlength="2" maxlength="255">

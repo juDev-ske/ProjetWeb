@@ -3,7 +3,7 @@
 {% block title %}CesiTonJob — Statistiques{% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href="../public/css/dashboard.css">
+  <link rel="stylesheet" href="/public/css/dashboard.css">
 {% endblock %}
 
 {% block content %}
@@ -37,61 +37,83 @@
 
   </div>
 
-  {# ── Ligne graphiques ── #}
-  <div class="stats-bottom-row">
+  {# ── Carrousel des graphiques ── #}
+  <div class="stats-carousel" id="statsCarousel">
+    <button class="stats-carousel-btn stats-carousel-prev" id="statsCarouselPrev" aria-label="Precedent">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
 
-    {# Répartition par type #}
-    <div class="stat-card">
-      <p class="stat-card-title">
-        <i class="fa-solid fa-chart-bar"></i>
-        Répartition par type de contrat
-      </p>
-      {% set max_type = 1 %}
-      {% for row in stats.par_type %}
-        {% if row.total > max_type %}{% set max_type = row.total %}{% endif %}
-      {% endfor %}
-      <div class="type-bars">
-        {% for row in stats.par_type %}
-          <div class="type-bar">
-            <div class="type-bar-header">
-              <span class="type-bar-label">{{ row.type }}</span>
-              <span class="type-bar-count">{{ row.total }}</span>
-            </div>
-            <div class="type-bar-track">
-              <div class="type-bar-fill" style="width: {{ (row.total / max_type * 100)|round }}%"></div>
+    <div class="stats-carousel-viewport">
+      <div class="stats-carousel-track" id="statsCarouselTrack">
+
+        {# Slide 1 : Repartition par type #}
+        <div class="stats-carousel-slide">
+          <div class="stat-card">
+            <p class="stat-card-title">
+              <i class="fa-solid fa-chart-bar"></i>
+              Répartition par type de contrat
+            </p>
+            {% set max_type = 1 %}
+            {% for row in stats.par_type %}
+              {% if row.total > max_type %}{% set max_type = row.total %}{% endif %}
+            {% endfor %}
+            <div class="type-bars">
+              {% for row in stats.par_type %}
+                <div class="type-bar">
+                  <div class="type-bar-header">
+                    <span class="type-bar-label">{{ row.type }}</span>
+                    <span class="type-bar-count">{{ row.total }}</span>
+                  </div>
+                  <div class="type-bar-track">
+                    <div class="type-bar-fill" style="width: {{ (row.total / max_type * 100)|round }}%"></div>
+                  </div>
+                </div>
+              {% else %}
+                <p style="color:var(--color-text-muted);font-size:.85rem">Aucune donnée.</p>
+              {% endfor %}
             </div>
           </div>
-        {% else %}
-          <p style="color:var(--color-text-muted);font-size:.85rem">Aucune donnée.</p>
-        {% endfor %}
+        </div>
+
+        {# Slide 2 : Top wishlist #}
+        <div class="stats-carousel-slide">
+          <div class="stat-card">
+            <p class="stat-card-title">
+              <i class="fa-solid fa-bookmark"></i>
+              Top 5 offres les plus wishlistées
+            </p>
+            <div class="wishlist-list">
+              {% for offre in stats.top_wishlist %}
+                <div class="wishlist-item">
+                  <span class="wishlist-item-rank">#{{ loop.index }}</span>
+                  <div class="wishlist-item-info">
+                    <a href="/offre/{{ offre.id }}" class="wishlist-item-title">{{ offre.titre }}</a>
+                    <p class="wishlist-item-company">{{ offre.entreprise }}</p>
+                  </div>
+                  <span class="wishlist-badge">
+                    <i class="fa-solid fa-heart"></i> {{ offre.nb_wishlist }}
+                  </span>
+                </div>
+              {% else %}
+                <p style="color:var(--color-text-muted);font-size:.85rem">Aucune donnée.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    {# Top wishlist #}
-    <div class="stat-card">
-      <p class="stat-card-title">
-        <i class="fa-solid fa-bookmark"></i>
-        Top 5 offres les plus wishlistées
-      </p>
-      <div class="wishlist-list">
-        {% for offre in stats.top_wishlist %}
-          <div class="wishlist-item">
-            <span class="wishlist-item-rank">#{{ loop.index }}</span>
-            <div class="wishlist-item-info">
-              <a href="/offre/{{ offre.id }}" class="wishlist-item-title">{{ offre.titre }}</a>
-              <p class="wishlist-item-company">{{ offre.entreprise }}</p>
-            </div>
-            <span class="wishlist-badge">
-              <i class="fa-solid fa-heart"></i> {{ offre.nb_wishlist }}
-            </span>
-          </div>
-        {% else %}
-          <p style="color:var(--color-text-muted);font-size:.85rem">Aucune donnée.</p>
-        {% endfor %}
-      </div>
-    </div>
-
+    <button class="stats-carousel-btn stats-carousel-next" id="statsCarouselNext" aria-label="Suivant">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
   </div>
 
+  <div class="stats-carousel-dots" id="statsCarouselDots"></div>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/public/js/stats-carousel.js"></script>
 {% endblock %}

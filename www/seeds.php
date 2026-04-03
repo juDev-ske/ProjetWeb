@@ -14,17 +14,14 @@ $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $passwo
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);
 
-// ============================================================
-// SCHÉMA — exécution de database.sql
-// ============================================================
+
 echo "Création des tables (database.sql)...\n";
 $sql = file_get_contents(__DIR__ . '/database.sql');
 $pdo->exec($sql);
 echo "  Tables prêtes.\n\n";
 
-// ============================================================
-// VIDAGE DES DONNÉES
-// ============================================================
+
+
 echo "Vidage des tables...\n";
 
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
@@ -34,15 +31,11 @@ foreach (['student_promotion','promotion','wishlist','spontaneous_application','
 }
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 
-// ============================================================
-// MOT DE PASSE
-// ============================================================
+
 $pwd = password_hash('password', PASSWORD_BCRYPT);
 echo "\nHash généré : $pwd\n\n";
 
-// ============================================================
-// UTILISATEURS
-// ============================================================
+
 echo "Insertion des utilisateurs...\n";
 $stmt = $pdo->prepare("INSERT INTO user (email, password, role) VALUES (?, ?, ?)");
 
@@ -64,9 +57,7 @@ $users = [
 ];
 foreach ($users as $u) { $stmt->execute($u); }
 
-// ============================================================
-// PROFILS
-// ============================================================
+
 echo "Insertion des profils...\n";
 $stmt = $pdo->prepare("INSERT INTO profile (user_id, first_name, last_name, is_active, stage_status) VALUES (?, ?, ?, 1, ?)");
 
@@ -88,9 +79,7 @@ $profiles = [
 ];
 foreach ($profiles as $p) { $stmt->execute($p); }
 
-// ============================================================
-// LOCALISATIONS
-// ============================================================
+
 echo "Insertion des localisations...\n";
 $stmt = $pdo->prepare("INSERT INTO location (city, department, postal_code, region) VALUES (?, ?, ?, ?)");
 
@@ -110,9 +99,7 @@ $locations = [
 ];
 foreach ($locations as $l) { $stmt->execute($l); }
 
-// ============================================================
-// ENTREPRISES
-// ============================================================
+
 echo "Insertion des entreprises...\n";
 $stmt = $pdo->prepare("INSERT INTO company (name, description, email, phone, rating) VALUES (?, ?, ?, ?, ?)");
 
@@ -130,18 +117,14 @@ $companies = [
 ];
 foreach ($companies as $c) { $stmt->execute($c); }
 
-// ============================================================
-// COMPÉTENCES
-// ============================================================
+
 echo "Insertion des compétences...\n";
 $stmt = $pdo->prepare("INSERT INTO skill (name) VALUES (?)");
 
 $skills = ['PHP', 'Python', 'Java', 'JavaScript', 'SQL', 'React', 'Symfony', 'Docker', 'Git', 'C++', 'Machine Learning', 'Cybersécurité', 'DevOps', 'Angular', 'Node.js'];
 foreach ($skills as $s) { $stmt->execute([$s]); }
 
-// ============================================================
-// OFFRES
-// ============================================================
+
 echo "Insertion des offres...\n";
 $stmt = $pdo->prepare("INSERT INTO offer (title, description, salary, type, mode, publication_date, company_id, location_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -169,9 +152,7 @@ $offers = [
 ];
 foreach ($offers as $o) { $stmt->execute($o); }
 
-// ============================================================
-// COMPÉTENCES DES OFFRES
-// ============================================================
+
 echo "Insertion des compétences par offre...\n";
 $stmt = $pdo->prepare("INSERT INTO offer_skill (offer_id, skill_id) VALUES (?, ?)");
 
@@ -199,9 +180,7 @@ $offerSkills = [
 ];
 foreach ($offerSkills as $os) { $stmt->execute($os); }
 
-// ============================================================
-// CANDIDATURES
-// ============================================================
+
 echo "Insertion des candidatures...\n";
 $stmt = $pdo->prepare("INSERT INTO application (student_id, offer_id, status, message, application_date) VALUES (?, ?, ?, ?, ?)");
 
@@ -229,9 +208,6 @@ $applications = [
 ];
 foreach ($applications as $a) { $stmt->execute($a); }
 
-// ============================================================
-// WISHLIST
-// ============================================================
 echo "Insertion de la wishlist...\n";
 $stmt = $pdo->prepare("INSERT INTO wishlist (student_id, offer_id) VALUES (?, ?)");
 
@@ -249,9 +225,7 @@ $wishlist = [
 ];
 foreach ($wishlist as $w) { $stmt->execute($w); }
 
-// ============================================================
-// PROMOTIONS
-// ============================================================
+
 echo "Insertion des promotions...\n";
 $pdo->exec("INSERT INTO promotion (name, year, pilot_id) VALUES ('BTS SIO 2026', 2026, 2), ('Licence Pro Dev 2026', 2026, 3), ('Master IA 2026', 2026, 4)");
 

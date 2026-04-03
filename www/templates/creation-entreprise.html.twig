@@ -16,6 +16,7 @@
 
     {% include '_errors.html.twig' %}
     <form action="/creation-entreprise" method="post">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
       <div class="form-group">
         <label for="nom">Nom de l'entreprise</label>
         <input type="text" id="nom" name="nom" placeholder="Ex : Google France" required minlength="2" maxlength="255">

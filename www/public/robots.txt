@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /statistiques
+Disallow: /creation-offre
+Disallow: /creation-entreprise
+Disallow: /creation-etudiant
+Disallow: /creation-pilote
+Disallow: /creation-promotion
+Disallow: /mes-candidatures
+Disallow: /candidatures-pilote
+Disallow: /wishlist
+Disallow: /profil
+Disallow: /public/uploads/
+
+Sitemap: https://cesitonjob.fr/public/sitemap.xml

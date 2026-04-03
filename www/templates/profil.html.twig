@@ -23,6 +23,7 @@
 
     {% if session.user_role == 'admin' %}
     <form action="/profil" method="post" novalidate>
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
       <div class="form-group">
         <label for="prenom">Prénom</label>
         <input type="text" id="prenom" name="prenom" value="{{ user.prenom }}">

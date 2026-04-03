@@ -1,7 +1,21 @@
 <?php
+// Sécurisation stricte des cookies de session
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_samesite', 'Strict');
+ini_set('session.use_strict_mode', 1);
+ini_set('session.use_only_cookies', 1);
 session_start();
-require 'vendor/autoload.php';
-require 'src/auth.php';
+
+// Headers de sécurité contre les injections et le détournement de contenu
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
+$baseDir = defined('BASE_DIR') ? BASE_DIR : __DIR__;
+require $baseDir . '/vendor/autoload.php';
+require $baseDir . '/src/auth.php';
 
 use App\Core\Router;
 use App\Controllers\AuthController;
@@ -12,28 +26,34 @@ use App\Controllers\WishlistController;
 use App\Controllers\EtudiantController;
 use App\Controllers\PiloteController;
 use App\Controllers\DashboardController;
+use App\Core\Csrf;
 use App\Models\UserModel;
 use App\Models\WishlistModel;
 
-// --- Twig ---
-$loader = new \Twig\Loader\FilesystemLoader('templates');
+// Initialisation de Twig et injection des données de session globales
+$loader = new \Twig\Loader\FilesystemLoader($baseDir . '/templates');
 $twig   = new \Twig\Environment($loader, ['debug' => true]);
 $twig->addGlobal('session', [
     'user_id'   => $_SESSION['user_id']   ?? null,
     'user_role' => $_SESSION['user_role'] ?? null,
     'user_name' => $_SESSION['user_name'] ?? null,
 ]);
+$twig->addGlobal('csrf_token', Csrf::generate());
 
-// --- URL ---
+// Vérification du jeton CSRF sur toutes les requêtes de modification (POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !Csrf::verify()) {
+    http_response_code(403);
+    echo $twig->render('erreur.html.twig', ['code' => 403, 'message' => 'Jeton CSRF invalide. Veuillez réessayer.']);
+    exit;
+}
+
+// Nettoyage de l'URL pour le routage
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $url = rtrim($url, '/');
 if ($url === '') $url = '/';
 
 $router = new Router($url);
 
-// =============================================
-// AUTHENTIFICATION
-// =============================================
 $router->get('/connexion', function () use ($twig) {
     echo (new AuthController($twig))->loginPage();
 });
@@ -46,9 +66,6 @@ $router->get('/deconnexion', function () use ($twig) {
     (new AuthController($twig))->logout();
 });
 
-// =============================================
-// ACCUEIL
-// =============================================
 $router->get('/', function () use ($twig) {
     $controller = new OffreController($twig);
     $wishlistIds = [];
@@ -61,9 +78,6 @@ $router->get('/', function () use ($twig) {
     ]);
 });
 
-// =============================================
-// OFFRES
-// =============================================
 $router->get('/offres', function () use ($twig) {
     echo (new OffreController($twig))->index();
 });
@@ -97,9 +111,6 @@ $router->get('/offre/:id/supprimer', function ($id) use ($twig) {
     (new OffreController($twig))->delete((int) $id);
 });
 
-// =============================================
-// CANDIDATURES
-// =============================================
 $router->get('/mes-candidatures', function () use ($twig) {
     requireRole('etudiant');
     echo (new CandidatureController($twig))->index();
@@ -112,7 +123,7 @@ $router->get('/candidature-spontanee', function () use ($twig) {
 
 $router->post('/candidature-spontanee', function () use ($twig) {
     requireRole('etudiant');
-    (new CandidatureController($twig))->spontaneous();
+    echo (new CandidatureController($twig))->spontaneous();
 });
 
 $router->get('/candidatures-pilote', function () use ($twig) {
@@ -130,9 +141,6 @@ $router->post('/postuler/:id', function ($id) use ($twig) {
     (new CandidatureController($twig))->apply((int) $id);
 });
 
-// =============================================
-// WISHLIST
-// =============================================
 $router->get('/wishlist', function () use ($twig) {
     requireRole('etudiant');
     echo (new WishlistController($twig))->index();
@@ -148,9 +156,6 @@ $router->get('/wishlist/retirer/:id', function ($id) use ($twig) {
     (new WishlistController($twig))->remove((int) $id);
 });
 
-// =============================================
-// DASHBOARD & STATISTIQUES
-// =============================================
 $router->get('/dashboard', function () use ($twig) {
     requireRole(['admin', 'pilote']);
     echo (new DashboardController($twig))->index();
@@ -161,9 +166,6 @@ $router->get('/statistiques', function () use ($twig) {
     echo (new DashboardController($twig))->statistiques();
 });
 
-// =============================================
-// ENTREPRISES
-// =============================================
 $router->get('/entreprises', function () use ($twig) {
     requireRole(['admin', 'pilote']);
     echo (new EntrepriseController($twig))->index();
@@ -204,9 +206,6 @@ $router->get('/entreprise/:id/supprimer', function ($id) use ($twig) {
     (new EntrepriseController($twig))->delete((int) $id);
 });
 
-// =============================================
-// ÉTUDIANTS
-// =============================================
 $router->get('/etudiants', function () use ($twig) {
     requireRole(['admin', 'pilote']);
     echo (new EtudiantController($twig))->index();
@@ -237,9 +236,6 @@ $router->get('/etudiant/:id/supprimer', function ($id) use ($twig) {
     (new EtudiantController($twig))->delete((int) $id);
 });
 
-// =============================================
-// PILOTES
-// =============================================
 $router->get('/pilotes', function () use ($twig) {
     requireRole('admin');
     echo (new PiloteController($twig))->index();
@@ -270,9 +266,6 @@ $router->get('/pilote/:id/supprimer', function ($id) use ($twig) {
     (new PiloteController($twig))->delete((int) $id);
 });
 
-// =============================================
-// PROMOTIONS
-// =============================================
 $router->get('/promotions', function () use ($twig) {
     requireRole(['admin', 'pilote']);
     echo (new PiloteController($twig))->promotions();
@@ -293,9 +286,6 @@ $router->get('/promotion/:id', function ($id) use ($twig) {
     echo (new PiloteController($twig))->promotionDetail((int) $id);
 });
 
-// =============================================
-// PROFIL
-// =============================================
 $router->get('/profil', function () use ($twig) {
     requireLogin();
     $user = (new UserModel())->getUserById($_SESSION['user_id']);
@@ -307,9 +297,6 @@ $router->get('/profil', function () use ($twig) {
     ]]);
 });
 
-// =============================================
-// PAGES STATIQUES
-// =============================================
 $router->get('/a-propos', function () use ($twig) {
     echo $twig->render('a-propos.html.twig', ['equipe' => [
         ['nom' => 'Julien VOLTZ',      'role' => 'Chef de projet',          'couleur' => '#1800ad'],
@@ -331,7 +318,5 @@ $router->get('/mentions-legales', function () use ($twig) {
     echo $twig->render('mentions-legales.html.twig');
 });
 
-// =============================================
-// LANCEMENT
-// =============================================
+// Déclenchement de la route correspondante
 $router->run();

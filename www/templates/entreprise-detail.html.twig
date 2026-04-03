@@ -56,6 +56,7 @@
         {# Formulaire avec demi-étoiles cliquables — JS driven (admin/pilote uniquement) #}
         {% if session.user_role in ['admin', 'pilote'] %}
         <form action="/entreprise/{{ entreprise.id }}/evaluer" method="post" class="detail-eval-form">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
           <div class="star-picker-js" id="starPicker" data-value="{{ entreprise.rating }}">
             {% for i in 1..5 %}
               <span class="star-js" data-full="{{ i }}" data-half="{{ i - 0.5 }}">
@@ -114,66 +115,5 @@
 </div>
 {% endblock %}
 {% block scripts %}
-<script>
-(function() {
-  const picker  = document.getElementById('starPicker');
-  const input   = document.getElementById('noteInput');
-  const label   = document.getElementById('starLabel');
-  const stars   = picker.querySelectorAll('.star-js');
-
-  // Valeur initiale depuis Twig
-  let current = parseFloat(picker.dataset.value) || 0;
-
-  // Peint les étoiles selon une valeur donnée
-  function paint(val) {
-    stars.forEach((star, idx) => {
-      const full = parseFloat(star.dataset.full);   // ex: 1, 2, 3…
-      const half = parseFloat(star.dataset.half);   // ex: 0.5, 1.5…
-      const icon = star.querySelector('i');
-      icon.className = 'fa-solid fa-star';          // reset
-      if (val >= full) {
-        icon.className = 'fa-solid fa-star star-full';
-      } else if (val >= half) {
-        icon.className = 'fa-solid fa-star-half-stroke star-half';
-      } else {
-        icon.className = 'fa-regular fa-star star-empty';
-      }
-    });
-  }
-
-  // Calcule la valeur selon la position X dans l'étoile (gauche = .5, droite = entier)
-  function valueFromEvent(star, e) {
-    const rect = star.getBoundingClientRect();
-    const x    = e.clientX - rect.left;
-    return x < rect.width / 2
-      ? parseFloat(star.dataset.half)
-      : parseFloat(star.dataset.full);
-  }
-
-  // Hover — preview
-  stars.forEach(star => {
-    star.addEventListener('mousemove', e => {
-      paint(valueFromEvent(star, e));
-    });
-  });
-
-  picker.addEventListener('mouseleave', () => {
-    paint(current); // Revenir à la valeur sélectionnée
-  });
-
-  // Click — sélection
-  stars.forEach(star => {
-    star.addEventListener('click', e => {
-      const val = valueFromEvent(star, e);
-      current = val;
-      input.value = val;
-      paint(val);
-      label.textContent = 'Note sélectionnée : ' + val + ' / 5';
-    });
-  });
-
-  // Peinture initiale
-  paint(current);
-})();
-</script>
+<script src="/public/js/star-picker.js"></script>
 {% endblock %}

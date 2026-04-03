@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CesiTonJob — Erreur {{ code }}{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="/public/css/secondaires.css">
+{% endblock %}
+
+{% block content %}
+<div class="page-content" style="text-align:center;padding:4rem 1.5rem;">
+  <h1 style="font-size:3rem;color:var(--color-primary);margin-bottom:1rem;">{{ code }}</h1>
+  <p style="font-size:1.1rem;margin-bottom:2rem;">{{ message }}</p>
+  <a href="/" class="btn-primary">Retour à l'accueil</a>
+</div>
+{% endblock %}

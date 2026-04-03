@@ -13,5 +13,4 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli zip
 # Installe Composer (gestionnaire de dépendances PHP)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copie notre config Apache personnalisée
 COPY docker/apache/httpd.conf /etc/apache2/sites-available/000-default.conf

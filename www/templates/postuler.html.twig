@@ -34,6 +34,7 @@
 
     {% include '_errors.html.twig' %}
     <form action="/postuler/{{ offre.id }}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
       {# ── CV ── #}
       <div class="form-group">
@@ -86,26 +87,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-  [['cv', 'cv-zone', 'cv-label'], ['lm', 'lm-zone', 'lm-label']].forEach(([id, zone, lbl]) => {
-    const input  = document.getElementById(id);
-    const zoneEl = document.getElementById(zone);
-    const lblEl  = document.getElementById(lbl);
-
-    // Clic sur la zone → ouvre le sélecteur de fichier
-    zoneEl.addEventListener('click', () => input.click());
-
-    // Feedback nom de fichier
-    input.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        lblEl.textContent = file.name;
-        zoneEl.classList.add('has-file');
-      } else {
-        lblEl.textContent = 'Choisir un fichier PDF ou Word';
-        zoneEl.classList.remove('has-file');
-      }
-    });
-  });
-</script>
+<script src="/public/js/file-upload.js"></script>
 {% endblock %}
